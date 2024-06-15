@@ -2,12 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-15 18:50:37
+ * @LastEditTime: 2024-06-15 19:47:37
  * @Description: 
 -->
 <template>
   <div class="container">
-    <div @click="start">打开摄像头</div>
     <video id="video" width="640" height="480" autoplay></video>
     <div id="overlay" v-if="countdown > 0">
       {{ countdown }}
@@ -16,7 +15,10 @@
 </template>
 
 <script>
-import tracking from 'tracking.js';
+require('tracking/build/tracking-min');
+require('tracking/build/data/face')
+
+const tracking = window.tracking;
 
 export default {
   name: 'FaceTracking',
