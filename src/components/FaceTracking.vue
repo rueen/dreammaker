@@ -2,15 +2,20 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-15 19:47:37
- * @Description: 
+ * @LastEditTime: 2024-06-15 21:44:05
+ * @Description: 人脸捕捉
 -->
 <template>
-  <div class="container">
-    <video id="video" width="640" height="480" autoplay></video>
-    <div id="overlay" v-if="countdown > 0">
+  <div class="faceCamera" :style="{'width': `${width}px`, 'height': `${width}px`}">
+    <video ref="refVideo" id="video" :width="width" :height="width" autoplay></video>
+    <canvas ref="refCanvas" id="canvas" :width="width" :height="width"></canvas>
+    <div class="mask">
+      <div class="tips" v-if="tipsContent">{{tipsContent}}</div>
+    </div>
+    <div class="countdown" v-if="countdown > 0">
       {{ countdown }}
     </div>
+    <img :src="imgUrl" alt="" class="imgUrl">
   </div>
 </template>
 
@@ -25,70 +30,142 @@ export default {
   components: {},
   data() {
     return {
-      countdown: 3,
-      tracker: null,
-      video: null,
-      canvas: null,
-      context: null
+      width: parseInt(window.innerWidth/100*20),
+      countdown: 0,
+      countdownTimer: null,
+      tipsContent: null,
+      profile: [],
+      context: null,
+      imgUrl: null
     };
   },
   mounted() {
-    this.video = document.getElementById('video');
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    this.context = canvas.getContext('2d');
+    const tracker = new tracking.ObjectTracker('face');
+    tracker.setInitialScale(4);
+    tracker.setStepSize(2);
+    tracker.setEdgesDensity(0.1);
+
     navigator.mediaDevices.getUserMedia({ video: {} }).then(stream => {
-      this.video.srcObject = stream;
+      video.srcObject = stream;
     });
 
-    this.canvas = document.createElement('canvas');
-    this.context = this.canvas.getContext('2d');
-    this.tracker = new tracking.ObjectTracker('face');
-    this.tracker.on('track', event => {
-      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      event.data.forEach(rect => {
-        if (rect.x && rect.y && rect.width && rect.height) {
-          this.context.strokeStyle = '#a64ceb';
-          this.context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+    try {
+      tracking.track('#video', tracker, { camera: true }); // 开始追踪
+    } catch (e) {
+      console.log('访问用户媒体失败，请重试');
+    }
+
+    tracker.on('track', (event) => {
+      this.context.clearRect(0, 0, canvas.width, canvas.height);
+
+      if(!event.data || !event.data.length){
+        this.tipsContent = '未检测到人脸';
+        clearInterval(this.countdownTimer);
+        this.countdown = 0;
+        this.flag = false;
+      } else {
+        this.tipsContent = `检测成功，正在拍照，请保持不动`;
+        if(!this.flag){
+          this.countdown = 1;
+          this.flag = true
+          this.countdownTimer = setInterval(() => {
+            if (this.countdown > 0) {
+              this.countdown--;
+            } else {
+              this.takePhoto();
+              clearInterval(this.countdownTimer);
+            }
+          }, 1000);
         }
+      }
+      event.data.forEach((rect) => {
+        this.context.strokeStyle = '#a64ceb';
+        this.context.strokeRect(rect.x, rect.y, rect.width, rect.height);
       });
     });
-
-    this.video.addEventListener('play', () => {
-      tracking.track(this.video, this.tracker);
-    });
-
-    this.countdownTimer = setInterval(() => {
-      if (this.countdown > 0) {
-        this.countdown--;
-      } else {
-        this.takePhoto();
-        clearInterval(this.countdownTimer);
-      }
-    }, 1000);
   },
   methods: {
     takePhoto() {
-      // 这里可以添加拍照逻辑，例如使用 canvas.toDataURL 保存图像
-      // 然后你可以将图像发送到服务器或进行其他处理
-    }
+      if(this.$refs.refVideo){
+        this.context.drawImage(this.$refs.refVideo, 0, 0, this.width, this.width);
+        this.imgUrl = this.saveAsPNG(this.$refs.refCanvas);
+        clearInterval(this.countdownTimer);
+      }
+    },
+    saveAsPNG(c) {
+      return c.toDataURL('image/png', 0.3)
+    },
+    // Base64转文件
+    // getBlobBydataURI(dataURI, type) {
+    //   var binary = window.atob(dataURI.split(',')[1]);
+    //   var array = [];
+    //   for(var i = 0; i < binary.length; i++) {
+    //       array.push(binary.charCodeAt(i));
+    //   }
+    //   return new Blob([new Uint8Array(array)], {
+    //       type: type
+    //   });
+    // },
   }
 }
 </script>
 
 <style scoped>
-.container{
-  width: 100%;
-  height: 100vh;
-  background: url(@/assets/bg/bg1.jpg) no-repeat 0 0;
-  background-size: 100% auto;
-}
-#capture-container {
+.faceCamera{
+  border-radius: 50%;
   position: relative;
+  overflow: hidden;
 }
-#overlay {
+.imgUrl{
+  width: 100%;
+  height: 100%;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 48px;
-  color: white;
+  left: 0;
+  top: 0;
+  z-index: 5;
+}
+#video{
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  object-fit: cover;
+}
+#canvas{
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
+.mask{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+.mask .tips{
+  color: #fff;
+  text-align: center;
+  margin-top: 2rem;
+  font-size: .8rem;
+}
+.countdown{
+  font-family: Arial, Helvetica, sans-serif;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 4rem;
+  z-index: 4;
 }
 </style>

@@ -2,12 +2,12 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-15 18:07:50
+ * @LastEditTime: 2024-06-15 20:28:01
  * @Description: 
 -->
 <template>
   <div class="container">
-    <FaceTracking />
+    <FaceTracking class="faceTracking" />
   </div>
 </template>
 
@@ -34,5 +34,11 @@ export default {
   height: 100vh;
   background: url(@/assets/bg/bg1.jpg) no-repeat 0 0;
   background-size: 100% auto;
+  position: relative;
+}
+.faceTracking{
+  position: absolute;
+  right: 20rem;
+  top: 10rem
 }
 </style>
