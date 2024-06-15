@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-15 21:44:05
+ * @LastEditTime: 2024-06-15 22:17:35
  * @Description: 人脸捕捉
 -->
 <template>
@@ -15,7 +15,7 @@
     <div class="countdown" v-if="countdown > 0">
       {{ countdown }}
     </div>
-    <img :src="imgUrl" alt="" class="imgUrl">
+    <img :src="imgUrl" alt="" class="imgUrl" v-if="imgUrl">
   </div>
 </template>
 
@@ -36,68 +36,100 @@ export default {
       tipsContent: null,
       profile: [],
       context: null,
+      video: null,
       imgUrl: null
     };
   },
   mounted() {
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    this.context = canvas.getContext('2d');
-    const tracker = new tracking.ObjectTracker('face');
-    tracker.setInitialScale(4);
-    tracker.setStepSize(2);
-    tracker.setEdgesDensity(0.1);
-
-    navigator.mediaDevices.getUserMedia({ video: {} }).then(stream => {
-      video.srcObject = stream;
-    });
-
-    try {
-      tracking.track('#video', tracker, { camera: true }); // 开始追踪
-    } catch (e) {
-      console.log('访问用户媒体失败，请重试');
+    document.addEventListener('visibilitychange', this.watchVisibility);
+    this.playVideo();
+  },
+  beforeUnmount(){
+    if(this.countdownTimer){
+      clearInterval(this.countdownTimer);
     }
-
-    tracker.on('track', (event) => {
-      this.context.clearRect(0, 0, canvas.width, canvas.height);
-
-      if(!event.data || !event.data.length){
-        this.tipsContent = '未检测到人脸';
-        clearInterval(this.countdownTimer);
-        this.countdown = 0;
-        this.flag = false;
-      } else {
-        this.tipsContent = `检测成功，正在拍照，请保持不动`;
-        if(!this.flag){
-          this.countdown = 1;
-          this.flag = true
-          this.countdownTimer = setInterval(() => {
-            if (this.countdown > 0) {
-              this.countdown--;
-            } else {
-              this.takePhoto();
-              clearInterval(this.countdownTimer);
-            }
-          }, 1000);
-        }
-      }
-      event.data.forEach((rect) => {
-        this.context.strokeStyle = '#a64ceb';
-        this.context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-      });
-    });
+    document.removeEventListener('visibilitychange', this.watchVisibility);
   },
   methods: {
+    watchVisibility() {
+      if (document.visibilityState === 'hidden') {
+        // 页面不可见，执行相应操作，如暂停视频
+        this.pauseVideo();
+      } else {
+        // 页面可见，执行相应操作，如恢复视频播放
+        this.playVideo();
+      }
+    },
     takePhoto() {
       if(this.$refs.refVideo){
         this.context.drawImage(this.$refs.refVideo, 0, 0, this.width, this.width);
         this.imgUrl = this.saveAsPNG(this.$refs.refCanvas);
         clearInterval(this.countdownTimer);
+        this.pauseVideo();
       }
     },
     saveAsPNG(c) {
       return c.toDataURL('image/png', 0.3)
     },
+    playVideo(){
+      console.log('playVideo')
+      this.video = document.getElementById('video');
+      navigator.mediaDevices.getUserMedia({ video: {} }).then(stream => {
+        this.video.srcObject = stream;
+      });
+      const canvas = document.getElementById('canvas');
+      this.context = canvas.getContext('2d');
+      const tracker = new tracking.ObjectTracker('face');
+      tracker.setInitialScale(4);
+      tracker.setStepSize(2);
+      tracker.setEdgesDensity(0.1);
+
+      try {
+        tracking.track('#video', tracker, { camera: true }); // 开始追踪
+      } catch (e) {
+        console.log('访问用户媒体失败，请重试');
+      }
+
+      tracker.on('track', (event) => {
+        this.context.clearRect(0, 0, canvas.width, canvas.height);
+
+        if(!event.data || !event.data.length){
+          this.tipsContent = '未检测到人脸';
+          clearInterval(this.countdownTimer);
+          this.countdown = 0;
+          this.flag = false;
+        } else {
+          this.tipsContent = `检测成功，正在拍照，请保持不动`;
+          if(!this.flag){
+            this.countdown = 3;
+            this.flag = true
+            this.countdownTimer = setInterval(() => {
+              if (this.countdown > 0) {
+                this.countdown--;
+              } else {
+                this.takePhoto();
+                clearInterval(this.countdownTimer);
+              }
+            }, 1000);
+          }
+        }
+        event.data.forEach((rect) => {
+          this.context.strokeStyle = '#a64ceb';
+          this.context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+        });
+      });
+    },
+    pauseVideo(){
+      console.log('pauseVideo')
+      var video = document.getElementById('video');
+      var stream = video.srcObject;
+      var tracks = stream ? stream.getTracks() : [];
+      tracks.forEach(function(track) {
+        track.stop();
+      });
+      video.srcObject = null;
+      video.pause();
+    }
     // Base64转文件
     // getBlobBydataURI(dataURI, type) {
     //   var binary = window.atob(dataURI.split(',')[1]);
