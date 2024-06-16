@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 11:15:28
+ * @LastEditTime: 2024-06-16 11:52:05
  * @Description: 人脸捕捉
 -->
 <template>
@@ -34,7 +34,6 @@ export default {
       countdown: 0,
       countdownTimer: null,
       tipsContent: null,
-      profile: [],
       context: null,
       video: null,
       canvas: null,
@@ -59,7 +58,7 @@ export default {
         this.pauseVideo();
       } else {
         // 页面可见，执行相应操作，如恢复视频播放
-        this.playVideo();
+        this.reTrack();
       }
     },
     takePhoto() {
@@ -72,6 +71,17 @@ export default {
     },
     saveAsPNG(c) {
       return c.toDataURL('image/png', 0.3)
+    },
+    reTrack(){
+      this.countdown = 0;
+      this.countdownTimer = null;
+      this.tipsContent = null;
+      this.context = null;
+      this.video = null;
+      this.canvas = null;
+      this.tracker = null;
+      this.imgUrl = null;
+      this.playVideo();
     },
     playVideo(){
       this.video = document.getElementById('video');
@@ -121,7 +131,9 @@ export default {
       });
     },
     pauseVideo(){
-      console.log('pauseVideo')
+      if(this.countdownTimer){
+        clearInterval(this.countdownTimer);
+      }
       var video = document.getElementById('video');
       var stream = video.srcObject;
       var tracks = stream ? stream.getTracks() : [];
