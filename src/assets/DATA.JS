@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:53:58
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 14:35:22
+ * @LastEditTime: 2024-06-16 14:50:21
  * @Description: 
  */
 // https://us-stock5.xpccdn.com/9db72648-b9e1-47cd-86bd-b92ff4ff3780.mp4
@@ -25,8 +25,8 @@ const DATA = {
   }, {
     id: 2,
     template: 'template2',
-    title: '标题',
-    content: '',
+    title: '我们的十年',
+    content: '在70年代的十堰，你作为造车厂工人的身影烙印在了城市崛起的历程中。从组织劳动竞赛提升生产效率，担任车间主任后专注技能培训，你以实际行动点燃了工人们的热情，铸就了团队的坚实力量。预测着未来，你将引领十堰汽车工业迈向辉煌。你的名字将成为这座城市繁荣美丽的注脚。',
     audio: '',
     video: '',
     bgUrl: 'https://seatent.com/img/fxpage/cloud-bg.jpg', // 背景图片

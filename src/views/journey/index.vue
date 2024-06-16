@@ -2,13 +2,13 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 14:24:27
+ * @LastEditTime: 2024-06-16 14:48:34
  * @Description: 
 -->
 <template>
   <div class="about">
-    <Template1 v-show="activeItem.template === 'template1'" :data="activeItem" @onEnd="onEnd()" />
-    <Template2 v-show="activeItem.template === 'template2'" :data="activeItem" @onEnd="onEnd()" />
+    <Template1 v-if="activeItem.template === 'template1'" :data="activeItem" @onEnd="onEnd()" />
+    <Template2 v-if="activeItem.template === 'template2'" :data="activeItem" @onEnd="onEnd()" />
   </div>
 </template>
 

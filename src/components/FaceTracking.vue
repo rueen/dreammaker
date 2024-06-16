@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 12:46:41
+ * @LastEditTime: 2024-06-16 14:47:14
  * @Description: 人脸捕捉
 -->
 <template>
@@ -46,10 +46,8 @@ export default {
     this.playVideo();
   },
   beforeUnmount(){
-    if(this.countdownTimer){
-      clearInterval(this.countdownTimer);
-    }
     document.removeEventListener('visibilitychange', this.watchVisibility);
+    this.pauseVideo();
   },
   methods: {
     watchVisibility() {
