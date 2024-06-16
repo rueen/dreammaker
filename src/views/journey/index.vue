@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 15:19:58
+ * @LastEditTime: 2024-06-16 16:35:31
  * @Description: 
 -->
 <template>
@@ -10,6 +10,7 @@
     <Template1 v-if="activeItem.template === 'template1'" :data="activeItem" @onEnd="onEnd()" />
     <Template2 v-if="activeItem.template === 'template2'" :data="activeItem" @onEnd="onEnd()" />
     <Template3 v-if="activeItem.template === 'template3'" :data="activeItem" @onEnd="onEnd()" />
+    <Template4 v-if="activeItem.template === 'template4'" :data="activeItem" @onEnd="onEnd()" />
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import { useRouter } from 'vue-router';
 import Template1 from './template/Template1.vue';
 import Template2 from './template/Template2.vue';
 import Template3 from './template/Template3.vue';
+import Template4 from './template/Template4.vue';
 import DATA from '@/assets/DATA'
 
 export default {
@@ -25,7 +27,8 @@ export default {
   components: {
     Template1,
     Template2,
-    Template3
+    Template3,
+    Template4
   },
   data(){
     return {

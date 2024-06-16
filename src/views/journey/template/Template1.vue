@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 15:10:35
+ * @LastEditTime: 2024-06-16 16:38:29
  * @Description: 
 -->
 <template>
@@ -97,6 +97,7 @@ export default {
   position: relative;
   display: flex;
   justify-content: space-between;
+  background-color: #EEF0F2;
 }
 .left{
   width: 45%;
