@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 12:45:45
+ * @LastEditTime: 2024-06-16 12:49:04
  * @Description: 
 -->
 <template>
@@ -69,6 +69,7 @@ export default {
     reTrack(){
       if(this.$refs.refFaceTracking){
         this.$refs.refFaceTracking.reTrack();
+        this.photo = null;
       }
     },
     getPhoto(e){
