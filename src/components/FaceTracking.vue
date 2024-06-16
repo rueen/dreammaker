@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-15 22:17:35
+ * @LastEditTime: 2024-06-16 11:15:28
  * @Description: 人脸捕捉
 -->
 <template>
@@ -37,6 +37,8 @@ export default {
       profile: [],
       context: null,
       video: null,
+      canvas: null,
+      tracker: null,
       imgUrl: null
     };
   },
@@ -72,26 +74,25 @@ export default {
       return c.toDataURL('image/png', 0.3)
     },
     playVideo(){
-      console.log('playVideo')
       this.video = document.getElementById('video');
       navigator.mediaDevices.getUserMedia({ video: {} }).then(stream => {
         this.video.srcObject = stream;
       });
-      const canvas = document.getElementById('canvas');
-      this.context = canvas.getContext('2d');
-      const tracker = new tracking.ObjectTracker('face');
-      tracker.setInitialScale(4);
-      tracker.setStepSize(2);
-      tracker.setEdgesDensity(0.1);
+      this.canvas = document.getElementById('canvas');
+      this.context = this.canvas.getContext('2d');
+      this.tracker = new tracking.ObjectTracker('face');
+      this.tracker.setInitialScale(4);
+      this.tracker.setStepSize(2);
+      this.tracker.setEdgesDensity(0.1);
 
       try {
-        tracking.track('#video', tracker, { camera: true }); // 开始追踪
+        tracking.track('#video', this.tracker, { camera: true }); // 开始追踪
       } catch (e) {
         console.log('访问用户媒体失败，请重试');
       }
 
-      tracker.on('track', (event) => {
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
+      this.tracker.on('track', (event) => {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         if(!event.data || !event.data.length){
           this.tipsContent = '未检测到人脸';
