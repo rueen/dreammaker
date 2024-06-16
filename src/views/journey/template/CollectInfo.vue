@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 12:28:51
+ * @LastEditTime: 2024-06-16 12:45:45
  * @Description: 
 -->
 <template>
@@ -30,12 +30,14 @@
       </div>
     </div>
     <div class="right">
-      <FaceTracking ref="refFaceTracking" style="margin-bottom: 2rem;" />
-      <CustomButton theme="white" @click="reTrack()" style="width: 10rem;margin-right: 2rem;">
-        <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
-        <span>重新拍</span>
-      </CustomButton>
-      <CustomButton theme="blue" style="width: 10rem;">下一步</CustomButton>
+      <FaceTracking ref="refFaceTracking" @getPhoto="getPhoto($event)" />
+      <div class="btnBox" :style="{'width': `${cameraWidth}px`}" v-if="photo">
+        <CustomButton theme="white" @click="reTrack()" style="width: 10rem;">
+          <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
+          <span>重新拍</span>
+        </CustomButton>
+        <CustomButton theme="blue" style="width: 10rem;">下一步</CustomButton>
+      </div>
     </div>
   </div>
 </template>
@@ -52,7 +54,9 @@ export default {
   },
   data(){
     return {
-      activeSex: 'male'
+      activeSex: 'male',
+      photo: null,
+      cameraWidth: null
     }
   },
   setup() {
@@ -66,6 +70,11 @@ export default {
       if(this.$refs.refFaceTracking){
         this.$refs.refFaceTracking.reTrack();
       }
+    },
+    getPhoto(e){
+      const {photo, cameraWidth} = e;
+      this.photo = photo;
+      this.cameraWidth = cameraWidth;
     }
   }
 }
@@ -162,5 +171,10 @@ export default {
 .right{
   width: 55%;
   padding-top: 10rem;
+}
+.btnBox{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
 }
 </style>

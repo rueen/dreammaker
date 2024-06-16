@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 11:52:05
+ * @LastEditTime: 2024-06-16 12:46:41
  * @Description: 人脸捕捉
 -->
 <template>
@@ -30,7 +30,7 @@ export default {
   components: {},
   data() {
     return {
-      width: parseInt(window.innerWidth/100*20),
+      width: parseInt(window.innerWidth/100*25),
       countdown: 0,
       countdownTimer: null,
       tipsContent: null,
@@ -67,6 +67,10 @@ export default {
         this.imgUrl = this.saveAsPNG(this.$refs.refCanvas);
         clearInterval(this.countdownTimer);
         this.pauseVideo();
+        this.$emit('getPhoto', {
+          photo: this.imgUrl,
+          cameraWidth: this.width
+        });
       }
     },
     saveAsPNG(c) {
@@ -112,7 +116,7 @@ export default {
         } else {
           this.tipsContent = `检测成功，正在拍照，请保持不动`;
           if(!this.flag){
-            this.countdown = 3;
+            this.countdown = 2;
             this.flag = true
             this.countdownTimer = setInterval(() => {
               if (this.countdown > 0) {
