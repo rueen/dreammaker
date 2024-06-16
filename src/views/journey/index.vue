@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 16:35:31
+ * @LastEditTime: 2024-06-16 16:48:33
  * @Description: 
 -->
 <template>
@@ -10,7 +10,7 @@
     <Template1 v-if="activeItem.template === 'template1'" :data="activeItem" @onEnd="onEnd()" />
     <Template2 v-if="activeItem.template === 'template2'" :data="activeItem" @onEnd="onEnd()" />
     <Template3 v-if="activeItem.template === 'template3'" :data="activeItem" @onEnd="onEnd()" />
-    <Template4 v-if="activeItem.template === 'template4'" :data="activeItem" @onEnd="onEnd()" />
+    <Template4 v-if="activeItem.template === 'template4'" :data="activeItem" @reStart="reStart()" />
   </div>
 </template>
 
@@ -52,6 +52,9 @@ export default {
       }
       const nexItem = this.list.find(item => item.id === this.activeItem.nextId);
       this.activeItem = nexItem;
+    },
+    reStart(){
+      this.activeItem = this.list[0];
     }
   }
 }

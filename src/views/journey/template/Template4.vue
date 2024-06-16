@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 16:39:14
+ * @LastEditTime: 2024-06-16 16:47:53
  * @Description: 
 -->
 <template>
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     reStart(){
-
+      this.$emit('reStart');
     }
   }
 }
