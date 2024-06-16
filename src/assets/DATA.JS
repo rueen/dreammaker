@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:53:58
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 14:50:21
+ * @LastEditTime: 2024-06-16 15:15:49
  * @Description: 
  */
 // https://us-stock5.xpccdn.com/9db72648-b9e1-47cd-86bd-b92ff4ff3780.mp4
@@ -20,7 +20,7 @@ const DATA = {
     maleText: '我是一位超级大帅哥',
     femaleText: '我是一位美女',
     audio: 'https://pic.ibaotu.com/mp3Watermark_v3/17/88/84/31b5fd17a01953e7506ad3b570032415.mp3',
-    bgUrl: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20220105/6add979b6dd84f91970b07b406fa3b60.jpg', // 背景图片
+    bgUrl: 'https://seatent.com/img/fxpage/cloud-bg.jpg', // 背景图片
     nextId: 2
   }, {
     id: 2,

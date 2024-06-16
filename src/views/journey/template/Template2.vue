@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 15:11:53
+ * @LastEditTime: 2024-06-16 15:17:27
  * @Description: 
 -->
 <template>
@@ -11,21 +11,23 @@
       <div id="title"></div>
       <div id="content"></div>
     </div>
+    <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="isShowNext">下一步</CustomButton>
   </div>
 </template>
 
 <script>
 import Typed from 'typed.js';
+import CustomButton from '@/components/CustomButton.vue'
 
 export default {
   name: 'Template2View',
   props: ['data'],
   components: {
-    
+    CustomButton
   },
   data(){
     return {
-      
+      isShowNext: false
     }
   },
   mounted() {
@@ -46,13 +48,16 @@ export default {
           startDelay: 300, // 开始之前的延迟300毫秒
           loop: false, // 是否循环
           onComplete: () => {
+            this.isShowNext = true;
           }
         });
       }
     });
   },
   methods: {
-    
+    nextStep(){
+      this.$emit('onEnd');
+    }
   }
 }
 </script>
@@ -63,6 +68,7 @@ export default {
   height: 100vh;
   background-size: 100% auto;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
