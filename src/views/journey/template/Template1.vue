@@ -2,11 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 14:23:42
+ * @LastEditTime: 2024-06-16 14:28:22
  * @Description: 
 -->
 <template>
-  <div class="container">
+  <div class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="left">
       <div class="sexList">
         <div class="sexItem sexMale" @click="selectSex('male')" :class="activeSex === 'male' ? 'activeSex' : ''">
@@ -89,7 +89,6 @@ export default {
 .container{
   width: 100%;
   height: 100vh;
-  background: url(@/assets/bg/bg1.jpg) no-repeat 0 0;
   background-size: 100% auto;
   position: relative;
   display: flex;
