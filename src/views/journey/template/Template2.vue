@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 15:17:27
+ * @LastEditTime: 2024-06-16 15:45:44
  * @Description: 
 -->
 <template>
@@ -27,7 +27,7 @@ export default {
   },
   data(){
     return {
-      isShowNext: false
+      isShowNext: true
     }
   },
   mounted() {

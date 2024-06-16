@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:53:58
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 15:15:49
+ * @LastEditTime: 2024-06-16 15:53:45
  * @Description: 
  */
 // https://us-stock5.xpccdn.com/9db72648-b9e1-47cd-86bd-b92ff4ff3780.mp4
@@ -20,7 +20,7 @@ const DATA = {
     maleText: '我是一位超级大帅哥',
     femaleText: '我是一位美女',
     audio: 'https://pic.ibaotu.com/mp3Watermark_v3/17/88/84/31b5fd17a01953e7506ad3b570032415.mp3',
-    bgUrl: 'https://seatent.com/img/fxpage/cloud-bg.jpg', // 背景图片
+    bgUrl: 'https://gw.alicdn.com/imgextra/i2/O1CN01R8zDb51craBhnk9pQ_!!6000000003654-0-tps-7680-2400.jpg', // 背景图片
     nextId: 2
   }, {
     id: 2,
@@ -40,6 +40,27 @@ const DATA = {
     optionNum: 3, // 选项数量
     optionType: 1, // 选项功能 1：文字图片 2: 预生成内容
     nextId: 4,
+    options: [{
+      id: 1,
+      name: '成为工人',
+      image: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20230914/5d6b2b02fbd74efc97a85c580e9f2749_small.jpg',
+    },{
+      id: 2,
+      name: '成为医生',
+      image: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20230914/c0e1cd7b3b3f44508203ab47365183f7_small.jpg',
+    },{
+      id: 3,
+      name: '成为汽车手',
+      image: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20220920/436880545f48423587c7a042a8986eeb_small.jpg',
+    },{
+      id: 4,
+      name: '成为汽车手',
+      image: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20220920/436880545f48423587c7a042a8986eeb_small.jpg',
+    },{
+      id: 5,
+      name: '成为汽车手',
+      image: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20220920/436880545f48423587c7a042a8986eeb_small.jpg',
+    }]
   }, {
     id: 4,
     template: 'template4',
