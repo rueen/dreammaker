@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 12:49:04
+ * @LastEditTime: 2024-06-16 14:23:42
  * @Description: 
 -->
 <template>
@@ -15,7 +15,7 @@
               <span class="iconfont icon-male sexIcon"></span>
               <span class="sexTag">male</span>
             </div>
-            <div class="sexText">我是一名男性</div>
+            <div class="sexText">{{data.maleText}}</div>
           </div>
         </div>
         <div class="sexItem" @click="selectSex('female')" :class="activeSex === 'female' ? 'activeSex' : ''">
@@ -24,19 +24,19 @@
               <span class="iconfont icon-female sexIcon"></span>
               <span class="sexTag">female</span>
             </div>
-            <div class="sexText">我是一名女性</div>
+            <div class="sexText">{{data.femaleText}}</div>
           </div>
         </div>
       </div>
     </div>
     <div class="right">
       <FaceTracking ref="refFaceTracking" @getPhoto="getPhoto($event)" />
-      <div class="btnBox" :style="{'width': `${cameraWidth}px`}" v-if="photo">
+      <div class="btnBox" :style="{'width': `${cameraWidth}px`}"><!--v-if="photo"-->
         <CustomButton theme="white" @click="reTrack()" style="width: 10rem;">
           <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
           <span>重新拍</span>
         </CustomButton>
-        <CustomButton theme="blue" style="width: 10rem;">下一步</CustomButton>
+        <CustomButton theme="blue" style="width: 10rem;" @click="nextStep">下一步</CustomButton>
       </div>
     </div>
   </div>
@@ -47,7 +47,8 @@ import FaceTracking from '@/components/FaceTracking';
 import CustomButton from '@/components/CustomButton.vue'
 
 export default {
-  name: 'CollectInfo',
+  name: 'Template1View',
+  props: ['data'],
   components: {
     FaceTracking,
     CustomButton
@@ -76,6 +77,9 @@ export default {
       const {photo, cameraWidth} = e;
       this.photo = photo;
       this.cameraWidth = cameraWidth;
+    },
+    nextStep(){
+      this.$emit('onEnd');
     }
   }
 }
@@ -101,7 +105,7 @@ export default {
 }
 .sexItem{
   width: 8.5rem;
-  height: 7.5rem;
+  height: 8rem;
   position: relative;
   cursor: pointer;
 }
@@ -135,7 +139,7 @@ export default {
 .iconBox{
   display: flex;
   align-items: flex-end;
-  height: 5.2rem;
+  height: 4.8rem;
 }
 .sexText{
   color: #fff;
