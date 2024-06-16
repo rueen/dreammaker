@@ -2,27 +2,29 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 15:54:50
+ * @LastEditTime: 2024-06-16 16:32:00
  * @Description: 
 -->
 <template>
   <div id="template3" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="options">
       <div
-        class="optionItem"
+        class="optionItem hide"
         v-for="(option, index) in data.options"
+        :id="`option_${option.id}`"
         :key="index"
         :style="{'width': `${optionItemWidth}px`, 'height': `${optionItemWidth*1.4}px`}"
+        @click="handleSelect(option)"
       >
         <img class="image" :src="option.image" alt="">
         <div class="name">{{ option.name }}</div>
       </div>
     </div>
-    <div class="selectedBox">
+    <div class="selectedBox" v-if="selectedOption">
       <div class="title">你将选择成为一名</div>
-      <div class="selected">汽车手</div>
+      <div class="selected">{{selectedOption.name}}</div>
     </div>
-    <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="isShowNext">下一步</CustomButton>
+    <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="selectedOption">下一步</CustomButton>
   </div>
 </template>
 
@@ -37,15 +39,38 @@ export default {
   },
   data(){
     return {
-      isShowNext: false,
-      optionItemWidth: null
+      optionItemWidth: null,
+      selectedOption: null
     }
   },
   mounted() {
     document.getElementById('template3').classList.add('fadeIn')
-    this.optionItemWidth = parseInt((window.innerWidth*0.6)/this.data.options.length)
+    this.optionItemWidth = parseInt((window.innerWidth*0.6)/this.data.options.length);
+    this.data.options.forEach((option, index) => {
+      const elm = document.getElementById(`option_${option.id}`);
+      if(elm){
+        setTimeout(() => {
+          elm.classList.remove('hide');
+          elm.classList.add('fadeInDownBig');
+        }, index * 100)
+      }
+    })
   },
   methods: {
+    handleSelect(option){
+      this.selectedOption = {...option};
+      const elm = document.getElementById(`option_${option.id}`);
+      if(elm){
+        this.data.options.forEach((option) => {
+          const _elm = document.getElementById(`option_${option.id}`);
+          if(_elm){
+            _elm.classList.remove('scaleUp');
+            _elm.classList.remove('fadeInDownBig');
+          }
+        })
+        elm.classList.add('scaleUp');
+      }
+    },
     nextStep(){
       this.$emit('onEnd');
     }
@@ -74,6 +99,9 @@ export default {
   box-shadow: 0 6px 6px 0 rgba(0,0,0,.2);
   box-sizing: border-box;
   cursor: pointer;
+}
+.hide{
+  opacity: 0;
 }
 .optionItem .image{
   width: 100%;
