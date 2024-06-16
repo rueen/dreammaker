@@ -2,11 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 14:28:22
+ * @LastEditTime: 2024-06-16 15:10:35
  * @Description: 
 -->
 <template>
-  <div class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
+  <div id="template1" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="left">
       <div class="sexList">
         <div class="sexItem sexMale" @click="selectSex('male')" :class="activeSex === 'male' ? 'activeSex' : ''">
@@ -60,8 +60,12 @@ export default {
       cameraWidth: null
     }
   },
-  setup() {
-    
+  mounted() {
+    document.getElementById('template1').classList.add('fadeIn')
+  },
+  beforeUnmount(){
+    document.getElementById('template1').classList.remove('fadeIn')
+    document.getElementById('template1').classList.add('fadeOut')
   },
   methods: {
     selectSex(sex){

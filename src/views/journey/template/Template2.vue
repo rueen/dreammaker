@@ -2,11 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 14:59:47
+ * @LastEditTime: 2024-06-16 15:11:53
  * @Description: 
 -->
 <template>
-  <div class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
+  <div id="template2" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="wrap">
       <div id="title"></div>
       <div id="content"></div>
@@ -29,6 +29,7 @@ export default {
     }
   },
   mounted() {
+    document.getElementById('template2').classList.add('fadeIn')
     new Typed('#title', {
       strings: [
         `${this.data.title}`
