@@ -2,10 +2,10 @@
  * @Author: diaochan
  * @Date: 2024-06-17 09:51:13
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-17 09:55:56
+ * @LastEditTime: 2024-06-17 09:59:27
  * @Description: 
  */
-import ghpages from 'gh-pages';
+var ghpages = require('gh-pages');
 
 ghpages.publish('dist', {
   repo: 'https://github.com/rueen/dreammaker.git',
