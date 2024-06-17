@@ -7,6 +7,7 @@ git config --global user.name "rueen"
 set -e
 
 # 构建
+npm install
 npm run build
 
 # 进入构建文件夹
