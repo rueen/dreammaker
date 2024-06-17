@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 16:38:29
+ * @LastEditTime: 2024-06-16 16:53:38
  * @Description: 
 -->
 <template>
@@ -31,7 +31,7 @@
     </div>
     <div class="right">
       <FaceTracking ref="refFaceTracking" @getPhoto="getPhoto($event)" />
-      <div class="btnBox" :style="{'width': `${cameraWidth}px`}"><!--v-if="photo"-->
+      <div class="btnBox" :style="{'width': `${cameraWidth}px`}" v-if="photo">
         <CustomButton theme="white" @click="reTrack()" style="width: 10rem;">
           <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
           <span>重新拍</span>
