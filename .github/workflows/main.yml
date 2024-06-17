@@ -1,24 +1,15 @@
-name: Push
-
+name: Push Update
+ 
 on:
   push:
     branches:
-      - main
+      - main  # 更改为你的默认分支
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build:  # 工作流程中的一个作业
+    runs-on: ubuntu-latest  # 运行环境
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16' # 根据你的deploy.js文件的依赖设置Node.js版本
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Run deploy script
-      run: node ./deploy.js
+    - uses: actions/checkout@v2  # 检出代码
+    - name: Run script
+      run: bash ./deploy.sh ${{ secrets.HOST }} ${{ secrets.USERNAME }} ${{ secrets.PASSWORD }}  # 运行你的 .sh 脚本
