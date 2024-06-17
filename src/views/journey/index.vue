@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 16:48:33
+ * @LastEditTime: 2024-06-17 11:42:36
  * @Description: 
 -->
 <template>
@@ -20,7 +20,7 @@ import Template1 from './template/Template1.vue';
 import Template2 from './template/Template2.vue';
 import Template3 from './template/Template3.vue';
 import Template4 from './template/Template4.vue';
-import DATA from '@/assets/DATA'
+import DATA from './DATA'
 
 export default {
   name: 'JourneyView',
@@ -58,4 +58,4 @@ export default {
     }
   }
 }
-</script>
+</script>@/views/journey/template/DATA
