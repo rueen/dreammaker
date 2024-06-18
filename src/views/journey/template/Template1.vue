@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 16:53:38
+ * @LastEditTime: 2024-06-18 20:57:00
  * @Description: 
 -->
 <template>
@@ -62,6 +62,9 @@ export default {
   },
   mounted() {
     document.getElementById('template1').classList.add('fadeIn')
+    this.$emit('getAudio', {
+      src: this.data.audio
+    })
   },
   beforeUnmount(){
     document.getElementById('template1').classList.remove('fadeIn')

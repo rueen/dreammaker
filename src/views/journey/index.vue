@@ -2,16 +2,33 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-18 20:29:19
+ * @LastEditTime: 2024-06-18 21:00:09
  * @Description: 
 -->
 <template>
   <div class="about">
-    <CustomAudio :src="info.launchAudio" />
-    <Template1 v-if="activeItem.template === 'template1'" :data="activeItem" @onEnd="onEnd()" />
-    <Template2 v-if="activeItem.template === 'template2'" :data="activeItem" @onEnd="onEnd()" />
-    <Template3 v-if="activeItem.template === 'template3'" :data="activeItem" @onEnd="onEnd()" />
-    <Template4 v-if="activeItem.template === 'template4'" :data="activeItem" @reStart="reStart()" />
+    <CustomAudio ref="CustomAudioRef" />
+    <Template1
+      v-if="activeItem.template === 'template1'"
+      :data="activeItem"
+      @onEnd="onEnd"
+      @getAudio="getAudio"
+    />
+    <Template2
+      v-if="activeItem.template === 'template2'"
+      :data="activeItem"
+      @onEnd="onEnd"
+    />
+    <Template3
+      v-if="activeItem.template === 'template3'"
+      :data="activeItem"
+      @onEnd="onEnd"
+    />
+    <Template4
+      v-if="activeItem.template === 'template4'"
+      :data="activeItem"
+      @reStart="reStart"
+    />
   </div>
 </template>
 
@@ -47,6 +64,9 @@ export default {
 
     console.log(id, DATA)
     this.info = DATA;
+    if(this.info.launchAudio){
+      this.getAudio(this.info.launchAudio);
+    }
     this.list = DATA.list || [];
     this.activeItem = this.list[0];
   },
@@ -60,6 +80,11 @@ export default {
     },
     reStart(){
       this.activeItem = this.list[0];
+    },
+    getAudio({src}){
+      if(src){
+        this.$refs.CustomAudioRef.init(src)
+      }
     }
   }
 }

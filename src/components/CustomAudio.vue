@@ -2,12 +2,12 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-18 20:43:48
+ * @LastEditTime: 2024-06-18 21:01:14
  * @Description: 人脸捕捉
 -->
 <template>
   <audio ref="audioElement" autoplay>
-    <source src="../assets/test/music.mp3" type="audio/mp3">
+    <source :src="src">
   </audio>
   <div class="controls">
     <div class="bar-container" @click="handlePause" v-if="isPlay">
@@ -27,16 +27,21 @@
 export default {
   name: 'CustomAudio',
   components: {},
-  props: ['src'],
+  props: [],
   data() {
     return {
-      isPlay: true
+      isPlay: true,
+      src: null
     };
   },
   mounted() {
     this.audio = this.$refs.audioElement;
   },
   methods: {
+    init(src){
+      this.src = src;
+      this.handlePlay();
+    },
     handlePause(){
       this.audio.pause();
       this.isPlay = false;
