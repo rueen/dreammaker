@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-18 15:23:56
+ * @LastEditTime: 2024-06-18 20:14:08
  * @Description: 人脸捕捉
 -->
 <template>
@@ -179,7 +179,7 @@ export default {
 .faceCamera{
   border-radius: 50%;
   position: relative;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 .imgUrl{
   width: 100%;

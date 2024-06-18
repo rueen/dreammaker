@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:53:58
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 15:47:13
+ * @LastEditTime: 2024-06-18 20:27:29
  * @Description: 
  */
 // https://us-stock5.xpccdn.com/9db72648-b9e1-47cd-86bd-b92ff4ff3780.mp4
@@ -11,7 +11,7 @@ const DATA = {
   name: '场景名称',
   desc: '场景描述',
   launchVideo: 'https://us-stock5.xpccdn.com/9db72648-b9e1-47cd-86bd-b92ff4ff3780.mp4', // 启动视频url
-  launchAudio: '', // 启动音频url
+  launchAudio: '../assets/test/music.mp3', // 启动音频url
   status: 1, // 状态 0:关闭 1:开启
   list:[{
     id: 1,
