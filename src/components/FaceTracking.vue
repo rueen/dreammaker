@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 14:47:14
+ * @LastEditTime: 2024-06-18 15:23:56
  * @Description: 人脸捕捉
 -->
 <template>
@@ -15,7 +15,7 @@
     <div class="countdown" v-if="countdown > 0">
       {{ countdown }}
     </div>
-    <img :src="imgUrl" alt="" class="imgUrl" v-if="imgUrl">
+    <!-- <img :src="imgUrl" alt="" class="imgUrl" v-if="imgUrl"> -->
   </div>
 </template>
 
@@ -31,6 +31,8 @@ export default {
   data() {
     return {
       width: parseInt(window.innerWidth/100*25),
+      videoWidth: parseInt(window.innerWidth/100*25),
+      videoHeight: parseInt(window.innerWidth/100*25),
       countdown: 0,
       countdownTimer: null,
       tipsContent: null,
@@ -61,7 +63,7 @@ export default {
     },
     takePhoto() {
       if(this.$refs.refVideo){
-        this.context.drawImage(this.$refs.refVideo, 0, 0, this.width, this.width);
+        this.context.drawImage(this.$refs.refVideo, Math.abs((this.videoWidth - this.videoHeight)/2), 0, this.videoHeight, this.videoHeight, 0, 0, this.width, this.width);
         this.imgUrl = this.saveAsPNG(this.$refs.refCanvas);
         clearInterval(this.countdownTimer);
         this.pauseVideo();
@@ -89,6 +91,19 @@ export default {
       this.video = document.getElementById('video');
       navigator.mediaDevices.getUserMedia({ video: {} }).then(stream => {
         this.video.srcObject = stream;
+        let i = 0;
+        const timer = setInterval(() => {
+          if(this.video.videoWidth){
+            clearInterval(timer);
+            this.videoWidth = this.video.videoWidth;
+            this.videoHeight = this.video.videoHeight;
+          } else if(i > 50){
+            clearInterval(timer);
+            console.log('video加载失败')
+          } else {
+            i += 1;
+          }
+        }, 100)
       });
       this.canvas = document.getElementById('canvas');
       this.context = this.canvas.getContext('2d');
@@ -164,7 +179,7 @@ export default {
 .faceCamera{
   border-radius: 50%;
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .imgUrl{
   width: 100%;
@@ -176,14 +191,16 @@ export default {
 }
 #video{
   position: absolute;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   top: 0;
   z-index: 1;
   object-fit: cover;
 }
 #canvas{
   position: absolute;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   top: 0;
   z-index: 2;
 }
