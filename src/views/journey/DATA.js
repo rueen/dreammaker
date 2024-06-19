@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:53:58
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-18 20:46:58
+ * @LastEditTime: 2024-06-19 17:36:02
  * @Description: 
  */
 // https://us-stock5.xpccdn.com/9db72648-b9e1-47cd-86bd-b92ff4ff3780.mp4
@@ -10,7 +10,7 @@
 const DATA = {
   name: '场景名称',
   desc: '场景描述',
-  launchVideo: 'https://us-stock5.xpccdn.com/9db72648-b9e1-47cd-86bd-b92ff4ff3780.mp4', // 启动视频url
+  launchVideo: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/task/20240419/1b42ebf0b820495f812b5ef9d1e35f51.mp4', // 启动视频url
   launchAudio: 'https://pic.ibaotu.com/mp3Watermark_v3/17/88/84/31b5fd17a01953e7506ad3b570032415.mp3', // 启动音频url
   status: 1, // 状态 0:关闭 1:开启
   list:[{
@@ -28,7 +28,7 @@ const DATA = {
     title: '我们的十年',
     content: '在70年代的十堰，你作为造车厂工人的身影烙印在了城市崛起的历程中。从组织劳动竞赛提升生产效率，担任车间主任后专注技能培训，你以实际行动点燃了工人们的热情，铸就了团队的坚实力量。预测着未来，你将引领十堰汽车工业迈向辉煌。你的名字将成为这座城市繁荣美丽的注脚。',
     audio: '',
-    video: '',
+    video: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/task/20240429/ddc5fcdc55474c89b2a005cbdbe543a8.mp4',
     bgUrl: 'https://seatent.com/img/fxpage/cloud-bg.jpg', // 背景图片
     nextId: 3
   }, {
