@@ -2,10 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 16:54:03
+ * @LastEditTime: 2024-06-23 09:36:51
  * @Description: 
 -->
 <template>
+  <CustomVideo ref="CustomVideoRef" />
   <div id="template2" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="wrap">
       <div id="title"></div>
@@ -18,12 +19,14 @@
 <script>
 import Typed from 'typed.js';
 import CustomButton from '@/components/CustomButton.vue'
+import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'Template2View',
   props: ['data'],
   components: {
-    CustomButton
+    CustomButton,
+    CustomVideo
   },
   data(){
     return {
@@ -31,7 +34,10 @@ export default {
     }
   },
   mounted() {
-    document.getElementById('template2').classList.add('fadeIn')
+    document.getElementById('template2').classList.add('fadeIn');
+    if(this.data && this.data.video){
+      this.$refs.CustomVideoRef.init(this.data.video)
+    }
     new Typed('#title', {
       strings: [
         `${this.data.title}`

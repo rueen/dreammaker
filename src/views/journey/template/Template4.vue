@@ -2,10 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 16:47:53
+ * @LastEditTime: 2024-06-23 09:37:05
  * @Description: 
 -->
 <template>
+  <CustomVideo ref="CustomVideoRef" />
   <div id="template4" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <CustomButton theme="blue" @click="reStart">
       <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
@@ -16,12 +17,14 @@
 
 <script>
 import CustomButton from '@/components/CustomButton.vue'
+import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'Template4View',
   props: ['data'],
   components: {
-    CustomButton
+    CustomButton,
+    CustomVideo
   },
   data(){
     return {
@@ -30,8 +33,10 @@ export default {
     }
   },
   mounted() {
-    document.getElementById('template4').classList.add('fadeIn')
-    
+    document.getElementById('template4').classList.add('fadeIn');
+    if(this.data && this.data.video){
+      this.$refs.CustomVideoRef.init(this.data.video)
+    }
   },
   methods: {
     reStart(){

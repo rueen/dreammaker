@@ -2,10 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-16 16:38:21
+ * @LastEditTime: 2024-06-23 09:36:57
  * @Description: 
 -->
 <template>
+  <CustomVideo ref="CustomVideoRef" />
   <div id="template3" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="options">
       <div
@@ -30,12 +31,14 @@
 
 <script>
 import CustomButton from '@/components/CustomButton.vue'
+import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'Template3View',
   props: ['data'],
   components: {
-    CustomButton
+    CustomButton,
+    CustomVideo
   },
   data(){
     return {
@@ -44,7 +47,10 @@ export default {
     }
   },
   mounted() {
-    document.getElementById('template3').classList.add('fadeIn')
+    document.getElementById('template3').classList.add('fadeIn');
+    if(this.data && this.data.video){
+      this.$refs.CustomVideoRef.init(this.data.video)
+    }
     this.optionItemWidth = parseInt((window.innerWidth*0.6)/this.data.options.length);
     this.data.options.forEach((option, index) => {
       const elm = document.getElementById(`option_${option.id}`);

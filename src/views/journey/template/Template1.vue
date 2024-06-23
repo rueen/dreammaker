@@ -2,10 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-18 20:57:00
+ * @LastEditTime: 2024-06-23 09:36:41
  * @Description: 
 -->
 <template>
+  <CustomVideo ref="CustomVideoRef" />
   <div id="template1" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="left">
       <div class="sexList">
@@ -45,13 +46,15 @@
 <script>
 import FaceTracking from '@/components/FaceTracking';
 import CustomButton from '@/components/CustomButton.vue'
+import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'Template1View',
   props: ['data'],
   components: {
     FaceTracking,
-    CustomButton
+    CustomButton,
+    CustomVideo
   },
   data(){
     return {
@@ -65,6 +68,9 @@ export default {
     this.$emit('getAudio', {
       src: this.data.audio
     })
+    if(this.data && this.data.video){
+      this.$refs.CustomVideoRef.init(this.data.video)
+    }
   },
   beforeUnmount(){
     document.getElementById('template1').classList.remove('fadeIn')
@@ -105,7 +111,7 @@ export default {
 .left{
   width: 45%;
   padding-top: 15rem;
-  padding-left: 6rem;
+  padding-left: 7rem;
 }
 .sexList{
   display: flex;

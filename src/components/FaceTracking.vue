@@ -2,15 +2,15 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-18 20:14:08
+ * @LastEditTime: 2024-06-23 09:29:34
  * @Description: 人脸捕捉
 -->
 <template>
   <div class="faceCamera" :style="{'width': `${width}px`, 'height': `${width}px`}">
-    <video ref="refVideo" id="video" :width="width" :height="width" autoplay></video>
+    <video ref="refVideo" id="video" :width="width" :height="width" autoplay muted></video>
     <canvas ref="refCanvas" id="canvas" :width="width" :height="width"></canvas>
     <div class="mask">
-      <div class="tips" v-if="tipsContent">{{tipsContent}}</div>
+      <div class="tips" v-if="tipsContent && !imgUrl">{{tipsContent}}</div>
     </div>
     <div class="countdown" v-if="countdown > 0">
       {{ countdown }}

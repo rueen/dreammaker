@@ -2,11 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-19 17:37:00
- * @Description: 人脸捕捉
+ * @LastEditTime: 2024-06-22 10:26:04
+ * @Description: 音频
 -->
 <template>
-  <audio ref="audioElement" autoplay>
+  <audio ref="audioElement" loop>
     <source :src="src">
   </audio>
   <div class="controls">
@@ -39,7 +39,9 @@ export default {
   },
   methods: {
     init(src){
-      this.src = src;
+      // this.src = src;
+      // this.handlePlay();
+      this.audio.src = src;
       this.handlePlay();
     },
     handlePause(){
