@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 09:37:05
+ * @LastEditTime: 2024-06-23 10:26:30
  * @Description: 
 -->
 <template>
@@ -22,6 +22,7 @@ import CustomVideo from '@/components/CustomVideo.vue';
 export default {
   name: 'Template4View',
   props: ['data'],
+  emits: ['reStart', 'getAudio'],
   components: {
     CustomButton,
     CustomVideo
@@ -34,6 +35,9 @@ export default {
   },
   mounted() {
     document.getElementById('template4').classList.add('fadeIn');
+    this.$emit('getAudio', {
+      src: this.data.audio
+    })
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }

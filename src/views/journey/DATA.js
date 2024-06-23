@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:53:58
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 10:07:36
+ * @LastEditTime: 2024-06-23 10:16:16
  * @Description: 
  */
 // https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/task/20240429/ddc5fcdc55474c89b2a005cbdbe543a8.mp4
@@ -11,7 +11,7 @@ const DATA = {
   name: '场景名称',
   desc: '场景描述',
   launchVideo: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/task/20240419/1b42ebf0b820495f812b5ef9d1e35f51.mp4', // 启动视频url
-  launchAudio: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/task/20240429/ddc5fcdc55474c89b2a005cbdbe543a8.mp4', // 启动音频url
+  launchAudio: 'https://statics.seatent.com/statics/video/20220520/224c0003225845e8be83042a07818353.mp4', // 启动音频url
   status: 1, // 状态 0:关闭 1:开启
   list:[{
     id: 1,
@@ -19,7 +19,7 @@ const DATA = {
     title: '标题',
     maleText: '我是一位超级大帅哥',
     femaleText: '我是一位美女',
-    audio: 'https://statics.seatent.com/statics/video/20220520/224c0003225845e8be83042a07818353.mp4',
+    audio: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/task/20240429/ddc5fcdc55474c89b2a005cbdbe543a8.mp4',
     bgUrl: 'https://gw.alicdn.com/imgextra/i2/O1CN01R8zDb51craBhnk9pQ_!!6000000003654-0-tps-7680-2400.jpg', // 背景图片
     nextId: 2
   }, {

@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-22 10:26:04
+ * @LastEditTime: 2024-06-23 10:16:08
  * @Description: 音频
 -->
 <template>
@@ -39,10 +39,10 @@ export default {
   },
   methods: {
     init(src){
-      // this.src = src;
-      // this.handlePlay();
       this.audio.src = src;
-      this.handlePlay();
+      if(this.isPlay){
+        this.audio.play();
+      }
     },
     handlePause(){
       this.audio.pause();

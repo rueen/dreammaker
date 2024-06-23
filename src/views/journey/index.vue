@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 10:09:39
+ * @LastEditTime: 2024-06-23 10:25:58
  * @Description: 
 -->
 <template>
@@ -21,16 +21,19 @@
         v-if="activeItem.template === 'template2'"
         :data="activeItem"
         @onEnd="onEnd"
+        @getAudio="getAudio"
       />
       <Template3
         v-if="activeItem.template === 'template3'"
         :data="activeItem"
         @onEnd="onEnd"
+        @getAudio="getAudio"
       />
       <Template4
         v-if="activeItem.template === 'template4'"
         :data="activeItem"
         @reStart="reStart"
+        @getAudio="getAudio"
       />
     </div>
   </div>
@@ -106,6 +109,7 @@ export default {
       this.activeItem = this.list[0];
     },
     getAudio({src}){
+      console.log(src, '-src')
       if(!!src && this.$refs.CustomAudioRef){
         this.$refs.CustomAudioRef.init(src)
       } else if(!src && this.info.launchAudio){

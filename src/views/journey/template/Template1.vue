@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 09:36:41
+ * @LastEditTime: 2024-06-23 10:25:57
  * @Description: 
 -->
 <template>
@@ -51,6 +51,7 @@ import CustomVideo from '@/components/CustomVideo.vue';
 export default {
   name: 'Template1View',
   props: ['data'],
+  emits: ['onEnd', 'getAudio'],
   components: {
     FaceTracking,
     CustomButton,
