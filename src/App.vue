@@ -9,12 +9,6 @@
   margin: 0;
   box-sizing: border-box;
 }
-.fadeIn{
-  animation: fadeIn .3s linear forwards;
-}
-.fadeOut{
-  animation: fadeOut .3s linear forwards;
-}
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -22,6 +16,9 @@
   100% {
     opacity: 1;
   }
+}
+.fadeIn{
+  animation: fadeIn .3s linear forwards;
 }
 @keyframes fadeOut {
   0% {
@@ -31,8 +28,8 @@
     opacity: 0;
   }
 }
-.scaleUp{
-  animation: scaleUp .1s linear forwards;
+.fadeOut{
+  animation: fadeOut .3s linear forwards;
 }
 @keyframes scaleUp {
   0% {
@@ -43,8 +40,8 @@
     z-index: 10;
   }
 }
-.fadeInDownBig {
-  animation: fadeInDownBig 1s linear forwards;
+.scaleUp{
+  animation: scaleUp .1s linear forwards;
 }
 @-webkit-keyframes fadeInDownBig {
   from {
@@ -72,5 +69,65 @@
     transform: translate3d(0, 0, 0);
   }
 }
+.fadeInDownBig {
+  animation: fadeInDownBig 1s linear forwards;
+}
+@-webkit-keyframes fadeInDown {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
 
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+.fadeInDown {
+  animation: fadeInDown .5s linear forwards;
+}
+@-webkit-keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+.fadeInLeft{
+  animation: fadeInLeft 1s linear forwards;
+}
 </style>

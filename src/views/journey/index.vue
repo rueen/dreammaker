@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 10:25:58
+ * @LastEditTime: 2024-06-23 11:22:24
  * @Description: 
 -->
 <template>
@@ -74,7 +74,7 @@ export default {
     const route = routes.currentRoute.value;
     const { id } = route.params;
 
-    console.log(id, DATA)
+    console.log(id, DATA);
     this.info = DATA;
   },
   methods: {
@@ -109,7 +109,6 @@ export default {
       this.activeItem = this.list[0];
     },
     getAudio({src}){
-      console.log(src, '-src')
       if(!!src && this.$refs.CustomAudioRef){
         this.$refs.CustomAudioRef.init(src)
       } else if(!src && this.info.launchAudio){
