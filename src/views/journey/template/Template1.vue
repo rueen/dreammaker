@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 10:25:57
+ * @LastEditTime: 2024-07-07 16:14:02
  * @Description: 
 -->
 <template>
@@ -93,7 +93,9 @@ export default {
       this.cameraWidth = cameraWidth;
     },
     nextStep(){
-      this.$emit('onEnd');
+      this.$emit('onEnd', {
+        nextId: this.data.nextId
+      });
     }
   }
 }

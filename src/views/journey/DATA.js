@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:53:58
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 11:27:11
+ * @LastEditTime: 2024-07-07 16:08:09
  * @Description: 
  */
 // https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/task/20240429/ddc5fcdc55474c89b2a005cbdbe543a8.mp4
@@ -39,27 +39,31 @@ const DATA = {
     audio: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/task/20240407/008304d5b399489a986c8824f5cf0cd1.mp4',
     optionNum: 3, // 选项数量
     optionType: 1, // 选项功能 1：文字图片 2: 预生成内容
-    nextId: 4,
     options: [{
       id: 1,
       name: '成为工人',
       image: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20230914/5d6b2b02fbd74efc97a85c580e9f2749_small.jpg',
+      nextId: 4,
     },{
       id: 2,
       name: '成为医生',
       image: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20230914/c0e1cd7b3b3f44508203ab47365183f7_small.jpg',
+      nextId: 4,
     },{
       id: 3,
       name: '成为汽车手',
       image: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20220920/436880545f48423587c7a042a8986eeb_small.jpg',
+      nextId: 4,
     },{
       id: 4,
       name: '成为汽车手',
       image: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20220920/436880545f48423587c7a042a8986eeb_small.jpg',
+      nextId: 4,
     },{
       id: 5,
       name: '成为汽车手',
       image: 'https://statics.seatent.com/statics/99cea281725792cfefc2737e7f5ecb3d/attachment/upload/image/20220920/436880545f48423587c7a042a8986eeb_small.jpg',
+      nextId: 4,
     }]
   }, {
     id: 4,

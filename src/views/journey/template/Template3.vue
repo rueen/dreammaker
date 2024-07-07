@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 10:26:20
+ * @LastEditTime: 2024-07-07 16:13:34
  * @Description: 
 -->
 <template>
@@ -82,7 +82,9 @@ export default {
       }
     },
     nextStep(){
-      this.$emit('onEnd');
+      this.$emit('onEnd', {
+        nextId: this.selectedOption.nextId
+      });
     }
   }
 }

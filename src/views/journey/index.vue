@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 11:22:24
+ * @LastEditTime: 2024-07-07 16:13:45
  * @Description: 
 -->
 <template>
@@ -98,11 +98,11 @@ export default {
       this.list = DATA.list || [];
       this.activeItem = this.list[0];
     },
-    onEnd(){
-      if(!this.activeItem.nextId){
+    onEnd({nextId}){
+      if(!nextId){
         return;
       }
-      const nexItem = this.list.find(item => item.id === this.activeItem.nextId);
+      const nexItem = this.list.find(item => item.id === nextId);
       this.activeItem = nexItem;
     },
     reStart(){

@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 11:24:07
+ * @LastEditTime: 2024-06-23 11:32:49
  * @Description: 
 -->
 <template>
@@ -99,6 +99,7 @@ export default {
 }
 .photo{
   width: 20rem;
+  height: 27rem;
   background-color: #E6E6E6;
   box-shadow: .3rem .1rem .8rem 0 rgba(0, 0, 0, .25);
   transform: rotate(5deg);
