@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-10 22:18:29
+ * @LastEditTime: 2024-07-10 22:34:20
  * @Description: 
 -->
 <template>
@@ -12,25 +12,25 @@
     <LaunchVideo ref="LaunchVideoFef" v-if="setp === 2" @launchVideoOnEnd="launchVideoOnEnd" />
     <div v-if="setp === 3">
       <Template1
-        v-if="activeItem.template === 'template1'"
+        v-if="activeItem.template === '1'"
         :data="activeItem"
         @onEnd="onEnd"
         @getAudio="getAudio"
       />
       <Template2
-        v-if="activeItem.template === 'template2'"
+        v-if="activeItem.template === '2'"
         :data="activeItem"
         @onEnd="onEnd"
         @getAudio="getAudio"
       />
       <Template3
-        v-if="activeItem.template === 'template3'"
+        v-if="activeItem.template === '3'"
         :data="activeItem"
         @onEnd="onEnd"
         @getAudio="getAudio"
       />
       <Template4
-        v-if="activeItem.template === 'template4'"
+        v-if="activeItem.template === '4'"
         :data="activeItem"
         @reStart="reStart"
         @getAudio="getAudio"
@@ -49,7 +49,6 @@ import Template3 from './template/Template3.vue';
 import Template4 from './template/Template4.vue';
 import CustomAudio from '@/components/CustomAudio';
 import {get} from '@/server/request';
-import DATA from './DATA'
 
 export default {
   name: 'JourneyView',
@@ -67,7 +66,6 @@ export default {
       id: null,
       setp: 1, // 1:启动引导 2:启动视频 3:场景播放
       info: {},
-      list: [],
       activeItem: {}
     }
   },
@@ -86,9 +84,7 @@ export default {
           id: this.id
         }
       })
-      
-      console.log(res1, res);
-      // this.info = DATA;
+      this.info = res.Data || {};
     },
     onLaunch(){
       this.setp = 2;
@@ -107,18 +103,15 @@ export default {
     },
     launchVideoOnEnd(){
       this.setp = 3;
-      this.list = DATA.list || [];
-      this.activeItem = this.list[0];
+      this.activeItem = this.info.list[0];
+      console.log(this.activeItem.template, '---')
     },
-    onEnd({nextId}){
-      if(!nextId){
-        return;
-      }
-      const nexItem = this.list.find(item => item.id === nextId);
+    onEnd(){
+      const nexItem = this.activeItem.children[0];
       this.activeItem = nexItem;
     },
     reStart(){
-      this.activeItem = this.list[0];
+      this.activeItem = this.info.list[0];
     },
     getAudio({src}){
       if(!!src && this.$refs.CustomAudioRef){
