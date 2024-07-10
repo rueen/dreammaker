@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-07 16:13:34
+ * @LastEditTime: 2024-07-10 22:44:50
  * @Description: 
 -->
 <template>
@@ -12,12 +12,14 @@
       <div
         class="optionItem hide"
         v-for="(option, index) in data.options"
-        :id="`option_${option.id}`"
+        :id="`option_${index}`"
         :key="index"
         :style="{'width': `${optionItemWidth}px`, 'height': `${optionItemWidth*1.4}px`}"
-        @click="handleSelect(option)"
+        @click="handleSelect(option, index)"
       >
-        <img class="image" :src="option.image" alt="">
+        <div
+          class="imageView"
+          :style="{'background-image': `url(${option.image})`, 'height': `${optionItemWidth*1.1}px`}"></div>
         <div class="name">{{ option.name }}</div>
       </div>
     </div>
@@ -57,7 +59,7 @@ export default {
     }
     this.optionItemWidth = parseInt((window.innerWidth*0.6)/this.data.options.length);
     this.data.options.forEach((option, index) => {
-      const elm = document.getElementById(`option_${option.id}`);
+      const elm = document.getElementById(`option_${index}`);
       if(elm){
         setTimeout(() => {
           elm.classList.remove('hide');
@@ -67,12 +69,12 @@ export default {
     })
   },
   methods: {
-    handleSelect(option){
+    handleSelect(option, index){
       this.selectedOption = {...option};
-      const elm = document.getElementById(`option_${option.id}`);
+      const elm = document.getElementById(`option_${index}`);
       if(elm){
-        this.data.options.forEach((option) => {
-          const _elm = document.getElementById(`option_${option.id}`);
+        this.data.options.forEach((option, index) => {
+          const _elm = document.getElementById(`option_${index}`);
           if(_elm){
             _elm.classList.remove('scaleUp');
             _elm.classList.remove('fadeInDownBig');
@@ -112,12 +114,15 @@ export default {
   box-shadow: 0 6px 6px 0 rgba(0,0,0,.2);
   box-sizing: border-box;
   cursor: pointer;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 .hide{
   opacity: 0;
 }
-.optionItem .image{
+.optionItem .imageView{
   width: 100%;
+  background-size: cover;
 }
 .optionItem .name{
   color: #535F6E;
