@@ -1,11 +1,14 @@
 /*
  * @Author: diaochan
  * @Date: 2024-06-11 16:28:57
- * @LastEditors: rueen
- * @LastEditTime: 2024-06-11 16:39:14
+ * @LastEditors: diaochan
+ * @LastEditTime: 2024-07-10 22:02:11
  * @Description: 
  */
 import axios from 'axios';
+
+// axios.defaults.baseURL = 'https://unidt.ontheway168.cn';
+// axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const get = async ({
   url,
@@ -23,4 +26,22 @@ const get = async ({
   return res.data;
 }
 
-export {get}
+const post = async ({
+  url,
+  params = {}
+}) => {
+  const res = await axios({
+    method: 'post',
+    url,
+    withCredentials: true,
+    data: {
+      ...params
+    }
+  });
+  if(res.status !== 200){
+    alert(res.message || '出错啦！')
+  }
+  return res.data;
+}
+
+export {get, post}

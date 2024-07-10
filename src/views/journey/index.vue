@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-07 16:13:45
+ * @LastEditTime: 2024-07-10 22:18:29
  * @Description: 
 -->
 <template>
@@ -48,6 +48,7 @@ import Template2 from './template/Template2.vue';
 import Template3 from './template/Template3.vue';
 import Template4 from './template/Template4.vue';
 import CustomAudio from '@/components/CustomAudio';
+import {get} from '@/server/request';
 import DATA from './DATA'
 
 export default {
@@ -63,6 +64,7 @@ export default {
   },
   data(){
     return {
+      id: null,
       setp: 1, // 1:启动引导 2:启动视频 3:场景播放
       info: {},
       list: [],
@@ -73,11 +75,21 @@ export default {
     const routes = useRouter();
     const route = routes.currentRoute.value;
     const { id } = route.params;
-
-    console.log(id, DATA);
-    this.info = DATA;
+    this.id = id;
+    this.getData();
   },
   methods: {
+    async getData() {
+      const res = await get({
+        url: '/site/api/scene',
+        params: {
+          id: this.id
+        }
+      })
+      
+      console.log(res1, res);
+      // this.info = DATA;
+    },
     onLaunch(){
       this.setp = 2;
       if(this.info.launchAudio){
