@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-11 12:19:21
+ * @LastEditTime: 2024-07-11 19:21:27
  * @Description: 
 -->
 <template>
@@ -105,8 +105,11 @@ export default {
       this.setp = 3;
       this.activeItem = this.info.list[0];
     },
-    onEnd(){
-      const nexItem = this.activeItem.children[0];
+    onEnd({nexItem}){
+      // const nexItem = this.activeItem.children[0];
+      if(!nexItem){
+        return false;
+      }
       this.activeItem = nexItem;
     },
     reStart(){

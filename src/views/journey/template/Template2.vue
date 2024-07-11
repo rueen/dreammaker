@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-07 16:14:18
+ * @LastEditTime: 2024-07-11 19:22:06
  * @Description: 
 -->
 <template>
@@ -67,7 +67,7 @@ export default {
   methods: {
     nextStep(){
       this.$emit('onEnd', {
-        nextId: this.data.nextId
+        nexItem: this.data.children[0]
       });
     }
   }

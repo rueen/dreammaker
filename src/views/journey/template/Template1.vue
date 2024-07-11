@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-11 12:28:08
+ * @LastEditTime: 2024-07-11 19:22:01
  * @Description: 
 -->
 <template>
@@ -102,7 +102,9 @@ export default {
         }
       })
       if(res.ReturnCode === '200'){
-        this.$emit('onEnd');
+        this.$emit('onEnd', {
+          nexItem: this.data.children[0]
+        });
       } else {
         toast.error('上传失败，请重新点击')
       }

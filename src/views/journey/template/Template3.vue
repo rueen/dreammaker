@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-10 22:50:16
+ * @LastEditTime: 2024-07-11 19:23:49
  * @Description: 
 -->
 <template>
@@ -84,8 +84,10 @@ export default {
       }
     },
     nextStep(){
+      const optionId = this.selectedOption.id;
+      const nexItem = this.data.children.find(item => item.optionsId === optionId);
       this.$emit('onEnd', {
-        nextId: this.selectedOption.nextId
+        nexItem
       });
     }
   }
