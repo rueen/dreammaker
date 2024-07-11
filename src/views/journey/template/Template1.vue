@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-07 16:14:02
+ * @LastEditTime: 2024-07-11 12:28:08
  * @Description: 
 -->
 <template>
@@ -47,6 +47,8 @@
 import FaceTracking from '@/components/FaceTracking';
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
+import {post} from '@/server/request';
+import { toast } from 'vue3-toastify';
 
 export default {
   name: 'Template1View',
@@ -92,10 +94,18 @@ export default {
       this.photo = photo;
       this.cameraWidth = cameraWidth;
     },
-    nextStep(){
-      this.$emit('onEnd', {
-        nextId: this.data.nextId
-      });
+    async nextStep(){
+      const res = await post({
+        url: '/site/api/uploadBase64',
+        params: {
+          file: this.photo
+        }
+      })
+      if(res.ReturnCode === '200'){
+        this.$emit('onEnd');
+      } else {
+        toast.error('上传失败，请重新点击')
+      }
     }
   }
 }

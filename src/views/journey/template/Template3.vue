@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-10 22:44:50
+ * @LastEditTime: 2024-07-10 22:50:16
  * @Description: 
 -->
 <template>
@@ -12,10 +12,10 @@
       <div
         class="optionItem hide"
         v-for="(option, index) in data.options"
-        :id="`option_${index}`"
+        :id="`option_${option.id}`"
         :key="index"
         :style="{'width': `${optionItemWidth}px`, 'height': `${optionItemWidth*1.4}px`}"
-        @click="handleSelect(option, index)"
+        @click="handleSelect(option)"
       >
         <div
           class="imageView"
@@ -59,7 +59,7 @@ export default {
     }
     this.optionItemWidth = parseInt((window.innerWidth*0.6)/this.data.options.length);
     this.data.options.forEach((option, index) => {
-      const elm = document.getElementById(`option_${index}`);
+      const elm = document.getElementById(`option_${option.id}`);
       if(elm){
         setTimeout(() => {
           elm.classList.remove('hide');
@@ -69,12 +69,12 @@ export default {
     })
   },
   methods: {
-    handleSelect(option, index){
+    handleSelect(option){
       this.selectedOption = {...option};
-      const elm = document.getElementById(`option_${index}`);
+      const elm = document.getElementById(`option_${option.id}`);
       if(elm){
-        this.data.options.forEach((option, index) => {
-          const _elm = document.getElementById(`option_${index}`);
+        this.data.options.forEach((option) => {
+          const _elm = document.getElementById(`option_${option.id}`);
           if(_elm){
             _elm.classList.remove('scaleUp');
             _elm.classList.remove('fadeInDownBig');

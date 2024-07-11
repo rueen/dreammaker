@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-10 22:34:20
+ * @LastEditTime: 2024-07-11 12:19:21
  * @Description: 
 -->
 <template>
@@ -104,7 +104,6 @@ export default {
     launchVideoOnEnd(){
       this.setp = 3;
       this.activeItem = this.info.list[0];
-      console.log(this.activeItem.template, '---')
     },
     onEnd(){
       const nexItem = this.activeItem.children[0];
