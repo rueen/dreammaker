@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-11 19:22:01
+ * @LastEditTime: 2024-07-13 17:11:03
  * @Description: 
 -->
 <template>
@@ -10,7 +10,10 @@
   <div id="template1" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="left">
       <div class="sexList">
-        <div class="sexItem sexMale" @click="selectSex('male')" :class="activeSex === 'male' ? 'activeSex' : ''">
+        <div class="sexItem sexMale" @click="selectSex({
+          gender: 'male',
+          text: data.maleText
+        })" :class="activeSex.gender === 'male' ? 'activeSex' : ''">
           <div class="sexItemContent">
             <div class="iconBox">
               <span class="iconfont icon-male sexIcon"></span>
@@ -19,7 +22,10 @@
             <div class="sexText">{{data.maleText}}</div>
           </div>
         </div>
-        <div class="sexItem" @click="selectSex('female')" :class="activeSex === 'female' ? 'activeSex' : ''">
+        <div class="sexItem" @click="selectSex({
+          gender: 'female',
+          text: data.femaleText
+        })" :class="activeSex.gender === 'female' ? 'activeSex' : ''">
           <div class="sexItemContent">
             <div class="iconBox">
               <span class="iconfont icon-female sexIcon"></span>
@@ -53,7 +59,7 @@ import { toast } from 'vue3-toastify';
 export default {
   name: 'Template1View',
   props: ['data'],
-  emits: ['onEnd', 'getAudio'],
+  emits: ['onEnd', 'getAudio', 'getUserInfo'],
   components: {
     FaceTracking,
     CustomButton,
@@ -61,7 +67,10 @@ export default {
   },
   data(){
     return {
-      activeSex: 'male',
+      activeSex: {
+        gender: 'male',
+        text: ''
+      },
       photo: null,
       cameraWidth: null
     }
@@ -80,8 +89,8 @@ export default {
     document.getElementById('template1').classList.add('fadeOut')
   },
   methods: {
-    selectSex(sex){
-      this.activeSex = sex;
+    selectSex(item){
+      this.activeSex = item;
     },
     reTrack(){
       if(this.$refs.refFaceTracking){
@@ -104,6 +113,10 @@ export default {
       if(res.ReturnCode === '200'){
         this.$emit('onEnd', {
           nexItem: this.data.children[0]
+        });
+        this.$emit('getUserInfo', {
+          photoPath: res.Data.url,
+          activeGender: this.activeSex
         });
       } else {
         toast.error('上传失败，请重新点击')

@@ -14,6 +14,7 @@
     "tracking": "^1.1.3",
     "typed.js": "^2.1.0",
     "vue": "^3.2.13",
+    "vue-qrcode": "^2.2.2",
     "vue-router": "^4.0.3",
     "vue3-toastify": "^0.2.2"
   },

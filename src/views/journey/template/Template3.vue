@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-11 19:23:49
+ * @LastEditTime: 2024-07-13 17:21:42
  * @Description: 
 -->
 <template>
@@ -38,7 +38,7 @@ import CustomVideo from '@/components/CustomVideo.vue';
 export default {
   name: 'Template3View',
   props: ['data'],
-  emits: ['onEnd', 'getAudio'],
+  emits: ['onEnd', 'getAudio', 'getOption'],
   components: {
     CustomButton,
     CustomVideo
@@ -84,10 +84,14 @@ export default {
       }
     },
     nextStep(){
-      const optionId = this.selectedOption.id;
-      const nexItem = this.data.children.find(item => item.optionsId === optionId);
+      const optionId = this.selectedOption.id - 0;
+      const children = JSON.parse(JSON.stringify(this.data.children));
+      const nexItem = children.find(item => item.optionsId === optionId);
       this.$emit('onEnd', {
         nexItem
+      });
+      this.$emit('getOption', {
+        selectedOption: this.selectedOption
       });
     }
   }

@@ -2,24 +2,26 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 11:32:49
+ * @LastEditTime: 2024-07-13 17:33:40
  * @Description: 
 -->
 <template>
   <CustomVideo ref="CustomVideoRef" />
   <div id="template4" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="left">
-      <div class="photo hide" id="photo">
-        <img class="photoImg" src="http://pre.statics.seatent.com/statics/6b8b4690e7a727e3a330a308fe136a2e/attachment/upload/image/20240125/a817df8a0e754ad99e1963f90fdc7bba.jpg" alt="">
-      </div>
+      <div class="photo hide" id="photo"><img class="photoImg" :src="info.imgage" alt=""></div>
     </div>
     <div class="right">
       <div class="rightContent">
-        <div class="title hide" id="title">#职业名称文本</div>
-        <div class="content hide" id="content">在70年代的十堰，你作为造车厂工人的身影烙印在了城市崛起的历程中。从组织劳动竞赛提升生产效率，担任车间主任后专注技能培训，你以实际行动点燃了工人们的热情，铸就了团队的坚实力量。预测着未来，你将引领十堰汽车...</div>
+        <div class="title hide" id="title">#{{selectedOption.name}}</div>
+        <div class="content hide" id="content">{{info.content}}</div>
         <div class="qrCodeWrap hide" id="qrCodeWrap">
           <div class="qrCode">
-            <!-- <img src="" alt=""> -->
+            <vue-qrcode
+              :value="info.imgage"
+              type="image/png"
+              :color="{ dark: '#000000ff' }"
+            />
           </div>
           <CustomButton theme="blue" @click="reStart">
             <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
@@ -32,31 +34,37 @@
 </template>
 
 <script>
+import VueQrcode from 'vue-qrcode'
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
+import {post} from '@/server/request';
 
 export default {
   name: 'Template4View',
-  props: ['data'],
+  props: ['data', 'userInfo', 'selectedOption'],
   emits: ['reStart', 'getAudio'],
   components: {
     CustomButton,
-    CustomVideo
+    CustomVideo,
+    VueQrcode
   },
   data(){
     return {
-      optionItemWidth: null,
-      selectedOption: null
+      info: {
+        content: '',
+        imgage: ''
+      }
     }
   },
-  mounted() {
+  async mounted() {
+    await this.synthetize();
     document.getElementById('template4').classList.add('fadeIn');
     setTimeout(() => {
       document.getElementById('title').classList.add('fadeInDown');
       document.getElementById('photo').classList.add('fadeInLeft');
       document.getElementById('content').classList.add('fadeIn');
       document.getElementById('qrCodeWrap').classList.add('fadeIn');
-    }, 500)
+    }, 800)
     this.$emit('getAudio', {
       src: this.data.audio
     })
@@ -65,6 +73,18 @@ export default {
     }
   },
   methods: {
+    async synthetize(){
+      const { photoPath, activeGender } = this.userInfo;
+      const res = await post({
+        url: '/site/api/synthetize',
+        params: {
+          id: this.data.id,
+          img: photoPath,
+          gender: activeGender.text
+        }
+      })
+      this.info = res.Data || {};
+    },
     reStart(){
       this.$emit('reStart');
     }
@@ -99,13 +119,13 @@ export default {
 }
 .photo{
   width: 20rem;
-  height: 27rem;
-  background-color: #E6E6E6;
+  /* background-color: #E6E6E6; */
   box-shadow: .3rem .1rem .8rem 0 rgba(0, 0, 0, .25);
   transform: rotate(5deg);
 }
 .photoImg{
   width: 100%;
+  vertical-align: middle;
 }
 .title{
   color: #2F52C1;
@@ -127,6 +147,9 @@ export default {
   width: 8rem;
   height: 8rem;
   background-color: #D9D9D9;
+}
+.qrCode img{
+  width: 100%;
 }
 @keyframes fadeIn {
   0% {

@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-22 11:37:47
+ * @LastEditTime: 2024-07-13 17:11:44
  * @Description: 
 -->
 <template>
@@ -17,6 +17,7 @@ import CustomButton from '@/components/CustomButton.vue'
 export default {
   name: 'LaunchScreen',
   props: [],
+  emits: ['onLaunch'],
   components: {
     CustomButton
   },

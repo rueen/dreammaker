@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 09:35:57
+ * @LastEditTime: 2024-07-13 17:11:59
  * @Description: 
 -->
 <template>
@@ -19,6 +19,7 @@ import CustomVideo from '@/components/CustomVideo.vue';
 export default {
   name: 'LaunchVideo',
   props: [],
+  emits: ['launchVideoOnEnd'],
   components: {
     CustomButton,
     CustomVideo

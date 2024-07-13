@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-11 19:21:27
+ * @LastEditTime: 2024-07-13 17:22:20
  * @Description: 
 -->
 <template>
@@ -16,6 +16,7 @@
         :data="activeItem"
         @onEnd="onEnd"
         @getAudio="getAudio"
+        @getUserInfo="getUserInfo"
       />
       <Template2
         v-if="activeItem.template === '2'"
@@ -28,10 +29,13 @@
         :data="activeItem"
         @onEnd="onEnd"
         @getAudio="getAudio"
+        @getOption="getOption"
       />
       <Template4
         v-if="activeItem.template === '4'"
         :data="activeItem"
+        :userInfo="userInfo"
+        :selectedOption="selectedOption"
         @reStart="reStart"
         @getAudio="getAudio"
       />
@@ -66,7 +70,12 @@ export default {
       id: null,
       setp: 1, // 1:启动引导 2:启动视频 3:场景播放
       info: {},
-      activeItem: {}
+      activeItem: {},
+      userInfo: {
+        photoPath: '',
+        activeGender: {}
+      },
+      selectedOption: {}
     }
   },
   mounted() {
@@ -106,7 +115,6 @@ export default {
       this.activeItem = this.info.list[0];
     },
     onEnd({nexItem}){
-      // const nexItem = this.activeItem.children[0];
       if(!nexItem){
         return false;
       }
@@ -121,6 +129,12 @@ export default {
       } else if(!src && this.info.launchAudio){
         this.$refs.CustomAudioRef.init(this.info.launchAudio)
       }
+    },
+    getUserInfo(userInfo){
+      this.userInfo = userInfo;
+    },
+    getOption({selectedOption}){
+      this.selectedOption = selectedOption;
     }
   }
 }
