@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-13 17:11:03
+ * @LastEditTime: 2024-07-22 10:20:28
  * @Description: 
 -->
 <template>
@@ -103,20 +103,47 @@ export default {
       this.photo = photo;
       this.cameraWidth = cameraWidth;
     },
+    flattenList(nestedArray) {
+      const result = [];
+
+      function flatten(item) {
+        result.push({
+          ...item
+        });
+        if (item.children) {
+          item.children.forEach(flatten);
+        }
+      }
+
+      nestedArray.forEach(flatten);
+      return result;
+    },
     async nextStep(){
       const res = await post({
         url: '/site/api/uploadBase64',
         params: {
-          file: this.photo
+          file: this.photo,
+          id: this.data.id
         }
       })
       if(res.ReturnCode === '200'){
-        this.$emit('onEnd', {
-          nexItem: this.data.children[0]
-        });
+        const scene = res.Data.scene || {};
         this.$emit('getUserInfo', {
           photoPath: res.Data.url,
-          activeGender: this.activeSex
+          activeGender: this.activeSex,
+          scene
+        });
+        let nexItem = this.data.children[0];
+        let _nexItem = {
+          ...nexItem
+        }
+        if(scene.generateRule === 2) {
+          // 1 文字图片选项; 2 预生成内容
+          const sceneList = this.flattenList(scene.list);
+          _nexItem = sceneList.find(item => item.id === nexItem.id);
+        }
+        this.$emit('onEnd', {
+          nexItem: _nexItem
         });
       } else {
         toast.error('上传失败，请重新点击')

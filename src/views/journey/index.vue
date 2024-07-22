@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-13 17:22:20
+ * @LastEditTime: 2024-07-22 10:20:25
  * @Description: 
 -->
 <template>
@@ -130,11 +130,20 @@ export default {
         this.$refs.CustomAudioRef.init(this.info.launchAudio)
       }
     },
-    getUserInfo(userInfo){
-      this.userInfo = userInfo;
+    getUserInfo({photoPath,activeGender,scene}){
+      this.userInfo = {
+        photoPath,
+        activeGender,
+      };
+      if(this.info.generateRule === 2 && scene) {
+        // 1 文字图片选项; 2 预生成内容
+        this.info = scene;
+      }
     },
     getOption({selectedOption}){
-      this.selectedOption = selectedOption;
+      if(!this.selectedOption || !Object.keys(this.selectedOption).length){
+        this.selectedOption = selectedOption;
+      }
     }
   }
 }
