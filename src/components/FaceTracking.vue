@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 09:29:34
+ * @LastEditTime: 2024-07-22 10:27:11
  * @Description: 人脸捕捉
 -->
 <template>
@@ -74,7 +74,7 @@ export default {
       }
     },
     saveAsPNG(c) {
-      return c.toDataURL('image/png', 0.3)
+      return c.toDataURL('image/png', 0.5)
     },
     reTrack(){
       this.countdown = 0;

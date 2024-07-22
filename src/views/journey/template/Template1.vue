@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-22 10:20:28
+ * @LastEditTime: 2024-07-22 10:27:25
  * @Description: 
 -->
 <template>
@@ -141,6 +141,7 @@ export default {
           // 1 文字图片选项; 2 预生成内容
           const sceneList = this.flattenList(scene.list);
           _nexItem = sceneList.find(item => item.id === nexItem.id);
+          console.log(_nexItem, '_nexItem')
         }
         this.$emit('onEnd', {
           nexItem: _nexItem
