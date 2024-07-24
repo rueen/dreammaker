@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-22 10:20:25
+ * @LastEditTime: 2024-07-24 14:02:57
  * @Description: 
 -->
 <template>
@@ -96,19 +96,21 @@ export default {
       this.info = res.Data || {};
     },
     onLaunch(){
-      this.setp = 2;
-      if(this.info.launchAudio){
-        this.getAudio({
-          src: this.info.launchAudio
-        });
-      }
-      setTimeout(() => {
-        if(this.info.launchVideo){
+      if(this.info.launchVideo){
+        this.setp = 2;
+        if(this.info.launchAudio){
+          this.getAudio({
+            src: this.info.launchAudio
+          });
+        }
+        setTimeout(() => {
           this.$refs.LaunchVideoFef.init({
             src: this.info.launchVideo
           });
-        }
-      })
+        })
+      } else {
+        this.launchVideoOnEnd();
+      }
     },
     launchVideoOnEnd(){
       this.setp = 3;
@@ -121,6 +123,7 @@ export default {
       this.activeItem = nexItem;
     },
     reStart(){
+      console.log(this.info, 'this.info')
       this.activeItem = this.info.list[0];
     },
     getAudio({src}){

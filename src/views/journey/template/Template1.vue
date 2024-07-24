@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-22 10:27:25
+ * @LastEditTime: 2024-07-24 14:14:59
  * @Description: 
 -->
 <template>
@@ -43,7 +43,7 @@
           <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
           <span>重新拍</span>
         </CustomButton>
-        <CustomButton theme="blue" style="width: 10rem;" @click="nextStep">下一步</CustomButton>
+        <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="data.children && data.children[0]">下一步</CustomButton>
       </div>
     </div>
   </div>
@@ -129,7 +129,7 @@ export default {
       if(res.ReturnCode === '200'){
         const scene = res.Data.scene || {};
         this.$emit('getUserInfo', {
-          photoPath: res.Data.url,
+          photoPath: res.Data.path,
           activeGender: this.activeSex,
           scene
         });
@@ -158,7 +158,7 @@ export default {
 .container{
   width: 100%;
   height: 100vh;
-  background-size: 100% auto;
+  background-size: cover;
   position: relative;
   display: flex;
   justify-content: space-between;

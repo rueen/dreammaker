@@ -2,14 +2,14 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-13 17:33:40
+ * @LastEditTime: 2024-07-24 13:43:46
  * @Description: 
 -->
 <template>
   <CustomVideo ref="CustomVideoRef" />
   <div id="template4" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="left">
-      <div class="photo hide" id="photo"><img class="photoImg" :src="info.imgage" alt=""></div>
+      <div class="photo hide" id="photo"><img class="photoImg" :src="info.image" alt=""></div>
     </div>
     <div class="right">
       <div class="rightContent">
@@ -18,7 +18,7 @@
         <div class="qrCodeWrap hide" id="qrCodeWrap">
           <div class="qrCode">
             <vue-qrcode
-              :value="info.imgage"
+              :value="info.image"
               type="image/png"
               :color="{ dark: '#000000ff' }"
             />
@@ -52,7 +52,7 @@ export default {
     return {
       info: {
         content: '',
-        imgage: ''
+        image: ''
       }
     }
   },
