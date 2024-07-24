@@ -2,13 +2,13 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 16:13:16
+ * @LastEditTime: 2024-07-24 17:40:28
  * @Description: 
 -->
 <template>
   <div class="about">
     <CustomAudio ref="CustomAudioRef" />
-    <LaunchScreen @onLaunch="onLaunch" v-if="setp === 1" />
+    <LaunchScreen @onLaunch="onLaunch" v-if="setp === 1 && info.id != null" />
     <LaunchVideo ref="LaunchVideoFef" v-if="setp === 2" @launchVideoOnEnd="launchVideoOnEnd" />
     <div v-if="setp === 3">
       <Template1

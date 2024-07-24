@@ -2,11 +2,12 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 16:14:07
+ * @LastEditTime: 2024-07-24 17:44:16
  * @Description: 
 -->
 <template>
   <CustomVideo ref="CustomVideoRef" />
+  <Loading text="数据加载中 请耐心等待..." v-if="loading" />
   <div id="template4" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="left">
       <div class="photo hide" id="photo"><img class="photoImg" :src="info.image" alt=""></div>
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+import Loading from '@/components/loading';
 import VueQrcode from 'vue-qrcode'
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
@@ -44,12 +46,14 @@ export default {
   props: ['data', 'userInfo', 'selectedOption', 'sceneInfo', 'selectedLastOption'],
   emits: ['reStart', 'getAudio'],
   components: {
+    Loading,
     CustomButton,
     CustomVideo,
     VueQrcode
   },
   data(){
     return {
+      loading: false,
       info: {
         content: '',
         image: ''
@@ -60,8 +64,10 @@ export default {
     await this.synthetize();
     document.getElementById('template4').classList.add('fadeIn');
     setTimeout(() => {
-      document.getElementById('title').classList.add('fadeInDown');
       document.getElementById('photo').classList.add('fadeInLeft');
+    })
+    setTimeout(() => {
+      document.getElementById('title').classList.add('fadeInDown');
       document.getElementById('content').classList.add('fadeIn');
       document.getElementById('qrCodeWrap').classList.add('fadeIn');
     }, 800)
@@ -75,6 +81,7 @@ export default {
   methods: {
     async synthetize(){
       const { photoPath, activeGender } = this.userInfo;
+      this.loading = true;
       const res = await post({
         url: '/site/api/synthetize',
         params: {
@@ -82,6 +89,9 @@ export default {
           img: photoPath,
           gender: activeGender.text
         }
+      })
+      setTimeout(() => {
+        this.loading = false;
       })
       this.info = res.Data || {};
       if(this.sceneInfo.generateRule === 2 && this.selectedLastOption && this.selectedLastOption.image){

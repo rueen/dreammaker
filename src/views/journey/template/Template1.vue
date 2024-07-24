@@ -2,11 +2,12 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 16:01:03
+ * @LastEditTime: 2024-07-24 17:37:42
  * @Description: 
 -->
 <template>
   <CustomVideo ref="CustomVideoRef" />
+  <Loading text="图片上传中 请耐心等待..." v-if="loading" />
   <div id="template1" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="left">
       <div class="sexList">
@@ -50,6 +51,7 @@
 </template>
 
 <script>
+import Loading from '@/components/loading';
 import FaceTracking from '@/components/FaceTracking';
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
@@ -61,6 +63,7 @@ export default {
   props: ['data', 'sceneInfo'],
   emits: ['onEnd', 'getAudio', 'getUserInfo'],
   components: {
+    Loading,
     FaceTracking,
     CustomButton,
     CustomVideo
@@ -72,7 +75,8 @@ export default {
         text: ''
       },
       photo: null,
-      cameraWidth: null
+      cameraWidth: null,
+      loading: false
     }
   },
   mounted() {
@@ -119,6 +123,9 @@ export default {
       return result;
     },
     async nextStep(){
+      if(this.sceneInfo.generateRule === 2){
+        this.loading = true;
+      }
       const res = await post({
         url: '/site/api/uploadBase64',
         params: {
@@ -127,6 +134,7 @@ export default {
           gender: this.activeSex.text
         }
       })
+      this.loading = false;
       if(res.ReturnCode === '200'){
         const scene = res.Data.scene || {};
         this.$emit('getUserInfo', {
@@ -142,7 +150,6 @@ export default {
           // 1 文字图片选项; 2 预生成内容
           const sceneList = this.flattenList(scene.list);
           _nexItem = sceneList.find(item => item.id === nexItem.id);
-          console.log(_nexItem, '_nexItem')
         }
         this.$emit('onEnd', {
           nexItem: _nexItem
