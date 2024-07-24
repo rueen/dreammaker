@@ -2,14 +2,13 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 17:40:28
+ * @LastEditTime: 2024-07-24 20:47:32
  * @Description: 
 -->
 <template>
   <div class="about">
     <CustomAudio ref="CustomAudioRef" />
-    <LaunchScreen @onLaunch="onLaunch" v-if="setp === 1 && info.id != null" />
-    <LaunchVideo ref="LaunchVideoFef" v-if="setp === 2" @launchVideoOnEnd="launchVideoOnEnd" />
+    <LaunchVideo ref="LaunchVideoFef" v-if="setp === 2 && info.id != null" @onLaunch="onLaunch" />
     <div v-if="setp === 3">
       <Template1
         v-if="activeItem.template === '1'"
@@ -51,7 +50,6 @@
 
 <script>
 import { useRouter } from 'vue-router';
-import LaunchScreen from './components/LaunchScreen.vue';
 import LaunchVideo from './components/LaunchVideo.vue';
 import Template1 from './template/Template1.vue';
 import Template2 from './template/Template2.vue';
@@ -63,7 +61,6 @@ import {get} from '@/server/request';
 export default {
   name: 'JourneyView',
   components: {
-    LaunchScreen,
     LaunchVideo,
     Template1,
     Template2,
@@ -101,25 +98,18 @@ export default {
         }
       })
       this.info = res.Data || {};
-    },
-    onLaunch(){
       if(this.info.launchVideo){
         this.setp = 2;
-        if(this.info.launchAudio){
-          this.getAudio({
-            src: this.info.launchAudio
-          });
-        }
         setTimeout(() => {
           this.$refs.LaunchVideoFef.init({
             src: this.info.launchVideo
           });
         })
       } else {
-        this.launchVideoOnEnd();
+        this.onLaunch();
       }
     },
-    launchVideoOnEnd(){
+    onLaunch(){
       this.setp = 3;
       this.activeItem = this.info.list[0];
     },

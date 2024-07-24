@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-23 09:50:35
+ * @LastEditTime: 2024-07-24 21:11:03
  * @Description: 视频
 -->
 <template>
@@ -13,6 +13,7 @@
       autoplay
       loop
       :src="src"
+      :muted="muted"
     >
       <source type="video/mp4">
     </video>
@@ -23,11 +24,16 @@
 export default {
   name: 'CustomVideo',
   components: {},
-  props: [],
+  props: {
+    muted: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       isShow: false,
-      src: null
+      src: null,
     };
   },
   mounted() {

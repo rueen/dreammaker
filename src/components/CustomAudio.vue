@@ -2,14 +2,14 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 17:28:36
+ * @LastEditTime: 2024-07-24 20:51:30
  * @Description: 音频
 -->
 <template>
   <audio ref="audioElement" loop>
     <source :src="src">
   </audio>
-  <div class="controls">
+  <div class="controls" v-if="src">
     <div class="bar-container" @click="handlePause" v-if="isPlay">
       <div class="bar"></div>
       <div class="bar"></div>

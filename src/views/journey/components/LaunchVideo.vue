@@ -2,13 +2,13 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-13 17:11:59
+ * @LastEditTime: 2024-07-24 21:14:09
  * @Description: 
 -->
 <template>
   <div class="container" id="launchScreenVideo">
-    <CustomVideo ref="CustomVideoRef" />
-    <CustomButton theme="blue" @click="launchVideoOnEnd">下一步</CustomButton>
+    <CustomVideo ref="CustomVideoRef" :muted="muted" />
+    <CustomButton theme="blue" @click="onLaunch">立即体验</CustomButton>
   </div>
 </template>
 
@@ -19,32 +19,43 @@ import CustomVideo from '@/components/CustomVideo.vue';
 export default {
   name: 'LaunchVideo',
   props: [],
-  emits: ['launchVideoOnEnd'],
+  emits: ['onLaunch'],
   components: {
     CustomButton,
     CustomVideo
   },
   data(){
     return {
-      
+      muted: true
     }
   },
   beforeUnmount(){
     document.getElementById('launchScreenVideo').classList.add('fadeOut')
   },
   mounted() {
+    // 监听点击事件
+    document.addEventListener('click', () => {
+      this.play();
+    });
 
+    // 监听键盘按下和释放事件
+    document.addEventListener('keydown', () => {
+      this.play();
+    });
   },
   methods: {
     init({src}){
       if(src && this.$refs.CustomVideoRef){
         this.$refs.CustomVideoRef.init(src)
       } else {
-        this.launchVideoOnEnd();
+        this.onLaunch();
       }
     },
-    launchVideoOnEnd(){
-      this.$emit('launchVideoOnEnd')
+    play(){
+      this.muted = false;
+    },
+    onLaunch(){
+      this.$emit('onLaunch')
     }
   }
 }
