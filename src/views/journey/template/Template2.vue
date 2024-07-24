@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 15:43:53
+ * @LastEditTime: 2024-07-24 20:32:06
  * @Description: 
 -->
 <template>
@@ -83,7 +83,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #EEF0F2;
 }
 .wrap{
   width: 60%;

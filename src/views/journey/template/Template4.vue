@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 17:44:16
+ * @LastEditTime: 2024-07-24 20:32:16
  * @Description: 
 -->
 <template>
@@ -113,7 +113,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #EEF0F2;
 }
 .hide{
   opacity: 0;
