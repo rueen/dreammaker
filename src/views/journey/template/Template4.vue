@@ -2,10 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 20:32:16
+ * @LastEditTime: 2024-07-24 22:10:13
  * @Description: 
 -->
 <template>
+  <CustomAudio ref="CustomAudioRef" />
   <CustomVideo ref="CustomVideoRef" />
   <Loading text="数据加载中 请耐心等待..." v-if="loading" />
   <div id="template4" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
@@ -35,6 +36,7 @@
 </template>
 
 <script>
+import CustomAudio from '@/components/CustomAudio';
 import Loading from '@/components/loading';
 import VueQrcode from 'vue-qrcode'
 import CustomButton from '@/components/CustomButton.vue'
@@ -44,12 +46,13 @@ import {post} from '@/server/request';
 export default {
   name: 'Template4View',
   props: ['data', 'userInfo', 'selectedOption', 'sceneInfo', 'selectedLastOption'],
-  emits: ['reStart', 'getAudio'],
+  emits: ['reStart', 'pauseLaunchAudio', 'playLaunchAudio'],
   components: {
     Loading,
     CustomButton,
     CustomVideo,
-    VueQrcode
+    VueQrcode,
+    CustomAudio
   },
   data(){
     return {
@@ -71,9 +74,12 @@ export default {
       document.getElementById('content').classList.add('fadeIn');
       document.getElementById('qrCodeWrap').classList.add('fadeIn');
     }, 800)
-    this.$emit('getAudio', {
-      src: this.data.audio
-    })
+    if(this.data.audio){
+      this.$refs.CustomAudioRef.init(this.data.audio);
+      this.$emit('pauseLaunchAudio');
+    } else {
+      this.$emit('playLaunchAudio');
+    }
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }

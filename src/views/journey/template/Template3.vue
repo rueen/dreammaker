@@ -2,10 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 20:32:12
+ * @LastEditTime: 2024-07-24 22:10:06
  * @Description: 
 -->
 <template>
+  <CustomAudio ref="CustomAudioRef" />
   <CustomVideo ref="CustomVideoRef" />
   <div id="template3" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="options">
@@ -32,16 +33,18 @@
 </template>
 
 <script>
+import CustomAudio from '@/components/CustomAudio';
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'Template3View',
   props: ['data', 'sceneInfo'],
-  emits: ['onEnd', 'getAudio', 'getOption', 'getLastOption'],
+  emits: ['onEnd', 'pauseLaunchAudio', 'playLaunchAudio', 'getOption', 'getLastOption'],
   components: {
     CustomButton,
-    CustomVideo
+    CustomVideo,
+    CustomAudio
   },
   data(){
     return {
@@ -51,9 +54,12 @@ export default {
   },
   mounted() {
     document.getElementById('template3').classList.add('fadeIn');
-    this.$emit('getAudio', {
-      src: this.data.audio
-    })
+    if(this.data.audio){
+      this.$refs.CustomAudioRef.init(this.data.audio);
+      this.$emit('pauseLaunchAudio');
+    } else {
+      this.$emit('playLaunchAudio');
+    }
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }

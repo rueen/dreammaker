@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 21:29:42
+ * @LastEditTime: 2024-07-24 22:24:54
  * @Description: 
 -->
 <template>
@@ -20,24 +20,27 @@
         :sceneInfo="info"
         :data="activeItem"
         @onEnd="onEnd"
-        @getAudio="getAudio"
         @getUserInfo="getUserInfo"
+        @pauseLaunchAudio="pauseLaunchAudio"
+        @playLaunchAudio="playLaunchAudio"
       />
       <Template2
         v-if="activeItem.template === '2'"
         :sceneInfo="info"
         :data="activeItem"
         @onEnd="onEnd"
-        @getAudio="getAudio"
+        @pauseLaunchAudio="pauseLaunchAudio"
+        @playLaunchAudio="playLaunchAudio"
       />
       <Template3
         v-if="activeItem.template === '3'"
         :sceneInfo="info"
         :data="activeItem"
         @onEnd="onEnd"
-        @getAudio="getAudio"
         @getOption="getOption"
         @getLastOption="getLastOption"
+        @pauseLaunchAudio="pauseLaunchAudio"
+        @playLaunchAudio="playLaunchAudio"
       />
       <Template4
         v-if="activeItem.template === '4'"
@@ -47,7 +50,8 @@
         :selectedOption="selectedOption"
         :selectedLastOption="selectedLastOption"
         @reStart="reStart"
-        @getAudio="getAudio"
+        @pauseLaunchAudio="pauseLaunchAudio"
+        @playLaunchAudio="playLaunchAudio"
       />
     </div>
   </div>
@@ -120,9 +124,7 @@ export default {
             src: this.info.launchVideo
           });
           if(this.isInteractive && this.info.launchAudio){
-            this.getAudio({
-              src: this.info.launchAudio
-            });
+            this.$refs.CustomAudioRef.init(this.info.launchAudio);
           }
         })
       } else {
@@ -137,13 +139,11 @@ export default {
     getInteractive(){
       if(!this.isInteractive){
         // 启动音频
+        this.isInteractive = true;
         if(this.info.launchAudio){
-          this.getAudio({
-            src: this.info.launchAudio
-          });
+          this.$refs.CustomAudioRef.init(this.info.launchAudio);
         }
       }
-      this.isInteractive = true;
     },
     onEnd({nexItem}){
       if(!nexItem){
@@ -152,14 +152,16 @@ export default {
       this.activeItem = nexItem;
     },
     reStart(){
-      console.log(this.info, 'this.info')
       this.activeItem = this.info.list[0];
     },
-    getAudio({src}){
-      if(!!src && this.$refs.CustomAudioRef){
-        this.$refs.CustomAudioRef.init(src)
-      } else if(!src && this.info.launchAudio){
-        this.$refs.CustomAudioRef.init(this.info.launchAudio)
+    pauseLaunchAudio(){
+      this.$refs.CustomAudioRef.handlePause(false);
+    },
+    playLaunchAudio(){
+      if(this.info.launchAudio){
+        setTimeout(() => {
+          this.$refs.CustomAudioRef.handlePlay(true);
+        }, 0)
       }
     },
     getUserInfo({photoPath,activeGender,scene}){

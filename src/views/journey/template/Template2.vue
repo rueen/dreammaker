@@ -2,10 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 20:32:06
+ * @LastEditTime: 2024-07-24 22:10:01
  * @Description: 
 -->
 <template>
+  <CustomAudio ref="CustomAudioRef" />
   <CustomVideo ref="CustomVideoRef" />
   <div id="template2" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
     <div class="wrap">
@@ -18,16 +19,18 @@
 
 <script>
 import Typed from 'typed.js';
+import CustomAudio from '@/components/CustomAudio';
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'Template2View',
   props: ['data', 'sceneInfo'],
-  emits: ['onEnd', 'getAudio'],
+  emits: ['onEnd', 'pauseLaunchAudio', 'playLaunchAudio'],
   components: {
     CustomButton,
-    CustomVideo
+    CustomVideo,
+    CustomAudio
   },
   data(){
     return {
@@ -36,9 +39,12 @@ export default {
   },
   mounted() {
     document.getElementById('template2').classList.add('fadeIn');
-    this.$emit('getAudio', {
-      src: this.data.audio
-    })
+    if(this.data.audio){
+      this.$refs.CustomAudioRef.init(this.data.audio);
+      this.$emit('pauseLaunchAudio');
+    } else {
+      this.$emit('playLaunchAudio');
+    }
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }

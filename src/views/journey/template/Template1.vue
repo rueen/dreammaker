@@ -2,10 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 20:31:54
+ * @LastEditTime: 2024-07-24 22:10:37
  * @Description: 
 -->
 <template>
+  <CustomAudio ref="CustomAudioRef" />
   <CustomVideo ref="CustomVideoRef" />
   <Loading text="图片上传中 请耐心等待..." v-if="loading" />
   <div id="template1" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
@@ -51,6 +52,7 @@
 </template>
 
 <script>
+import CustomAudio from '@/components/CustomAudio';
 import Loading from '@/components/loading';
 import FaceTracking from '@/components/FaceTracking';
 import CustomButton from '@/components/CustomButton.vue'
@@ -61,12 +63,13 @@ import { toast } from 'vue3-toastify';
 export default {
   name: 'Template1View',
   props: ['data', 'sceneInfo'],
-  emits: ['onEnd', 'getAudio', 'getUserInfo'],
+  emits: ['onEnd', 'getUserInfo', 'pauseLaunchAudio', 'playLaunchAudio'],
   components: {
     Loading,
     FaceTracking,
     CustomButton,
-    CustomVideo
+    CustomVideo,
+    CustomAudio
   },
   data(){
     return {
@@ -80,10 +83,13 @@ export default {
     }
   },
   mounted() {
-    document.getElementById('template1').classList.add('fadeIn')
-    this.$emit('getAudio', {
-      src: this.data.audio
-    })
+    document.getElementById('template1').classList.add('fadeIn');
+    if(this.data.audio){
+      this.$refs.CustomAudioRef.init(this.data.audio);
+      this.$emit('pauseLaunchAudio');
+    } else {
+      this.$emit('playLaunchAudio');
+    }
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }
