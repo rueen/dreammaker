@@ -2,13 +2,18 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 20:47:32
+ * @LastEditTime: 2024-07-24 21:29:42
  * @Description: 
 -->
 <template>
   <div class="about">
     <CustomAudio ref="CustomAudioRef" />
-    <LaunchVideo ref="LaunchVideoFef" v-if="setp === 2 && info.id != null" @onLaunch="onLaunch" />
+    <LaunchVideo
+      ref="LaunchVideoFef"
+      v-if="setp === 2 && info.id != null"
+      @onLaunch="onLaunch"
+      :muted="!isInteractive"
+    />
     <div v-if="setp === 3">
       <Template1
         v-if="activeItem.template === '1'"
@@ -79,7 +84,8 @@ export default {
         activeGender: {}
       },
       selectedOption: {},
-      selectedLastOption: {}
+      selectedLastOption: {},
+      isInteractive: false
     }
   },
   mounted() {
@@ -88,6 +94,15 @@ export default {
     const { id } = route.params;
     this.id = id;
     this.getData();
+
+    // 监听点击事件
+    document.addEventListener('click', () => {
+      this.getInteractive();
+    });
+    // 监听键盘按下和释放事件
+    document.addEventListener('keydown', () => {
+      this.getInteractive();
+    });
   },
   methods: {
     async getData() {
@@ -104,6 +119,11 @@ export default {
           this.$refs.LaunchVideoFef.init({
             src: this.info.launchVideo
           });
+          if(this.isInteractive && this.info.launchAudio){
+            this.getAudio({
+              src: this.info.launchAudio
+            });
+          }
         })
       } else {
         this.onLaunch();
@@ -112,6 +132,18 @@ export default {
     onLaunch(){
       this.setp = 3;
       this.activeItem = this.info.list[0];
+    },
+    // 拿到用户首次交互（否则无法播放音频）
+    getInteractive(){
+      if(!this.isInteractive){
+        // 启动音频
+        if(this.info.launchAudio){
+          this.getAudio({
+            src: this.info.launchAudio
+          });
+        }
+      }
+      this.isInteractive = true;
     },
     onEnd({nexItem}){
       if(!nexItem){

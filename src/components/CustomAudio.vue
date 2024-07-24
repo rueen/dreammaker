@@ -2,14 +2,14 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 20:51:30
+ * @LastEditTime: 2024-07-24 21:24:33
  * @Description: 音频
 -->
 <template>
   <audio ref="audioElement" loop>
     <source :src="src">
   </audio>
-  <div class="controls" v-if="src">
+  <div class="controls" v-if="isShowControls">
     <div class="bar-container" @click="handlePause" v-if="isPlay">
       <div class="bar"></div>
       <div class="bar"></div>
@@ -31,7 +31,8 @@ export default {
   data() {
     return {
       isPlay: true,
-      src: null
+      src: null,
+      isShowControls: false
     };
   },
   mounted() {
@@ -40,6 +41,7 @@ export default {
   methods: {
     init(src){
       this.audio.src = src;
+      this.isShowControls = true;
       if(this.isPlay){
         this.audio.play();
       }

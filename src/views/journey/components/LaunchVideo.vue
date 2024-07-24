@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 21:14:09
+ * @LastEditTime: 2024-07-24 21:29:22
  * @Description: 
 -->
 <template>
@@ -18,7 +18,12 @@ import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'LaunchVideo',
-  props: [],
+  props: {
+    muted: {
+      type: Boolean,
+      default: true
+    }
+  },
   emits: ['onLaunch'],
   components: {
     CustomButton,
@@ -26,22 +31,13 @@ export default {
   },
   data(){
     return {
-      muted: true
     }
   },
   beforeUnmount(){
     document.getElementById('launchScreenVideo').classList.add('fadeOut')
   },
   mounted() {
-    // 监听点击事件
-    document.addEventListener('click', () => {
-      this.play();
-    });
-
-    // 监听键盘按下和释放事件
-    document.addEventListener('keydown', () => {
-      this.play();
-    });
+    
   },
   methods: {
     init({src}){
@@ -50,9 +46,6 @@ export default {
       } else {
         this.onLaunch();
       }
-    },
-    play(){
-      this.muted = false;
     },
     onLaunch(){
       this.$emit('onLaunch')
