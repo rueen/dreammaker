@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 13:25:59
+ * @LastEditTime: 2024-07-24 15:43:53
  * @Description: 
 -->
 <template>
@@ -23,7 +23,7 @@ import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'Template2View',
-  props: ['data'],
+  props: ['data', 'sceneInfo'],
   emits: ['onEnd', 'getAudio'],
   components: {
     CustomButton,

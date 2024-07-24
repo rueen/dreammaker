@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 14:14:59
+ * @LastEditTime: 2024-07-24 16:01:03
  * @Description: 
 -->
 <template>
@@ -58,7 +58,7 @@ import { toast } from 'vue3-toastify';
 
 export default {
   name: 'Template1View',
-  props: ['data'],
+  props: ['data', 'sceneInfo'],
   emits: ['onEnd', 'getAudio', 'getUserInfo'],
   components: {
     FaceTracking,
@@ -123,7 +123,8 @@ export default {
         url: '/site/api/uploadBase64',
         params: {
           file: this.photo,
-          id: this.data.id
+          id: this.sceneInfo.id,
+          gender: this.activeSex.text
         }
       })
       if(res.ReturnCode === '200'){

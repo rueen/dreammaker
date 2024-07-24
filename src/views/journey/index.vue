@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 14:02:57
+ * @LastEditTime: 2024-07-24 16:13:16
  * @Description: 
 -->
 <template>
@@ -13,6 +13,7 @@
     <div v-if="setp === 3">
       <Template1
         v-if="activeItem.template === '1'"
+        :sceneInfo="info"
         :data="activeItem"
         @onEnd="onEnd"
         @getAudio="getAudio"
@@ -20,22 +21,27 @@
       />
       <Template2
         v-if="activeItem.template === '2'"
+        :sceneInfo="info"
         :data="activeItem"
         @onEnd="onEnd"
         @getAudio="getAudio"
       />
       <Template3
         v-if="activeItem.template === '3'"
+        :sceneInfo="info"
         :data="activeItem"
         @onEnd="onEnd"
         @getAudio="getAudio"
         @getOption="getOption"
+        @getLastOption="getLastOption"
       />
       <Template4
         v-if="activeItem.template === '4'"
+        :sceneInfo="info"
         :data="activeItem"
         :userInfo="userInfo"
         :selectedOption="selectedOption"
+        :selectedLastOption="selectedLastOption"
         @reStart="reStart"
         @getAudio="getAudio"
       />
@@ -75,7 +81,8 @@ export default {
         photoPath: '',
         activeGender: {}
       },
-      selectedOption: {}
+      selectedOption: {},
+      selectedLastOption: {}
     }
   },
   mounted() {
@@ -147,6 +154,9 @@ export default {
       if(!this.selectedOption || !Object.keys(this.selectedOption).length){
         this.selectedOption = selectedOption;
       }
+    },
+    getLastOption({selectedOption}){
+      this.selectedLastOption = selectedOption;
     }
   }
 }

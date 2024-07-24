@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-13 17:21:42
+ * @LastEditTime: 2024-07-24 16:10:54
  * @Description: 
 -->
 <template>
@@ -37,8 +37,8 @@ import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'Template3View',
-  props: ['data'],
-  emits: ['onEnd', 'getAudio', 'getOption'],
+  props: ['data', 'sceneInfo'],
+  emits: ['onEnd', 'getAudio', 'getOption', 'getLastOption'],
   components: {
     CustomButton,
     CustomVideo
@@ -91,6 +91,9 @@ export default {
         nexItem
       });
       this.$emit('getOption', {
+        selectedOption: this.selectedOption
+      });
+      this.$emit('getLastOption', {
         selectedOption: this.selectedOption
       });
     }

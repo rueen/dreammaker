@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 13:43:46
+ * @LastEditTime: 2024-07-24 16:14:07
  * @Description: 
 -->
 <template>
@@ -41,7 +41,7 @@ import {post} from '@/server/request';
 
 export default {
   name: 'Template4View',
-  props: ['data', 'userInfo', 'selectedOption'],
+  props: ['data', 'userInfo', 'selectedOption', 'sceneInfo', 'selectedLastOption'],
   emits: ['reStart', 'getAudio'],
   components: {
     CustomButton,
@@ -84,6 +84,9 @@ export default {
         }
       })
       this.info = res.Data || {};
+      if(this.sceneInfo.generateRule === 2 && this.selectedLastOption && this.selectedLastOption.image){
+        this.info.image = this.selectedLastOption.image;
+      }
     },
     reStart(){
       this.$emit('reStart');
