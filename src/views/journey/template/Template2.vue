@@ -2,13 +2,13 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 22:10:01
+ * @LastEditTime: 2024-07-25 09:58:53
  * @Description: 
 -->
 <template>
   <CustomAudio ref="CustomAudioRef" />
   <CustomVideo ref="CustomVideoRef" />
-  <div id="template2" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
+  <div id="template2" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
     <div class="wrap">
       <div id="title"></div>
       <div id="content"></div>
@@ -84,7 +84,7 @@ export default {
 .container{
   width: 100%;
   height: 100vh;
-  background-size: 100% auto;
+  background-size: cover;
   display: flex;
   flex-direction: column;
   justify-content: center;

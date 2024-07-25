@@ -2,11 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 21:29:22
+ * @LastEditTime: 2024-07-25 09:57:46
  * @Description: 
 -->
 <template>
-  <div class="container" id="launchScreenVideo">
+  <div class="container" id="launchScreenVideo" :style="{'background-image': `url(${launchPhoto})`}">
     <CustomVideo ref="CustomVideoRef" :muted="muted" />
     <CustomButton theme="blue" @click="onLaunch">立即体验</CustomButton>
   </div>
@@ -31,6 +31,8 @@ export default {
   },
   data(){
     return {
+      launchVideo: null,
+      launchPhoto: null
     }
   },
   beforeUnmount(){
@@ -40,12 +42,15 @@ export default {
     
   },
   methods: {
-    init({src}){
-      if(src && this.$refs.CustomVideoRef){
-        this.$refs.CustomVideoRef.init(src)
-      } else {
-        this.onLaunch();
+    init({
+      launchVideo,
+      launchPhoto
+    }){
+      if(launchVideo && this.$refs.CustomVideoRef){
+        this.$refs.CustomVideoRef.init(launchVideo)
       }
+      this.launchVideo = launchVideo;
+      this.launchPhoto = launchPhoto;
     },
     onLaunch(){
       this.$emit('onLaunch')
@@ -58,7 +63,7 @@ export default {
 .container{
   width: 100%;
   height: 100vh;
-  background-size: 100% auto;
+  background-size: cover;
   display: flex;
   flex-direction: column;
   justify-content: center;

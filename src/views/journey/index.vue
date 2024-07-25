@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 22:24:54
+ * @LastEditTime: 2024-07-25 09:54:49
  * @Description: 
 -->
 <template>
@@ -117,11 +117,12 @@ export default {
         }
       })
       this.info = res.Data || {};
-      if(this.info.launchVideo){
+      if(this.info.launchVideo || this.info.launchPhoto){
         this.setp = 2;
         setTimeout(() => {
           this.$refs.LaunchVideoFef.init({
-            src: this.info.launchVideo
+            launchVideo: this.info.launchVideo,
+            launchPhoto: this.info.launchPhoto
           });
           if(this.isInteractive && this.info.launchAudio){
             this.$refs.CustomAudioRef.init(this.info.launchAudio);

@@ -2,14 +2,14 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 22:10:13
+ * @LastEditTime: 2024-07-25 10:02:23
  * @Description: 
 -->
 <template>
   <CustomAudio ref="CustomAudioRef" />
   <CustomVideo ref="CustomVideoRef" />
   <Loading text="数据加载中 请耐心等待..." v-if="loading" />
-  <div id="template4" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
+  <div id="template4" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
     <div class="left">
       <div class="photo hide" id="photo"><img class="photoImg" :src="info.image" alt=""></div>
     </div>
@@ -115,7 +115,7 @@ export default {
 .container{
   width: 100%;
   height: 100vh;
-  background-size: 100% auto;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;

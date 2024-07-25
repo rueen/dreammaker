@@ -2,13 +2,13 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 22:10:06
+ * @LastEditTime: 2024-07-25 10:02:19
  * @Description: 
 -->
 <template>
   <CustomAudio ref="CustomAudioRef" />
   <CustomVideo ref="CustomVideoRef" />
-  <div id="template3" class="container" :style="{'background': `url(${data.bgUrl}) no-repeat 0 0`}">
+  <div id="template3" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
     <div class="options">
       <div
         class="optionItem hide"
@@ -111,7 +111,7 @@ export default {
 .container{
   width: 100%;
   height: 100vh;
-  background-size: 100% auto;
+  background-size: cover;
   display: flex;
   flex-direction: column;
   justify-content: center;
