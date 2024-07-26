@@ -2,13 +2,13 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-25 09:57:46
+ * @LastEditTime: 2024-07-26 16:55:20
  * @Description: 
 -->
 <template>
   <div class="container" id="launchScreenVideo" :style="{'background-image': `url(${launchPhoto})`}">
     <CustomVideo ref="CustomVideoRef" :muted="muted" />
-    <CustomButton theme="blue" @click="onLaunch">立即体验</CustomButton>
+    <CustomButton theme="blue" @click="onLaunch" v-if="sceneInfo.list && sceneInfo.list.length">立即体验</CustomButton>
   </div>
 </template>
 
@@ -22,6 +22,9 @@ export default {
     muted: {
       type: Boolean,
       default: true
+    },
+    sceneInfo: {
+      type: Object
     }
   },
   emits: ['onLaunch'],
