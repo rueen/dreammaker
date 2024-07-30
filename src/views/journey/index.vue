@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-30 11:19:11
+ * @LastEditTime: 2024-07-30 11:54:04
  * @Description: 
 -->
 <template>
@@ -22,7 +22,7 @@
     <div v-if="setp === 3">
       <Template1
         ref="Template1"
-        v-if="activeItem.template === '1'"
+        v-if="activeItem.template === '1' && isShow"
         :isInteractive="isInteractive"
         :sceneInfo="info"
         :data="activeItem"
@@ -33,7 +33,7 @@
       />
       <Template2
         ref="Template2"
-        v-if="activeItem.template === '2'"
+        v-if="activeItem.template === '2' && isShow"
         :isInteractive="isInteractive"
         :sceneInfo="info"
         :data="activeItem"
@@ -43,7 +43,7 @@
       />
       <Template3
         ref="Template3"
-        v-if="activeItem.template === '3'"
+        v-if="activeItem.template === '3' && isShow"
         :isInteractive="isInteractive"
         :sceneInfo="info"
         :data="activeItem"
@@ -55,7 +55,7 @@
       />
       <Template4
         ref="Template4"
-        v-if="activeItem.template === '4'"
+        v-if="activeItem.template === '4' && isShow"
         :isInteractive="isInteractive"
         :sceneInfo="info"
         :data="activeItem"
@@ -102,7 +102,8 @@ export default {
       },
       selectedOption: {},
       selectedLastOption: {},
-      isInteractive: false
+      isInteractive: false,
+      isShow: true
     }
   },
   watch: {
@@ -111,6 +112,14 @@ export default {
         if(this.$refs[`Template${this.activeItem.template}`] && this.$refs[`Template${this.activeItem.template}`].getInteractive){
           this.$refs[`Template${this.activeItem.template}`].getInteractive();
         }
+      }
+    },
+    activeItem(newValue, oldValue){
+      if(newValue.template === oldValue.template){
+        this.isShow = false;
+        setTimeout(() => {
+          this.isShow = true;
+        }, 0)
       }
     }
   },
