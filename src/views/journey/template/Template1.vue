@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-25 09:58:44
+ * @LastEditTime: 2024-07-30 11:22:23
  * @Description: 
 -->
 <template>
@@ -62,7 +62,7 @@ import { toast } from 'vue3-toastify';
 
 export default {
   name: 'Template1View',
-  props: ['data', 'sceneInfo'],
+  props: ['data', 'sceneInfo', 'isInteractive'],
   emits: ['onEnd', 'getUserInfo', 'pauseLaunchAudio', 'playLaunchAudio'],
   components: {
     Loading,
@@ -85,7 +85,9 @@ export default {
   mounted() {
     document.getElementById('template1').classList.add('fadeIn');
     if(this.data.audio){
-      this.$refs.CustomAudioRef.init(this.data.audio);
+      if(this.isInteractive){
+        this.$refs.CustomAudioRef.init(this.data.audio);
+      }
       this.$emit('pauseLaunchAudio');
     } else {
       this.$emit('playLaunchAudio');
@@ -99,6 +101,11 @@ export default {
     document.getElementById('template1').classList.add('fadeOut')
   },
   methods: {
+    getInteractive(){
+      if(this.data.audio){
+        this.$refs.CustomAudioRef.init(this.data.audio);
+      }
+    },
     selectSex(item){
       this.activeSex = item;
     },

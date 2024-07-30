@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-25 10:02:19
+ * @LastEditTime: 2024-07-30 11:23:25
  * @Description: 
 -->
 <template>
@@ -39,7 +39,7 @@ import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'Template3View',
-  props: ['data', 'sceneInfo'],
+  props: ['data', 'sceneInfo', 'isInteractive'],
   emits: ['onEnd', 'pauseLaunchAudio', 'playLaunchAudio', 'getOption', 'getLastOption'],
   components: {
     CustomButton,
@@ -55,7 +55,9 @@ export default {
   mounted() {
     document.getElementById('template3').classList.add('fadeIn');
     if(this.data.audio){
-      this.$refs.CustomAudioRef.init(this.data.audio);
+      if(this.isInteractive){
+        this.$refs.CustomAudioRef.init(this.data.audio);
+      }
       this.$emit('pauseLaunchAudio');
     } else {
       this.$emit('playLaunchAudio');
@@ -75,6 +77,11 @@ export default {
     })
   },
   methods: {
+    getInteractive(){
+      if(this.data.audio){
+        this.$refs.CustomAudioRef.init(this.data.audio);
+      }
+    },
     handleSelect(option){
       this.selectedOption = {...option};
       const elm = document.getElementById(`option_${option.id}`);

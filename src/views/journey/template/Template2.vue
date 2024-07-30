@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-25 09:58:53
+ * @LastEditTime: 2024-07-30 11:21:37
  * @Description: 
 -->
 <template>
@@ -25,7 +25,7 @@ import CustomVideo from '@/components/CustomVideo.vue';
 
 export default {
   name: 'Template2View',
-  props: ['data', 'sceneInfo'],
+  props: ['data', 'sceneInfo', 'isInteractive'],
   emits: ['onEnd', 'pauseLaunchAudio', 'playLaunchAudio'],
   components: {
     CustomButton,
@@ -40,7 +40,9 @@ export default {
   mounted() {
     document.getElementById('template2').classList.add('fadeIn');
     if(this.data.audio){
-      this.$refs.CustomAudioRef.init(this.data.audio);
+      if(this.isInteractive){
+        this.$refs.CustomAudioRef.init(this.data.audio);
+      }
       this.$emit('pauseLaunchAudio');
     } else {
       this.$emit('playLaunchAudio');
@@ -71,6 +73,11 @@ export default {
     });
   },
   methods: {
+    getInteractive(){
+      if(this.data.audio){
+        this.$refs.CustomAudioRef.init(this.data.audio);
+      }
+    },
     nextStep(){
       this.$emit('onEnd', {
         nexItem: this.data.children[0]

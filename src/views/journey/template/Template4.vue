@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-25 10:02:23
+ * @LastEditTime: 2024-07-30 11:23:31
  * @Description: 
 -->
 <template>
@@ -45,7 +45,7 @@ import {post} from '@/server/request';
 
 export default {
   name: 'Template4View',
-  props: ['data', 'userInfo', 'selectedOption', 'sceneInfo', 'selectedLastOption'],
+  props: ['data', 'userInfo', 'selectedOption', 'sceneInfo', 'selectedLastOption', 'isInteractive'],
   emits: ['reStart', 'pauseLaunchAudio', 'playLaunchAudio'],
   components: {
     Loading,
@@ -75,7 +75,9 @@ export default {
       document.getElementById('qrCodeWrap').classList.add('fadeIn');
     }, 800)
     if(this.data.audio){
-      this.$refs.CustomAudioRef.init(this.data.audio);
+      if(this.isInteractive){
+        this.$refs.CustomAudioRef.init(this.data.audio);
+      }
       this.$emit('pauseLaunchAudio');
     } else {
       this.$emit('playLaunchAudio');
@@ -85,6 +87,11 @@ export default {
     }
   },
   methods: {
+    getInteractive(){
+      if(this.data.audio){
+        this.$refs.CustomAudioRef.init(this.data.audio);
+      }
+    },
     async synthetize(){
       const { photoPath, activeGender } = this.userInfo;
       this.loading = true;
