@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-11 16:28:57
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-10 22:02:11
+ * @LastEditTime: 2024-12-01 19:34:53
  * @Description: 
  */
 import axios from 'axios';
@@ -36,7 +36,8 @@ const post = async ({
     withCredentials: true,
     data: {
       ...params
-    }
+    },
+    timeout: 10000,
   });
   if(res.status !== 200){
     alert(res.message || '出错啦！')
