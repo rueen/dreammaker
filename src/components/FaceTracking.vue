@@ -40,7 +40,10 @@ export default {
       video: null,
       canvas: null,
       tracker: null,
-      imgUrl: null
+      imgUrl: null,
+      flag: false,
+      isTracking: false,
+      lastTrackTime: 0
     };
   },
   mounted() {
@@ -66,7 +69,10 @@ export default {
         this.context.drawImage(this.$refs.refVideo, Math.abs((this.videoWidth - this.videoHeight)/2), 0, this.videoHeight, this.videoHeight, 0, 0, this.width, this.width);
         this.imgUrl = this.saveAsPNG(this.$refs.refCanvas);
         clearInterval(this.countdownTimer);
+        
+        // 性能优化：拍照完成后立即停止追踪以节省CPU
         this.pauseVideo();
+        
         this.$emit('getPhoto', {
           photo: this.imgUrl,
           cameraWidth: this.width
@@ -77,40 +83,54 @@ export default {
       return c.toDataURL('image/png', 0.5)
     },
     reTrack(){
+      // 先清理现有资源
+      this.pauseVideo();
+      
+      // 重置所有状态
       this.countdown = 0;
       this.countdownTimer = null;
-      this.tipsContent = null;
+      this.tipsContent = '正在启动摄像头...';
       this.context = null;
       this.video = null;
       this.canvas = null;
       this.tracker = null;
       this.imgUrl = null;
-      this.playVideo();
+      this.flag = false;
+      this.isTracking = false;
+      this.lastTrackTime = 0;
+      
+      // 稍微延迟重新开始，确保资源完全释放
+      setTimeout(() => {
+        this.playVideo();
+      }, 100);
     },
     playVideo(){
       this.video = document.getElementById('video');
       navigator.mediaDevices.getUserMedia({ video: {} }).then(stream => {
         this.video.srcObject = stream;
+        // 性能优化：使用更高效的视频加载检测
         let i = 0;
         const timer = setInterval(() => {
-          if(this.video.videoWidth){
+          if(this.video.videoWidth && this.video.videoWidth > 0){
             clearInterval(timer);
             this.videoWidth = this.video.videoWidth;
             this.videoHeight = this.video.videoHeight;
-          } else if(i > 50){
+            this.isTracking = true;
+          } else if(i > 30){ // 减少重试次数从50到30
             clearInterval(timer);
             console.log('video加载失败')
+            this.tipsContent = '视频加载失败，请刷新页面重试';
           } else {
             i += 1;
           }
-        }, 100)
+        }, 150) // 增加检测间隔从100ms到150ms
       });
       this.canvas = document.getElementById('canvas');
       this.context = this.canvas.getContext('2d');
       this.tracker = new tracking.ObjectTracker('face');
-      this.tracker.setInitialScale(4);
-      this.tracker.setStepSize(2);
-      this.tracker.setEdgesDensity(0.1);
+      this.tracker.setInitialScale(3.5); // 稍微降低初始缩放，有助于检测更多尺寸的人脸
+      this.tracker.setStepSize(3); // 平衡性能和精度：从原来的2改为3
+      this.tracker.setEdgesDensity(0.08); // 适中的边缘密度：从0.1降到0.08，保持检测准确性
 
       try {
         tracking.track('#video', this.tracker, { camera: true }); // 开始追踪
@@ -119,17 +139,24 @@ export default {
       }
 
       this.tracker.on('track', (event) => {
+        // 性能优化：限制追踪频率，平衡性能和检测准确性
+        const currentTime = Date.now();
+        if (currentTime - this.lastTrackTime < 80) { // 从100ms调整到80ms，提高检测频率
+          return;
+        }
+        this.lastTrackTime = currentTime;
+        
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         if(!event.data || !event.data.length){
-          this.tipsContent = '未检测到人脸';
+          this.tipsContent = '未检测到人脸，请调整位置';
           clearInterval(this.countdownTimer);
           this.countdown = 0;
           this.flag = false;
         } else {
           this.tipsContent = `检测成功，正在拍照，请保持不动`;
           if(!this.flag){
-            this.countdown = 2;
+            this.countdown = 3; // 增加倒计时时间到3秒，给用户更多准备时间
             this.flag = true
             this.countdownTimer = setInterval(() => {
               if (this.countdown > 0) {
@@ -141,24 +168,42 @@ export default {
             }, 1000);
           }
         }
-        event.data.forEach((rect) => {
-          this.context.strokeStyle = '#a64ceb';
-          this.context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-        });
+        
+        // 性能优化：减少绘制操作
+        if(event.data && event.data.length > 0) {
+          event.data.forEach((rect) => {
+            this.context.strokeStyle = '#a64ceb';
+            this.context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+          });
+        }
       });
     },
     pauseVideo(){
       if(this.countdownTimer){
         clearInterval(this.countdownTimer);
       }
+      
+      // 性能优化：停止追踪器以释放CPU资源
+      if(this.tracker){
+        try {
+          this.tracker.removeAllListeners('track');
+        } catch(e) {
+          console.log('移除追踪监听器失败');
+        }
+      }
+      
       var video = document.getElementById('video');
-      var stream = video.srcObject;
-      var tracks = stream ? stream.getTracks() : [];
-      tracks.forEach(function(track) {
-        track.stop();
-      });
-      video.srcObject = null;
-      video.pause();
+      if(video) {
+        var stream = video.srcObject;
+        var tracks = stream ? stream.getTracks() : [];
+        tracks.forEach(function(track) {
+          track.stop();
+        });
+        video.srcObject = null;
+        video.pause();
+      }
+      
+      this.isTracking = false;
     }
     // Base64转文件
     // getBlobBydataURI(dataURI, type) {

@@ -81,7 +81,8 @@ export default {
   margin: 0 2px;
   background-color: rgba(255,255,255,.4);
   border-radius: 2px;
-  animation: jump 1s ease-in-out infinite;
+  animation: jump 1.5s ease-in-out infinite; /* 性能优化：减缓动画频率 */
+  will-change: transform; /* 启用硬件加速 */
 }
 .bar:nth-child(1) {
   animation-delay: 0s;

@@ -117,9 +117,10 @@ export default {
     activeItem(newValue, oldValue){
       if(newValue.template === oldValue.template){
         this.isShow = false;
-        setTimeout(() => {
+        // 性能优化：使用nextTick代替setTimeout(0)，更高效
+        this.$nextTick(() => {
           this.isShow = true;
-        }, 0)
+        })
       }
     }
   },
@@ -130,14 +131,27 @@ export default {
     this.id = id;
     this.getData();
 
+    // 性能优化：保存事件处理函数引用以便清理
+    this.handleClick = () => {
+      this.getInteractive();
+    };
+    this.handleKeydown = () => {
+      this.getInteractive();
+    };
+
     // 监听点击事件
-    document.addEventListener('click', () => {
-      this.getInteractive();
-    });
+    document.addEventListener('click', this.handleClick);
     // 监听键盘按下和释放事件
-    document.addEventListener('keydown', () => {
-      this.getInteractive();
-    });
+    document.addEventListener('keydown', this.handleKeydown);
+  },
+  beforeUnmount() {
+    // 性能优化：组件销毁时移除事件监听器，防止内存泄漏
+    if (this.handleClick) {
+      document.removeEventListener('click', this.handleClick);
+    }
+    if (this.handleKeydown) {
+      document.removeEventListener('keydown', this.handleKeydown);
+    }
   },
   methods: {
     async getData() {
