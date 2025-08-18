@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-18 14:17:38
+ * @LastEditTime: 2025-08-18 14:19:56
  * @Description: 
 -->
 <template>
@@ -13,7 +13,7 @@
       <div id="title"></div>
       <div id="content"></div>
     </div>
-    <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="isShowNext && data.children && data.children[0]">下一步</CustomButton>
+    <CustomButton theme="blue" style="width: 10rem;margin-top: 1rem;" @click="nextStep" v-if="isShowNext && data.children && data.children[0]">下一步</CustomButton>
   </div>
 </template>
 

@@ -2,33 +2,36 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-30 11:23:25
+ * @LastEditTime: 2025-08-18 14:33:45
  * @Description: 
 -->
 <template>
   <CustomAudio ref="CustomAudioRef" />
   <CustomVideo ref="CustomVideoRef" />
   <div id="template3" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
-    <div class="options">
-      <div
-        class="optionItem hide"
-        v-for="(option, index) in data.options"
-        :id="`option_${option.id}`"
-        :key="index"
-        :style="{'width': `${optionItemWidth}px`, 'height': `${optionItemWidth*1.4}px`}"
-        @click="handleSelect(option)"
-      >
+    <div class="content">
+      <div class="page-title">{{ data.title }}</div>
+      <div class="options">
         <div
-          class="imageView"
-          :style="{'background-image': `url(${option.image})`, 'height': `${optionItemWidth*1.1}px`}"></div>
-        <div class="name">{{ option.name }}</div>
+          class="optionItem hide"
+          v-for="(option, index) in data.options"
+          :id="`option_${option.id}`"
+          :key="index"
+          :style="{'width': `${optionItemWidth}px`, 'height': `${optionItemWidth*1.4}px`}"
+          @click="handleSelect(option)"
+        >
+          <div
+            class="imageView"
+            :style="{'background-image': `url(${option.image})`, 'height': `${optionItemWidth*1.1}px`}"></div>
+          <div class="name">{{ option.name }}</div>
+        </div>
       </div>
+      <div class="selectedBox" v-if="selectedOption">
+        <div class="title">你将选择成为</div>
+        <div class="selected">{{selectedOption.name}}</div>
+      </div>
+      <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="selectedOption">下一步</CustomButton>
     </div>
-    <div class="selectedBox" v-if="selectedOption">
-      <div class="title">你将选择成为一名</div>
-      <div class="selected">{{selectedOption.name}}</div>
-    </div>
-    <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="selectedOption">下一步</CustomButton>
   </div>
 </template>
 
@@ -119,10 +122,37 @@ export default {
   width: 100%;
   height: 100vh;
   background-size: cover;
+  position: relative;
+}
+.container::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,.5);
+  z-index: 1;
+}
+.content{
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.page-title {
+  font-size: 1.5rem;
+  color: #fff;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .options{
   width: 65%;
@@ -159,7 +189,7 @@ export default {
   padding-top: 2rem;
 }
 .selectedBox .title{
-  color: #23272E;
+  color: #fff;
   font-size: 1rem;
 }
 .selectedBox .selected{
