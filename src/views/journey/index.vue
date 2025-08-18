@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-30 11:54:04
+ * @LastEditTime: 2025-08-18 14:57:21
  * @Description: 
 -->
 <template>
@@ -187,7 +187,20 @@ export default {
       this.activeItem = nexItem;
     },
     reStart(){
-      this.activeItem = this.info.list[0];
+      if(this.info.launchVideo || this.info.launchPhoto){
+        this.setp = 2;
+        setTimeout(() => {
+          this.$refs.LaunchVideoFef.init({
+            launchVideo: this.info.launchVideo,
+            launchPhoto: this.info.launchPhoto
+          });
+          if(this.isInteractive && this.info.launchAudio){
+            this.$refs.CustomAudioRef.init(this.info.launchAudio);
+          }
+        })
+      } else {
+        this.onLaunch();
+      }
     },
     pauseLaunchAudio(){
       this.$refs.CustomAudioRef.handlePause(false);
