@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-30 11:23:31
+ * @LastEditTime: 2025-08-18 14:41:11
  * @Description: 
 -->
 <template>
@@ -20,10 +20,14 @@
         <div class="qrCodeWrap hide" id="qrCodeWrap">
           <div class="qrCode">
             <vue-qrcode
+              v-if="info.image && info.image.trim()"
               :value="info.image"
               type="image/png"
               :color="{ dark: '#000000ff' }"
             />
+            <div v-else class="qrCodePlaceholder">
+              <span>暂无二维码</span>
+            </div>
           </div>
           <CustomButton theme="blue" @click="reStart">
             <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
@@ -106,7 +110,12 @@ export default {
       setTimeout(() => {
         this.loading = false;
       })
-      this.info = res.Data || {};
+      // 确保返回的数据有默认值，避免undefined错误
+      this.info = {
+        content: '',
+        image: '',
+        ...(res.Data || {})
+      };
       if(this.sceneInfo.generateRule === 2 && this.selectedLastOption && this.selectedLastOption.image){
         this.info.image = this.selectedLastOption.image;
       }
@@ -141,6 +150,11 @@ export default {
 }
 .rightContent{
   width: 70%;
+  background-color: #fff;
+  padding: 2rem;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  box-shadow: .3rem .1rem .8rem 0 rgba(0, 0, 0, .25);
 }
 .photo{
   width: 20rem;
@@ -175,6 +189,17 @@ export default {
 }
 .qrCode img{
   width: 100%;
+}
+.qrCodePlaceholder{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border: 2px dashed #ddd;
+  color: #999;
+  font-size: 0.9rem;
 }
 @keyframes fadeIn {
   0% {

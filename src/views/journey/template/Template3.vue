@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-18 14:33:45
+ * @LastEditTime: 2025-08-18 14:48:54
  * @Description: 
 -->
 <template>
@@ -147,6 +147,7 @@ export default {
   align-items: center;
 }
 .page-title {
+  width: 65%;
   font-size: 1.5rem;
   color: #fff;
   position: absolute;
@@ -157,7 +158,7 @@ export default {
 .options{
   width: 65%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .optionItem{
   background-color: #E6E6E6;
