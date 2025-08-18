@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-30 11:21:37
+ * @LastEditTime: 2025-08-18 14:16:21
  * @Description: 
 -->
 <template>
@@ -57,6 +57,7 @@ export default {
       typeSpeed: 100, // 打印速度
       startDelay: 300, // 开始之前的延迟300毫秒
       loop: false, // 是否循环
+      showCursor: false,
       onComplete: () => {
         new Typed('#content', {
           strings: [
@@ -65,6 +66,7 @@ export default {
           typeSpeed: 100, // 打印速度
           startDelay: 300, // 开始之前的延迟300毫秒
           loop: false, // 是否循环
+          showCursor: false,
           onComplete: () => {
             this.isShowNext = true;
           }
