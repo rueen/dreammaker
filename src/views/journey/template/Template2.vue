@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-18 14:16:21
+ * @LastEditTime: 2025-08-18 14:17:38
  * @Description: 
 -->
 <template>
@@ -105,9 +105,10 @@ export default {
 #title{
   font-size: 2rem;
   color: #fff;
+  margin-bottom: 1rem;
 }
 #content{
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 1.8rem;
   color: #fff;
 }
