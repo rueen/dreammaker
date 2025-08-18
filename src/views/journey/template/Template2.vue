@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-18 14:19:56
+ * @LastEditTime: 2025-08-18 16:54:04
  * @Description: 
 -->
 <template>
@@ -96,11 +96,16 @@ export default {
   background-size: cover;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  padding-bottom: 12rem;
 }
 .wrap{
   width: 60%;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 2rem;
+  border-radius: .8rem;
+  box-sizing: border-box;
 }
 #title{
   font-size: 2rem;

@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-30 11:22:23
+ * @LastEditTime: 2025-08-18 16:43:18
  * @Description: 
 -->
 <template>
@@ -10,6 +10,7 @@
   <CustomVideo ref="CustomVideoRef" />
   <Loading text="图片上传中 请耐心等待..." v-if="loading" />
   <div id="template1" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
+    <div class="page-title">{{data.title}}</div>
     <div class="left">
       <div class="sexList">
         <div class="sexItem sexMale" @click="selectSex({
@@ -182,6 +183,13 @@ export default {
   background-size: cover;
   display: flex;
   justify-content: space-between;
+}
+.page-title {
+  font-size: 1.5rem;
+  color: #fff;
+  position: absolute;
+  top: 10%;
+  left: 7rem;
 }
 .left{
   width: 45%;
