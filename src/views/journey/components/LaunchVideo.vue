@@ -2,13 +2,16 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-26 16:55:20
+ * @LastEditTime: 2025-08-18 14:11:01
  * @Description: 
 -->
 <template>
   <div class="container" id="launchScreenVideo" :style="{'background-image': `url(${launchPhoto})`}">
     <CustomVideo ref="CustomVideoRef" :muted="muted" />
-    <CustomButton theme="blue" @click="onLaunch" v-if="sceneInfo.list && sceneInfo.list.length">立即体验</CustomButton>
+    <div class="title">{{ sceneInfo.name }}</div>
+    <div class="launchButton">
+      <CustomButton theme="blue" @click="onLaunch" v-if="sceneInfo.list && sceneInfo.list.length">立即体验</CustomButton>
+    </div>
   </div>
 </template>
 
@@ -71,5 +74,16 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.title{
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 5%;
+}
+.launchButton{
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>
