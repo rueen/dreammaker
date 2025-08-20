@@ -19,5 +19,25 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    
+    <!-- Service Worker 注册 -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/dreammaker/sw.js')
+            .then(registration => {
+              console.log('Face-API Service Worker 注册成功:', registration.scope);
+              
+              // 主动缓存模型
+              if (registration.active) {
+                registration.active.postMessage({ type: 'CACHE_MODELS' });
+              }
+            })
+            .catch(error => {
+              console.warn('Face-API Service Worker 注册失败:', error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

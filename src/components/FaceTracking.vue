@@ -20,6 +20,7 @@
 
 <script>
 import * as faceapi from 'face-api.js'
+import faceApiLoader from '@/utils/faceApiLoader'
 
 export default {
   name: 'FaceTracking',
@@ -41,7 +42,8 @@ export default {
       lastDetectionTime: 0,
       modelsLoaded: false,
       stream: null,
-      animationFrame: null
+      animationFrame: null,
+      loadingProgress: 0
     };
   },
   
@@ -59,27 +61,48 @@ export default {
   
   methods: {
     /**
-     * 加载face-api.js模型 - 使用CDN
+     * 加载face-api.js模型 - 优化版本，支持本地模型和进度显示
      */
     async loadModels() {
       try {
         this.tipsContent = '正在加载AI模型...';
         
-        // 设置超时时间，避免长时间等待
-        const loadPromise = faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/model');
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('模型加载超时')), 8000)
-        );
+        // 启动进度显示
+        this.startLoadingProgress();
         
-        await Promise.race([loadPromise, timeoutPromise]);
+        // 使用优化的模型加载器
+        await faceApiLoader.preloadModels(['tinyFaceDetector']);
         
         this.modelsLoaded = true;
+        this.loadingProgress = 100;
         this.tipsContent = '正在启动摄像头...';
         
+        console.log('Face-API.js 模型加载成功');
+        
       } catch (error) {
+        console.warn('模型加载失败，将使用简单检测模式:', error);
         this.modelsLoaded = false;
+        this.loadingProgress = 0;
         this.tipsContent = '正在启动摄像头...';
+        
+        // 使用简单检测方案作为后备
+        this.useSimpleDetection();
       }
+    },
+
+    /**
+     * 启动加载进度显示
+     */
+    startLoadingProgress() {
+      const progressInterval = setInterval(() => {
+        if (this.modelsLoaded || this.loadingProgress >= 100) {
+          clearInterval(progressInterval);
+          return;
+        }
+        
+        this.loadingProgress = faceApiLoader.getLoadingProgress();
+        this.tipsContent = `正在加载AI模型... ${this.loadingProgress}%`;
+      }, 100);
     },
     
     /**
@@ -135,6 +158,11 @@ export default {
         
         // 等待视频加载完成
         await this.waitForVideoLoad();
+        
+        // 预热模型（如果模型已加载）
+        if (this.modelsLoaded) {
+          await faceApiLoader.warmupModels(this.video);
+        }
         
         // 开始人脸检测（统一使用startDetection，内部会判断使用哪种模式）
         this.startDetection();
