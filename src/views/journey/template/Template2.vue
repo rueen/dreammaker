@@ -2,18 +2,20 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-20 23:16:23
+ * @LastEditTime: 2025-08-20 23:53:58
  * @Description: 
 -->
 <template>
   <CustomAudio ref="CustomAudioRef" />
   <CustomVideo ref="CustomVideoRef" />
   <div id="template2" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
-    <div class="wrap">
-      <div id="title"></div>
-      <div id="content"></div>
+    <div class="content">
+      <div class="wrap">
+        <div id="title"></div>
+        <div id="content"></div>
+      </div>
+      <CustomButton theme="blue" style="width: 10rem;margin-top: 1rem;" @click="nextStep" v-if="isShowNext && data.children && data.children[0]">下一步</CustomButton>
     </div>
-    <CustomButton theme="blue" style="width: 10rem;margin-top: 1rem;" @click="nextStep" v-if="isShowNext && data.children && data.children[0]">下一步</CustomButton>
   </div>
 </template>
 
@@ -23,6 +25,7 @@ import CustomAudio from '@/components/CustomAudio';
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
 import { preloadCriticalImages } from '@/utils/imagePreloader'
+import { preloadVideo } from '@/utils/videoPreloader'
 
 export default {
   name: 'Template2View',
@@ -75,20 +78,33 @@ export default {
       }
     });
     
-    // 预加载
-    let preload = [];
-    let nexItem = this.data.children[0];
-    if(nexItem.bgUrl){
-      preload.push(nexItem.bgUrl);
-    }
-    if(nexItem.options && nexItem.options.length){
-      nexItem.options.forEach(option => {
-        if(option.image){
-          preload.push(option.image);
-        }
-      })
-    }
-    preloadCriticalImages(preload);
+    setTimeout(() => {
+      // 预加载图片
+      let preload = [];
+      let nexItem = this.data.children[0];
+      if(nexItem.bgUrl){
+        preload.push(nexItem.bgUrl);
+      }
+      if(nexItem.options && nexItem.options.length){
+        nexItem.options.forEach(option => {
+          if(option.image){
+            preload.push(option.image);
+          }
+        })
+      }
+      preloadCriticalImages(preload);
+      // 预加载视频
+      if(nexItem.video){
+        preloadVideo(nexItem.video)
+      }
+      if(nexItem.children && nexItem.children.length){
+        nexItem.children.forEach(child => {
+          if(child.video){
+            preloadVideo(child.video)
+          }
+        })
+      }
+    }, 1000)
   },
   methods: {
     getInteractive(){
@@ -110,11 +126,16 @@ export default {
   width: 100%;
   height: 100vh;
   background-size: cover;
+}
+.content{
+  position: absolute;
+  bottom: 15%;
+  left: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  padding-bottom: 12rem;
 }
 .wrap{
   width: 60%;

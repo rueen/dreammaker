@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-20 23:10:59
+ * @LastEditTime: 2025-08-20 23:47:34
  * @Description: 
 -->
 <template>
@@ -40,6 +40,7 @@ import CustomAudio from '@/components/CustomAudio';
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
 import { preloadCriticalImages } from '@/utils/imagePreloader'
+import { preloadVideo } from '@/utils/videoPreloader'
 
 export default {
   name: 'Template3View',
@@ -80,13 +81,19 @@ export default {
       }
     })
 
-    // 预加载
-    let preload = [];
-    let nexItem = this.data.children[0];
-    if(nexItem.bgUrl){
-      preload.push(nexItem.bgUrl);
-    }
-    preloadCriticalImages(preload);
+    setTimeout(() => {
+      // 预加载图片
+      let preload = [];
+      let nexItem = this.data.children[0];
+      if(nexItem.bgUrl){
+        preload.push(nexItem.bgUrl);
+      }
+      preloadCriticalImages(preload);
+      // 预加载视频
+      if(nexItem.video){
+        preloadVideo(nexItem.video)
+      }
+    }, 1000)
   },
   methods: {
     getInteractive(){

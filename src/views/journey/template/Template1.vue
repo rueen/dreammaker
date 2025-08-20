@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-20 23:16:25
+ * @LastEditTime: 2025-08-20 23:37:05
  * @Description: 
 -->
 <template>
@@ -61,6 +61,7 @@ import CustomVideo from '@/components/CustomVideo.vue';
 import {post} from '@/server/request';
 import { toast } from 'vue3-toastify';
 import { preloadCriticalImages } from '@/utils/imagePreloader'
+import { preloadVideo } from '@/utils/videoPreloader'
 
 export default {
   name: 'Template1View',
@@ -98,20 +99,33 @@ export default {
       this.$refs.CustomVideoRef.init(this.data.video)
     }
 
-    // 预加载
-    let preload = [];
-    let nexItem = this.data.children[0];
-    if(nexItem.bgUrl){
-      preload.push(nexItem.bgUrl);
-    }
-    if(nexItem.options && nexItem.options.length){
-      nexItem.options.forEach(option => {
-        if(option.image){
-          preload.push(option.image);
-        }
-      })
-    }
-    preloadCriticalImages(preload);
+    setTimeout(() => {
+      // 预加载图片
+      let preload = [];
+      let nexItem = this.data.children[0];
+      if(nexItem.bgUrl){
+        preload.push(nexItem.bgUrl);
+      }
+      if(nexItem.options && nexItem.options.length){
+        nexItem.options.forEach(option => {
+          if(option.image){
+            preload.push(option.image);
+          }
+        })
+      }
+      preloadCriticalImages(preload);
+      // 预加载视频
+      if(nexItem.video){
+        preloadVideo(nexItem.video)
+      }
+      if(nexItem.children && nexItem.children.length){
+        nexItem.children.forEach(child => {
+          if(child.video){
+            preloadVideo(child.video)
+          }
+        })
+      }
+    }, 1000)
   },
   beforeUnmount(){
     document.getElementById('template1').classList.remove('fadeIn')

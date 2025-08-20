@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-20 23:11:42
+ * @LastEditTime: 2025-08-20 23:45:03
  * @Description: 
 -->
 <template>
@@ -80,6 +80,7 @@ import Template4 from './template/Template4.vue';
 import CustomAudio from '@/components/CustomAudio';
 import {get} from '@/server/request';
 import { preloadCriticalImages } from '@/utils/imagePreloader'
+import { preloadVideo } from '@/utils/videoPreloader'
 
 export default {
   name: 'JourneyView',
@@ -176,8 +177,15 @@ export default {
           preload.push(this.info.list[0].bgUrl);
         }
         preloadCriticalImages(preload);
+
+        if(this.info.launchVideo){
+          preloadVideo(this.info.launchVideo)
+        }
+        if(this.info.list[0] && this.info.list[0].video){
+          preloadVideo(this.info.list[0].video);
+        }
       } catch (error) {
-        console.warn('关键图片预加载失败:', error);
+        console.warn('预加载失败:', error);
       }
       if(this.info.launchVideo || this.info.launchPhoto){
         this.setp = 2;
