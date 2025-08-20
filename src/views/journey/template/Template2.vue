@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-20 23:10:48
+ * @LastEditTime: 2025-08-20 23:16:23
  * @Description: 
 -->
 <template>
@@ -80,6 +80,13 @@ export default {
     let nexItem = this.data.children[0];
     if(nexItem.bgUrl){
       preload.push(nexItem.bgUrl);
+    }
+    if(nexItem.options && nexItem.options.length){
+      nexItem.options.forEach(option => {
+        if(option.image){
+          preload.push(option.image);
+        }
+      })
     }
     preloadCriticalImages(preload);
   },
