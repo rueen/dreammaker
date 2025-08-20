@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-20 23:53:58
+ * @LastEditTime: 2025-08-21 00:00:45
  * @Description: 
 -->
 <template>
@@ -104,7 +104,7 @@ export default {
           }
         })
       }
-    }, 1000)
+    }, 300)
   },
   methods: {
     getInteractive(){
