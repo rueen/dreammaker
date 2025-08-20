@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-18 16:43:18
+ * @LastEditTime: 2025-08-20 23:10:39
  * @Description: 
 -->
 <template>
@@ -60,6 +60,7 @@ import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
 import {post} from '@/server/request';
 import { toast } from 'vue3-toastify';
+import { preloadCriticalImages } from '@/utils/imagePreloader'
 
 export default {
   name: 'Template1View',
@@ -96,6 +97,14 @@ export default {
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }
+
+    // 预加载
+    let preload = [];
+    let nexItem = this.data.children[0];
+    if(nexItem.bgUrl){
+      preload.push(nexItem.bgUrl);
+    }
+    preloadCriticalImages(preload);
   },
   beforeUnmount(){
     document.getElementById('template1').classList.remove('fadeIn')

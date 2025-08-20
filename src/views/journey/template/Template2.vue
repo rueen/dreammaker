@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-18 16:54:04
+ * @LastEditTime: 2025-08-20 23:10:48
  * @Description: 
 -->
 <template>
@@ -22,6 +22,7 @@ import Typed from 'typed.js';
 import CustomAudio from '@/components/CustomAudio';
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
+import { preloadCriticalImages } from '@/utils/imagePreloader'
 
 export default {
   name: 'Template2View',
@@ -73,6 +74,14 @@ export default {
         });
       }
     });
+    
+    // 预加载
+    let preload = [];
+    let nexItem = this.data.children[0];
+    if(nexItem.bgUrl){
+      preload.push(nexItem.bgUrl);
+    }
+    preloadCriticalImages(preload);
   },
   methods: {
     getInteractive(){

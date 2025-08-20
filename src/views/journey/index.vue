@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-18 14:57:21
+ * @LastEditTime: 2025-08-20 23:11:42
  * @Description: 
 -->
 <template>
@@ -79,6 +79,7 @@ import Template3 from './template/Template3.vue';
 import Template4 from './template/Template4.vue';
 import CustomAudio from '@/components/CustomAudio';
 import {get} from '@/server/request';
+import { preloadCriticalImages } from '@/utils/imagePreloader'
 
 export default {
   name: 'JourneyView',
@@ -164,6 +165,19 @@ export default {
       this.info = res.Data || {};
       if(this.info.status === 0){
         return
+      }
+      // 预加载图片、视频
+      try {
+        let preload = [];
+        if(this.info.launchPhoto){
+          preload.push(this.info.launchPhoto);
+        }
+        if(this.info.list[0] && this.info.list[0].bgUrl){
+          preload.push(this.info.list[0].bgUrl);
+        }
+        preloadCriticalImages(preload);
+      } catch (error) {
+        console.warn('关键图片预加载失败:', error);
       }
       if(this.info.launchVideo || this.info.launchPhoto){
         this.setp = 2;
