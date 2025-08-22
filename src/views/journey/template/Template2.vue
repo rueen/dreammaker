@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-21 00:00:45
+ * @LastEditTime: 2025-08-22 17:18:43
  * @Description: 
 -->
 <template>
@@ -126,6 +126,7 @@ export default {
   width: 100%;
   height: 100vh;
   background-size: cover;
+  background-position: center center;
 }
 .content{
   position: absolute;
@@ -153,5 +154,16 @@ export default {
   font-size: 1.2rem;
   line-height: 1.8rem;
   color: #fff;
+}
+/* 竖屏 */
+.portrait .wrap{
+  width: 90%;
+  padding: 1rem;
+}
+.portrait #title{
+  font-size: 1.5rem;
+}
+.portrait #content{
+  font-size: 1rem;
 }
 </style>

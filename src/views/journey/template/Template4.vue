@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-18 14:41:11
+ * @LastEditTime: 2025-08-22 17:29:59
  * @Description: 
 -->
 <template>
@@ -245,5 +245,37 @@ export default {
 }
 .fadeInLeft{
   animation: fadeInLeft 1s linear forwards;
+}
+/* 竖屏 */
+.portrait .container{
+  flex-direction: column;
+}
+.portrait .left{
+  width: auto;
+  padding: 0 0 2rem 0;
+}
+.portrait .photo{
+  width: 15rem;
+}
+.portrait .right{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.portrait .rightContent{
+  width: 90%;
+  padding: 1rem;
+}
+.portrait .rightContent .title{
+  font-size: 1.2rem;
+  margin-bottom: .8rem;
+}
+.portrait .rightContent .content{
+  font-size: 1rem;
+  margin-bottom: .8rem;
+}
+.portrait .rightContent .qrCode{
+  width: 7rem;
+  height: 7rem;
 }
 </style>

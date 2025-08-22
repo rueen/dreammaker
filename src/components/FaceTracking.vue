@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-19 19:18:13
+ * @LastEditTime: 2025-08-22 14:50:14
  * @Description: 人脸捕捉 - 使用face-api.js，兼容现代主流浏览器
 -->
 <template>
@@ -27,9 +27,9 @@ export default {
   components: {},
   data() {
     return {
-      width: parseInt(window.innerWidth/100*25),
-      videoWidth: parseInt(window.innerWidth/100*25),
-      videoHeight: parseInt(window.innerWidth/100*25),
+      width: window.innerWidth > window.innerHeight ? parseInt(window.innerWidth/100*25) : parseInt(window.innerWidth * 0.9),
+      videoWidth: window.innerWidth > window.innerHeight ? parseInt(window.innerWidth/100*25) : parseInt(window.innerWidth * 0.9),
+      videoHeight: window.innerWidth > window.innerHeight ? parseInt(window.innerWidth/100*25) : parseInt(window.innerWidth * 0.9),
       countdown: 0,
       countdownTimer: null,
       tipsContent: '正在初始化...',

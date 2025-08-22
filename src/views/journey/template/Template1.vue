@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-21 00:00:36
+ * @LastEditTime: 2025-08-22 15:51:41
  * @Description: 
 -->
 <template>
@@ -41,12 +41,14 @@
     </div>
     <div class="right">
       <FaceTracking ref="refFaceTracking" @getPhoto="getPhoto($event)" />
-      <div class="btnBox" :style="{'width': `${cameraWidth}px`}" v-if="photo">
-        <CustomButton theme="white" @click="reTrack()" style="width: 10rem;">
-          <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
-          <span>重新拍</span>
-        </CustomButton>
-        <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="data.children && data.children[0]">下一步</CustomButton>
+      <div class="btnBox-wrap">
+        <div class="btnBox" :style="{'width': `${cameraWidth}px`}" v-if="photo">
+          <CustomButton theme="white" @click="reTrack()" style="width: 10rem;">
+            <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
+            <span>重新拍</span>
+          </CustomButton>
+          <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="data.children && data.children[0]">下一步</CustomButton>
+        </div>
       </div>
     </div>
   </div>
@@ -303,9 +305,66 @@ export default {
   width: 55%;
   padding-top: 10rem;
 }
+.btnBox-wrap{
+  height: 3rem;
+}
 .btnBox{
   display: flex;
   justify-content: space-between;
   margin-top: 2rem;
+}
+/* 竖屏 */
+.portrait .container{
+  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+}
+.portrait .page-title{
+  position: absolute;
+  text-align: center;
+  left: 0;
+  top: 10%;
+  width: 100%;
+  text-align: center;
+}
+.portrait .left{
+  padding: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.portrait .left .sexItem{
+  width: 7.5rem;
+  height: 6rem;
+}
+.portrait .left .sexMale{
+  margin-right: 2rem;
+}
+.portrait .iconBox{
+  height: 3.8rem;
+}
+.portrait .icon-male{
+  font-size: 3rem;
+}
+.portrait .icon-female{
+  font-size: 2.8rem;
+}
+.portrait .activeSex::before{
+  width: 65%;
+}
+.portrait .activeSex::after{
+  height: 65%;
+}
+.portrait .sexText{
+  font-size: 0.8rem;
+}
+.portrait .right{
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

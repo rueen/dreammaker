@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-21 00:00:52
+ * @LastEditTime: 2025-08-22 17:17:46
  * @Description: 
 -->
 <template>
@@ -17,20 +17,21 @@
           v-for="(option, index) in data.options"
           :id="`option_${option.id}`"
           :key="index"
-          :style="{'width': `${optionItemWidth}px`, 'height': `${optionItemWidth*1.4}px`}"
-          @click="handleSelect(option)"
-        >
+          :style="{'width': `${optionItemWidth}px`, 'margin-bottom': `${optionItemWidth*0.1}px`}"
+          @click="handleSelect(option)">
           <div
             class="imageView"
             :style="{'background-image': `url(${option.image})`, 'height': `${optionItemWidth*1.1}px`}"></div>
           <div class="name">{{ option.name }}</div>
         </div>
       </div>
-      <div class="selectedBox" v-if="selectedOption">
-        <div class="title">你将选择成为</div>
-        <div class="selected">{{selectedOption.name}}</div>
+      <div class="bottom-box">
+        <div class="selectedBox" v-if="selectedOption">
+          <div class="title">你将选择成为</div>
+          <div class="selected">{{selectedOption.name}}</div>
+        </div>
+        <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="selectedOption">下一步</CustomButton>
       </div>
-      <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="selectedOption">下一步</CustomButton>
     </div>
   </div>
 </template>
@@ -54,7 +55,9 @@ export default {
   data(){
     return {
       optionItemWidth: null,
-      selectedOption: null
+      selectedOption: null,
+      isLandscape: window.innerWidth > window.innerHeight,
+      animationName: window.innerWidth > window.innerHeight ? 'fadeInDownBig' : 'fadeInLeftBig'
     }
   },
   mounted() {
@@ -70,13 +73,14 @@ export default {
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }
-    this.optionItemWidth = parseInt((window.innerWidth*0.6)/this.data.options.length);
+    const len = this.data.options.length === 3 ? 3 : 2;
+    this.optionItemWidth = this.isLandscape ? parseInt((window.innerWidth*0.6)/this.data.options.length) : parseInt(window.innerWidth*0.86/len);
     this.data.options.forEach((option, index) => {
       const elm = document.getElementById(`option_${option.id}`);
       if(elm){
         setTimeout(() => {
           elm.classList.remove('hide');
-          elm.classList.add('fadeInDownBig');
+          elm.classList.add(this.animationName);
         }, index * 100)
       }
     })
@@ -109,7 +113,7 @@ export default {
           const _elm = document.getElementById(`option_${option.id}`);
           if(_elm){
             _elm.classList.remove('scaleUp');
-            _elm.classList.remove('fadeInDownBig');
+            _elm.classList.remove(this.animationName);
           }
         })
         elm.classList.add('scaleUp');
@@ -198,6 +202,12 @@ export default {
   margin-top: .5rem;
   text-align: center;
 }
+.bottom-box{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .selectedBox{
   width: 65%;
   display: flex;
@@ -214,5 +224,37 @@ export default {
   color: #2454C4;
   font-weight: bold;
   margin-top: .2rem;
+}
+/* 竖屏 */
+.portrait .page-title{
+  position: absolute;
+  text-align: center;
+  left: 0;
+  top: 10%;
+  width: 100%;
+  text-align: center;
+  transform: none;
+}
+.portrait .options{
+  width: 90%;
+  flex-wrap: wrap;
+}
+.portrait .optionItem{
+  padding: .7rem;
+}
+.portrait .optionItem .name{
+  font-size: .8rem;
+  margin-top: .3rem;
+}
+.portrait .bottom-box{
+  height: 6rem;
+  justify-content: space-between;
+}
+.portrait .selectedBox{
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0;
 }
 </style>

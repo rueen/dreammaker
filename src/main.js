@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 19:23:52
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-11 12:25:54
+ * @LastEditTime: 2025-08-22 14:28:58
  * @Description: 
  */
 import { createApp } from 'vue'
@@ -33,8 +33,36 @@ router.beforeEach(async (to, from, next) => {
 app.use(router).mount('#app')
 
 const resize = () => {
-  const screenWidth = window.innerWidth;
-  document.documentElement.style.fontSize = `${parseInt(screenWidth/100)}px`;
+  // const screenWidth = window.innerWidth;
+  // document.documentElement.style.fontSize = `${parseInt(screenWidth/100)}px`;
+  
+  // 检测横竖屏状态
+  const isLandscape = window.innerWidth > window.innerHeight;
+  
+  // 检测是否为手机端
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                   window.innerWidth <= 768;
+  
+  const appElement = document.getElementById('app');
+  
+  if (appElement) {
+    // 移除之前的横竖屏和设备类型 class
+    appElement.classList.remove('landscape', 'portrait', 'mobile', 'desktop');
+    
+    // 添加当前屏幕方向的 class
+    if (isLandscape) {
+      appElement.classList.add('landscape');
+    } else {
+      appElement.classList.add('portrait');
+    }
+    
+    // 添加设备类型 class
+    if (isMobile) {
+      appElement.classList.add('mobile');
+    } else {
+      appElement.classList.add('desktop');
+    }
+  }
 }
 window.addEventListener('resize', debounce(function() {
   resize();
