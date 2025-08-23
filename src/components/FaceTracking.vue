@@ -28,8 +28,8 @@ export default {
   data() {
     return {
       width: window.innerWidth > window.innerHeight ? parseInt(window.innerWidth/100*25) : parseInt(window.innerWidth * 0.9),
-      videoWidth: window.innerWidth > window.innerHeight ? parseInt(window.innerWidth/100*25) : parseInt(window.innerWidth * 0.9),
-      videoHeight: window.innerWidth > window.innerHeight ? parseInt(window.innerWidth/100*25) : parseInt(window.innerWidth * 0.9),
+      videoWidth: 0,
+      videoHeight: 0,
       countdown: 0,
       countdownTimer: null,
       tipsContent: '正在初始化...',
@@ -43,7 +43,8 @@ export default {
       modelsLoaded: false,
       stream: null,
       animationFrame: null,
-      loadingProgress: 0
+      loadingProgress: 0,
+      progressInterval: null
     };
   },
   
@@ -57,6 +58,12 @@ export default {
     document.removeEventListener('visibilitychange', this.watchVisibility);
     this.stopCamera();
     this.stopDetection();
+    
+    // 清理进度定时器
+    if (this.progressInterval) {
+      clearInterval(this.progressInterval);
+      this.progressInterval = null;
+    }
   },
   
   methods: {
@@ -94,9 +101,15 @@ export default {
      * 启动加载进度显示
      */
     startLoadingProgress() {
-      const progressInterval = setInterval(() => {
+      // 清除可能存在的旧定时器
+      if (this.progressInterval) {
+        clearInterval(this.progressInterval);
+      }
+      
+      this.progressInterval = setInterval(() => {
         if (this.modelsLoaded || this.loadingProgress >= 100) {
-          clearInterval(progressInterval);
+          clearInterval(this.progressInterval);
+          this.progressInterval = null;
           return;
         }
         
@@ -111,20 +124,9 @@ export default {
     useSimpleDetection() {
       this.modelsLoaded = true;
       this.tipsContent = '正在启动摄像头...';
-      
-      // 重写检测方法为简单的倒计时模式
-      this.startSimpleDetection = () => {
-        if (!this.isTracking) return;
-        
-        // 简单模式：检测到视频就开始倒计时
-        setTimeout(() => {
-          if (this.isTracking && !this.flag) {
-            this.tipsContent = '请面向摄像头，即将拍照';
-            this.handleFaceDetected();
-          }
-        }, 2000);
-      };
     },
+
+
     
     /**
      * 启动摄像头 - 兼容所有现代浏览器
@@ -341,17 +343,34 @@ export default {
       try {
         if (!this.video || !this.canvas) return;
         
-        // 将视频帧绘制到canvas
+        // 获取视频的实际尺寸
+        const videoWidth = this.video.videoWidth;
+        const videoHeight = this.video.videoHeight;
+        const canvasSize = this.width;
+        
+        // 清除canvas
+        this.context.clearRect(0, 0, canvasSize, canvasSize);
+        
+        // 计算居中裁剪的坐标
+        let sourceX = 0;
+        let sourceY = 0;
+        let sourceSize = Math.min(videoWidth, videoHeight);
+        
+        if (videoWidth > videoHeight) {
+          // 横向视频，从中间裁剪正方形
+          sourceX = (videoWidth - videoHeight) / 2;
+          sourceSize = videoHeight;
+        } else {
+          // 竖向视频，从中间裁剪正方形
+          sourceY = (videoHeight - videoWidth) / 2;
+          sourceSize = videoWidth;
+        }
+        
+        // 绘制居中裁剪的正方形图像
         this.context.drawImage(
-          this.video, 
-          Math.abs((this.videoWidth - this.videoHeight)/2), 
-          0, 
-          this.videoHeight, 
-          this.videoHeight, 
-          0, 
-          0, 
-          this.width, 
-          this.width
+          this.video,
+          sourceX, sourceY, sourceSize, sourceSize,  // 源坐标和尺寸
+          0, 0, canvasSize, canvasSize               // 目标坐标和尺寸
         );
         
         // 转换为图片
@@ -370,6 +389,7 @@ export default {
         });
         
       } catch (error) {
+        console.error('拍照失败:', error);
         this.tipsContent = '拍照失败，请重试';
       }
     },
@@ -404,6 +424,13 @@ export default {
       this.flag = false;
       this.isTracking = false;
       this.lastDetectionTime = 0;
+      this.loadingProgress = 0;
+      
+      // 清理定时器
+      if (this.progressInterval) {
+        clearInterval(this.progressInterval);
+        this.progressInterval = null;
+      }
     },
     
     /**
