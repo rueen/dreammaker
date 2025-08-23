@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-07-24 21:11:03
+ * @LastEditTime: 2025-08-23 16:46:57
  * @Description: 视频
 -->
 <template>
@@ -12,10 +12,14 @@
       class="videoPlayer"
       autoplay
       loop
-      :src="src"
       :muted="muted"
+      playsinline
+      webkit-playsinline="true"
+      x5-video-player-type="h5"
+      x5-video-player-fullscreen="true"
+      x5-video-orientation="portrait"
     >
-      <source type="video/mp4">
+      <source :src="src" type="video/mp4">
     </video>
   </div>
 </template>
