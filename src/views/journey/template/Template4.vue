@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-22 17:29:59
+ * @LastEditTime: 2025-08-23 18:12:56
  * @Description: 
 -->
 <template>
@@ -11,7 +11,13 @@
   <Loading text="数据加载中 请耐心等待..." v-if="loading" />
   <div id="template4" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
     <div class="left">
-      <div class="photo hide" id="photo"><img class="photoImg" :src="info.image" alt=""></div>
+      <div
+        class="photo hide"
+        v-for="(option, index) in [1,2,3]"
+        :key="index"
+        :style="{'z-index': `${100 - index}`}"
+        @click="handleSelect(index)"
+      ><img class="photoImg" :src="info.image" alt=""></div>
     </div>
     <div class="right">
       <div class="rightContent">
@@ -64,14 +70,18 @@ export default {
       info: {
         content: '',
         image: ''
-      }
+      },
     }
   },
   async mounted() {
     await this.synthetize();
     document.getElementById('template4').classList.add('fadeIn');
     setTimeout(() => {
-      document.getElementById('photo').classList.add('fadeInLeft');
+      document.querySelectorAll('.photo').forEach((el, index) => {
+        // 为每个元素设置不同的旋转角度
+        el.style.setProperty('--final-rotate', `${(index + 1) * 10}deg`);
+        el.classList.add('fadeInLeft');
+      });
     })
     setTimeout(() => {
       document.getElementById('title').classList.add('fadeInDown');
@@ -91,6 +101,18 @@ export default {
     }
   },
   methods: {
+    handleSelect(index){
+      // 移除所有元素的 scaleUp 类名
+      document.querySelectorAll('.photo').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      // 为选中的元素添加 scaleUp 类名
+      const selectedElement = document.querySelectorAll('.photo')[index];
+      if (selectedElement) {
+        selectedElement.classList.add('active');
+      }
+    },
     getInteractive(){
       if(this.data.audio){
         this.$refs.CustomAudioRef.init(this.data.audio);
@@ -144,6 +166,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   padding-right: 8rem;
+  position: relative;
 }
 .right{
   width: 50%;
@@ -158,9 +181,18 @@ export default {
 }
 .photo{
   width: 20rem;
-  /* background-color: #E6E6E6; */
   box-shadow: .3rem .1rem .8rem 0 rgba(0, 0, 0, .25);
-  transform: rotate(5deg);
+  transform-origin: 80% 80%;
+  cursor: pointer;
+  position: absolute;
+  right: 30%;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: .5rem;
+  background-color: #E6E6E6;
+}
+.photo.active{
+  z-index: 101!important;
 }
 .photoImg{
   width: 100%;
@@ -213,34 +245,39 @@ export default {
   animation: fadeIn 1s linear forwards;
 }
 @-webkit-keyframes fadeInLeft {
-  from {
+  0% {
     opacity: 0;
-    -webkit-transform: translate3d(-100%, 0, 0);
-    transform: translate3d(-100%, 0, 0);
+    -webkit-transform: translate3d(-100%, -50%, 0);
+    transform: translate3d(-100%, -50%, 0);
   }
 
-  to {
+  70% {
     opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, -50%, 0);
+    transform: translate3d(0, -50%, 0);
+  }
+  100%{
+    opacity: 1;
+    -webkit-transform: translate3d(0, -50%, 0) rotate(var(--final-rotate, 5deg));
+    transform: translate3d(0, -50%, 0) rotate(var(--final-rotate, 5deg));
   }
 }
 @keyframes fadeInLeft {
   0% {
     opacity: 0;
-    -webkit-transform: translate3d(-100%, 0, 0);
-    transform: translate3d(-100%, 0, 0);
+    -webkit-transform: translate3d(-100%, -50%, 0);
+    transform: translate3d(-100%, -50%, 0);
   }
 
   70% {
     opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, -50%, 0);
+    transform: translate3d(0, -50%, 0);
   }
   100%{
     opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0) rotate(5deg);
-    transform: translate3d(0, 0, 0) rotate(5deg);
+    -webkit-transform: translate3d(0, -50%, 0) rotate(var(--final-rotate, 5deg));
+    transform: translate3d(0, -50%, 0) rotate(var(--final-rotate, 5deg));
   }
 }
 .fadeInLeft{

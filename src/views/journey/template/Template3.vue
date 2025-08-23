@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-22 17:17:46
+ * @LastEditTime: 2025-08-23 17:20:11
  * @Description: 
 -->
 <template>
@@ -21,7 +21,24 @@
           @click="handleSelect(option)">
           <div
             class="imageView"
-            :style="{'background-image': `url(${option.image})`, 'height': `${optionItemWidth*1.1}px`}"></div>
+            :style="{'background-image': `url(${option.image})`, 'height': `${optionItemWidth*1.1}px`}">
+            <div class="imageView-content" v-if="selectedOption && selectedOption.id === option.id">
+              <video
+                class="imageView-video"
+                autoplay
+                loop
+                muted
+                playsinline
+                webkit-playsinline="true"
+                x5-video-player-type="h5"
+                x5-video-player-fullscreen="true"
+                x5-video-orientation="portrait"
+              >
+                <source src="https://unidt365.oss-cn-hangzhou.aliyuncs.com/video/20250821115049.mp4" type="video/mp4">
+              </video>
+              <!-- <div class="imageView-gif" :style="{'background-image': `url(${option.image})`}"></div> -->
+            </div>
+          </div>
           <div class="name">{{ option.name }}</div>
         </div>
       </div>
@@ -191,6 +208,19 @@ export default {
 }
 .hide{
   opacity: 0;
+}
+.imageView-content{
+  width: 100%;
+  height: 100%;
+}
+.imageView-video{
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 确保视频覆盖整个背景 */
+}
+.imageView-gif{
+  width: 100%;
+  height: 100%;
 }
 .optionItem .imageView{
   width: 100%;
