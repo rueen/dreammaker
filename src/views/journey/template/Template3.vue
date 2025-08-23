@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-23 17:20:11
+ * @LastEditTime: 2025-08-23 20:03:13
  * @Description: 
 -->
 <template>
@@ -260,7 +260,7 @@ export default {
   position: absolute;
   text-align: center;
   left: 0;
-  top: 10%;
+  top: 5%;
   width: 100%;
   text-align: center;
   transform: none;

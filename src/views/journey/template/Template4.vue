@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-23 18:12:56
+ * @LastEditTime: 2025-08-23 20:17:41
  * @Description: 
 -->
 <template>
@@ -10,14 +10,14 @@
   <CustomVideo ref="CustomVideoRef" />
   <Loading text="数据加载中 请耐心等待..." v-if="loading" />
   <div id="template4" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
-    <div class="left">
+    <div class="left" :style="{'height': `${leftHeight}px`}">
       <div
         class="photo hide"
-        v-for="(option, index) in [1,2,3]"
+        v-for="(option, index) in images"
         :key="index"
         :style="{'z-index': `${100 - index}`}"
         @click="handleSelect(index)"
-      ><img class="photoImg" :src="info.image" alt=""></div>
+      ><img class="photoImg" :src="option" alt=""></div>
     </div>
     <div class="right">
       <div class="rightContent">
@@ -71,6 +71,8 @@ export default {
         content: '',
         image: ''
       },
+      images: [],
+      leftHeight: 0
     }
   },
   async mounted() {
@@ -141,6 +143,41 @@ export default {
       if(this.sceneInfo.generateRule === 2 && this.selectedLastOption && this.selectedLastOption.image){
         this.info.image = this.selectedLastOption.image;
       }
+      this.images = [this.info.image,this.info.image,this.info.image];
+      // 计算leftHeight
+      this.calculateLeftHeight();
+    },
+    /**
+     * 计算left区域高度 - 基于图片等比例缩放后的最大高度
+     */
+    calculateLeftHeight() {
+      // 等待DOM更新完成
+      this.$nextTick(() => {
+        const photoElements = document.querySelectorAll('.photo');
+        if (photoElements.length === 0) return;
+        
+        // 获取第一个photo元素的宽度作为基准
+        const photoWidth = photoElements[0].offsetWidth;
+        let maxHeight = 0;
+        
+        // 遍历所有图片，计算等比例缩放后的高度
+        this.images.forEach((imageSrc, index) => {
+          if (imageSrc) {
+            const img = new Image();
+            img.onload = () => {
+              const aspectRatio = img.height / img.width;
+              const scaledHeight = photoWidth * aspectRatio;
+              maxHeight = Math.max(maxHeight, scaledHeight);
+              
+              // 当所有图片都加载完成后，更新leftHeight
+              if (index === this.images.length - 1) {
+                this.leftHeight = maxHeight;
+              }
+            };
+            img.src = imageSrc;
+          }
+        });
+      });
     },
     reStart(){
       this.$emit('reStart');
@@ -288,8 +325,9 @@ export default {
   flex-direction: column;
 }
 .portrait .left{
-  width: auto;
-  padding: 0 0 2rem 0;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 2rem;
 }
 .portrait .photo{
   width: 15rem;
