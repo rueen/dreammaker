@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-22 17:18:43
+ * @LastEditTime: 2025-08-24 14:13:07
  * @Description: 
 -->
 <template>
@@ -10,7 +10,11 @@
   <CustomVideo ref="CustomVideoRef" />
   <div id="template2" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
     <div class="content">
-      <div class="wrap">
+      <div class="wrap" v-if="data.rate === 0">
+        <div id="title">{{ data.title }}</div>
+        <div id="content">{{ data.content }}</div>
+      </div>
+      <div class="wrap" v-else>
         <div id="title"></div>
         <div id="content"></div>
       </div>
@@ -54,29 +58,33 @@ export default {
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }
-    new Typed('#title', {
-      strings: [
-        `${this.data.title}`
-      ],
-      typeSpeed: 100, // 打印速度
-      startDelay: 300, // 开始之前的延迟300毫秒
-      loop: false, // 是否循环
-      showCursor: false,
-      onComplete: () => {
-        new Typed('#content', {
-          strings: [
-            `${this.data.content}`
-          ],
-          typeSpeed: 100, // 打印速度
-          startDelay: 300, // 开始之前的延迟300毫秒
-          loop: false, // 是否循环
-          showCursor: false,
-          onComplete: () => {
-            this.isShowNext = true;
-          }
-        });
-      }
-    });
+    if(this.data.rate === 0) {
+      this.isShowNext = true;
+    } else {
+      new Typed('#title', {
+        strings: [
+          `${this.data.title}`
+        ],
+        typeSpeed: 100 * this.data.rate, // 打印速度
+        startDelay: 300, // 开始之前的延迟300毫秒
+        loop: false, // 是否循环
+        showCursor: false,
+        onComplete: () => {
+          new Typed('#content', {
+            strings: [
+              `${this.data.content}`
+            ],
+            typeSpeed: 100, // 打印速度
+            startDelay: 300, // 开始之前的延迟300毫秒
+            loop: false, // 是否循环
+            showCursor: false,
+            onComplete: () => {
+              this.isShowNext = true;
+            }
+          });
+        }
+      });
+    }
     
     setTimeout(() => {
       // 预加载图片
