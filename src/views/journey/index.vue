@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-20 23:45:03
+ * @LastEditTime: 2025-08-24 16:07:35
  * @Description: 
 -->
 <template>
@@ -28,8 +28,8 @@
         :data="activeItem"
         @onEnd="onEnd"
         @getUserInfo="getUserInfo"
-        @pauseLaunchAudio="pauseLaunchAudio"
-        @playLaunchAudio="playLaunchAudio"
+        @initAudio="handleInitAudio"
+        @userInteractive="handleUserInteractive"
       />
       <Template2
         ref="Template2"
@@ -38,8 +38,8 @@
         :sceneInfo="info"
         :data="activeItem"
         @onEnd="onEnd"
-        @pauseLaunchAudio="pauseLaunchAudio"
-        @playLaunchAudio="playLaunchAudio"
+        @initAudio="handleInitAudio"
+        @userInteractive="handleUserInteractive"
       />
       <Template3
         ref="Template3"
@@ -50,8 +50,8 @@
         @onEnd="onEnd"
         @getOption="getOption"
         @getLastOption="getLastOption"
-        @pauseLaunchAudio="pauseLaunchAudio"
-        @playLaunchAudio="playLaunchAudio"
+        @initAudio="handleInitAudio"
+        @userInteractive="handleUserInteractive"
       />
       <Template4
         ref="Template4"
@@ -63,8 +63,8 @@
         :selectedOption="selectedOption"
         :selectedLastOption="selectedLastOption"
         @reStart="reStart"
-        @pauseLaunchAudio="pauseLaunchAudio"
-        @playLaunchAudio="playLaunchAudio"
+        @initAudio="handleInitAudio"
+        @userInteractive="handleUserInteractive"
       />
     </div>
   </div>
@@ -111,18 +111,35 @@ export default {
   watch: {
     isInteractive(newValue){
       if(newValue && this.activeItem && this.activeItem.template){
-        if(this.$refs[`Template${this.activeItem.template}`] && this.$refs[`Template${this.activeItem.template}`].getInteractive){
-          this.$refs[`Template${this.activeItem.template}`].getInteractive();
-        }
+        // 延迟一下，让场景音频先播放，然后再让模板组件处理剧情音频
+        this.$nextTick(() => {
+          if(this.$refs[`Template${this.activeItem.template}`] && this.$refs[`Template${this.activeItem.template}`].getInteractive){
+            this.$refs[`Template${this.activeItem.template}`].getInteractive();
+          }
+        });
       }
     },
     activeItem(newValue, oldValue){
+      const updateAudio = () => {
+        if(this.isInteractive && newValue){
+          this.$nextTick(() => {
+            this.handleInitAudio({
+              sceneAudio: this.info.launchAudio,
+              plotAudio: newValue.audio,
+              audioLevel: newValue.audioLevel || 0
+            });
+          });
+        }
+      };
+
       if(newValue.template === oldValue.template){
         this.isShow = false;
-        // 性能优化：使用nextTick代替setTimeout(0)，更高效
         this.$nextTick(() => {
           this.isShow = true;
-        })
+          updateAudio();
+        });
+      } else {
+        updateAudio();
       }
     }
   },
@@ -194,9 +211,7 @@ export default {
             launchVideo: this.info.launchVideo,
             launchPhoto: this.info.launchPhoto
           });
-          if(this.isInteractive && this.info.launchAudio){
-            this.$refs.CustomAudioRef.init(this.info.launchAudio);
-          }
+
         })
       } else {
         this.onLaunch();
@@ -211,8 +226,11 @@ export default {
       if(!this.isInteractive){
         // 启动音频
         this.isInteractive = true;
-        if(this.info.launchAudio){
-          this.$refs.CustomAudioRef.init(this.info.launchAudio);
+        
+        // 用户首次交互后，如果存在场景音频，立即播放场景音频
+        if(this.info.launchAudio && this.$refs.CustomAudioRef){
+          // 播放场景音频，audioLevel=0表示场景音频优先
+          this.$refs.CustomAudioRef.init(this.info.launchAudio, null, 0);
         }
       }
     },
@@ -230,24 +248,36 @@ export default {
             launchVideo: this.info.launchVideo,
             launchPhoto: this.info.launchPhoto
           });
-          if(this.isInteractive && this.info.launchAudio){
-            this.$refs.CustomAudioRef.init(this.info.launchAudio);
-          }
+
         })
       } else {
         this.onLaunch();
       }
     },
-    pauseLaunchAudio(){
-      this.$refs.CustomAudioRef.handlePause(false);
-    },
-    playLaunchAudio(){
-      if(this.info.launchAudio){
-        setTimeout(() => {
-          this.$refs.CustomAudioRef.handlePlay(true);
-        }, 0)
+    // 处理音频初始化请求（统一处理）
+    handleInitAudio({ sceneAudio, plotAudio, audioLevel }) {
+      if (this.$refs.CustomAudioRef) {
+        this.$refs.CustomAudioRef.init(sceneAudio, plotAudio, audioLevel);
       }
     },
+    
+    // 处理用户交互事件
+    handleUserInteractive(audioData) {
+      if (this.isInteractive) {
+        // 如果剧情没有音频，但有场景音频，继续播放场景音频
+        if (!audioData.plotAudio && this.info.launchAudio) {
+          this.handleInitAudio({
+            sceneAudio: this.info.launchAudio,
+            plotAudio: null,
+            audioLevel: 0
+          });
+        } else {
+          // 否则按照模板组件的音频策略播放
+          this.handleInitAudio(audioData);
+        }
+      }
+    },
+
     getUserInfo({photoPath,activeGender,scene}){
       this.userInfo = {
         photoPath,

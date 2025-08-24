@@ -6,7 +6,7 @@
  * @Description: 
 -->
 <template>
-  <CustomAudio ref="CustomAudioRef" />
+
   <CustomVideo ref="CustomVideoRef" />
   <Loading text="图片上传中 请耐心等待..." v-if="loading" />
   <div id="template1" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import CustomAudio from '@/components/CustomAudio';
+
 import Loading from '@/components/loading';
 import FaceTracking from '@/components/FaceTracking';
 import CustomButton from '@/components/CustomButton.vue'
@@ -65,16 +65,18 @@ import { toast } from 'vue3-toastify';
 import { preloadCriticalImages } from '@/utils/imagePreloader'
 import { preloadVideo } from '@/utils/videoPreloader'
 
+
 export default {
   name: 'Template1View',
   props: ['data', 'sceneInfo', 'isInteractive'],
-  emits: ['onEnd', 'getUserInfo', 'pauseLaunchAudio', 'playLaunchAudio'],
+  emits: ['onEnd', 'getUserInfo', 'initAudio', 'userInteractive'],
+
   components: {
     Loading,
     FaceTracking,
     CustomButton,
     CustomVideo,
-    CustomAudio
+
   },
   data(){
     return {
@@ -87,16 +89,16 @@ export default {
       loading: false
     }
   },
+
   mounted() {
     document.getElementById('template1').classList.add('fadeIn');
-    if(this.data.audio){
-      if(this.isInteractive){
-        this.$refs.CustomAudioRef.init(this.data.audio);
-      }
-      this.$emit('pauseLaunchAudio');
-    } else {
-      this.$emit('playLaunchAudio');
-    }
+    
+    // 通知父组件初始化音频
+    this.$emit('initAudio', {
+      sceneAudio: this.sceneInfo?.launchAudio,
+      plotAudio: this.data?.audio,
+      audioLevel: this.data?.audioLevel
+    });
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }
@@ -135,9 +137,12 @@ export default {
   },
   methods: {
     getInteractive(){
-      if(this.data.audio){
-        this.$refs.CustomAudioRef.init(this.data.audio);
-      }
+      // 通知父组件用户已交互，可以播放音频
+      this.$emit('userInteractive', {
+        sceneAudio: this.sceneInfo?.launchAudio,
+        plotAudio: this.data?.audio,
+        audioLevel: this.data?.audioLevel
+      });
     },
     selectSex(item){
       this.activeSex = item;

@@ -6,7 +6,7 @@
  * @Description: 
 -->
 <template>
-  <CustomAudio ref="CustomAudioRef" />
+
   <CustomVideo ref="CustomVideoRef" />
   <div id="template3" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
     <div class="content">
@@ -54,20 +54,22 @@
 </template>
 
 <script>
-import CustomAudio from '@/components/CustomAudio';
+
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
 import { preloadCriticalImages } from '@/utils/imagePreloader'
 import { preloadVideo } from '@/utils/videoPreloader'
 
+
 export default {
   name: 'Template3View',
   props: ['data', 'sceneInfo', 'isInteractive'],
-  emits: ['onEnd', 'pauseLaunchAudio', 'playLaunchAudio', 'getOption', 'getLastOption'],
+  emits: ['onEnd', 'initAudio', 'userInteractive', 'getOption', 'getLastOption'],
+
   components: {
     CustomButton,
     CustomVideo,
-    CustomAudio
+
   },
   data(){
     return {
@@ -79,14 +81,13 @@ export default {
   },
   mounted() {
     document.getElementById('template3').classList.add('fadeIn');
-    if(this.data.audio){
-      if(this.isInteractive){
-        this.$refs.CustomAudioRef.init(this.data.audio);
-      }
-      this.$emit('pauseLaunchAudio');
-    } else {
-      this.$emit('playLaunchAudio');
-    }
+    
+    // 通知父组件初始化音频
+    this.$emit('initAudio', {
+      sceneAudio: this.sceneInfo?.launchAudio,
+      plotAudio: this.data?.audio,
+      audioLevel: this.data?.audioLevel
+    });
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }
@@ -118,9 +119,12 @@ export default {
   },
   methods: {
     getInteractive(){
-      if(this.data.audio){
-        this.$refs.CustomAudioRef.init(this.data.audio);
-      }
+      // 通知父组件用户已交互，可以播放音频
+      this.$emit('userInteractive', {
+        sceneAudio: this.sceneInfo?.launchAudio,
+        plotAudio: this.data?.audio,
+        audioLevel: this.data?.audioLevel
+      });
     },
     handleSelect(option){
       this.selectedOption = {...option};

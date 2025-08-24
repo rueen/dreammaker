@@ -2,11 +2,11 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-24 14:13:07
+ * @LastEditTime: 2025-08-24 14:26:56
  * @Description: 
 -->
 <template>
-  <CustomAudio ref="CustomAudioRef" />
+
   <CustomVideo ref="CustomVideoRef" />
   <div id="template2" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
     <div class="content">
@@ -25,20 +25,22 @@
 
 <script>
 import Typed from 'typed.js';
-import CustomAudio from '@/components/CustomAudio';
+
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
 import { preloadCriticalImages } from '@/utils/imagePreloader'
 import { preloadVideo } from '@/utils/videoPreloader'
 
+
 export default {
   name: 'Template2View',
   props: ['data', 'sceneInfo', 'isInteractive'],
-  emits: ['onEnd', 'pauseLaunchAudio', 'playLaunchAudio'],
+  emits: ['onEnd', 'initAudio', 'userInteractive'],
+
   components: {
     CustomButton,
     CustomVideo,
-    CustomAudio
+
   },
   data(){
     return {
@@ -47,14 +49,13 @@ export default {
   },
   mounted() {
     document.getElementById('template2').classList.add('fadeIn');
-    if(this.data.audio){
-      if(this.isInteractive){
-        this.$refs.CustomAudioRef.init(this.data.audio);
-      }
-      this.$emit('pauseLaunchAudio');
-    } else {
-      this.$emit('playLaunchAudio');
-    }
+    
+    // 通知父组件初始化音频
+    this.$emit('initAudio', {
+      sceneAudio: this.sceneInfo?.launchAudio,
+      plotAudio: this.data?.audio,
+      audioLevel: this.data?.audioLevel
+    });
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }
@@ -116,9 +117,12 @@ export default {
   },
   methods: {
     getInteractive(){
-      if(this.data.audio){
-        this.$refs.CustomAudioRef.init(this.data.audio);
-      }
+      // 通知父组件用户已交互，可以播放音频
+      this.$emit('userInteractive', {
+        sceneAudio: this.sceneInfo?.launchAudio,
+        plotAudio: this.data?.audio,
+        audioLevel: this.data?.audioLevel
+      });
     },
     nextStep(){
       this.$emit('onEnd', {

@@ -6,7 +6,7 @@
  * @Description: 
 -->
 <template>
-  <CustomAudio ref="CustomAudioRef" />
+
   <CustomVideo ref="CustomVideoRef" />
   <Loading text="数据加载中 请耐心等待..." v-if="loading" />
   <div id="template4" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
@@ -46,23 +46,25 @@
 </template>
 
 <script>
-import CustomAudio from '@/components/CustomAudio';
+
 import Loading from '@/components/loading';
 import VueQrcode from 'vue-qrcode'
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
 import {post} from '@/server/request';
 
+
 export default {
   name: 'Template4View',
   props: ['data', 'userInfo', 'selectedOption', 'sceneInfo', 'selectedLastOption', 'isInteractive'],
-  emits: ['reStart', 'pauseLaunchAudio', 'playLaunchAudio'],
+  emits: ['reStart', 'initAudio', 'userInteractive'],
+
   components: {
     Loading,
     CustomButton,
     CustomVideo,
     VueQrcode,
-    CustomAudio
+
   },
   data(){
     return {
@@ -90,14 +92,12 @@ export default {
       document.getElementById('content').classList.add('fadeIn');
       document.getElementById('qrCodeWrap').classList.add('fadeIn');
     }, 800)
-    if(this.data.audio){
-      if(this.isInteractive){
-        this.$refs.CustomAudioRef.init(this.data.audio);
-      }
-      this.$emit('pauseLaunchAudio');
-    } else {
-      this.$emit('playLaunchAudio');
-    }
+    // 通知父组件初始化音频
+    this.$emit('initAudio', {
+      sceneAudio: this.sceneInfo?.launchAudio,
+      plotAudio: this.data?.audio,
+      audioLevel: this.data?.audioLevel
+    });
     if(this.data && this.data.video){
       this.$refs.CustomVideoRef.init(this.data.video)
     }
@@ -116,9 +116,12 @@ export default {
       }
     },
     getInteractive(){
-      if(this.data.audio){
-        this.$refs.CustomAudioRef.init(this.data.audio);
-      }
+      // 通知父组件用户已交互，可以播放音频
+      this.$emit('userInteractive', {
+        sceneAudio: this.sceneInfo?.launchAudio,
+        plotAudio: this.data?.audio,
+        audioLevel: this.data?.audioLevel
+      });
     },
     async synthetize(){
       const { photoPath, activeGender } = this.userInfo;
