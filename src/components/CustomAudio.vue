@@ -65,10 +65,27 @@ export default {
     
     // 根据权重计算播放策略
     getPlayStrategy() {
-      return {
-        playScene: this.currentAudioLevel === 0 || this.currentAudioLevel === 2,
-        playPlot: this.currentAudioLevel === 1 || this.currentAudioLevel === 2
-      };
+      const hasSceneAudio = !!this.sceneAudioSrc && !!this.sceneAudio;
+      const hasPlotAudio = !!this.plotAudioSrc && !!this.plotAudio;
+      
+      let playScene = false;
+      let playPlot = false;
+      
+      if (this.currentAudioLevel === 0) {
+        // 场景音频优先：优先播放场景音频，如果没有则播放剧情音频
+        playScene = hasSceneAudio;
+        playPlot = !hasSceneAudio && hasPlotAudio;
+      } else if (this.currentAudioLevel === 1) {
+        // 剧情音频优先：优先播放剧情音频，如果没有则播放场景音频
+        playPlot = hasPlotAudio;
+        playScene = !hasPlotAudio && hasSceneAudio;
+      } else if (this.currentAudioLevel === 2) {
+        // 同时播放：播放所有存在的音频
+        playScene = hasSceneAudio;
+        playPlot = hasPlotAudio;
+      }
+      
+      return { playScene, playPlot };
     },
     
     // 统一的音频控制方法
@@ -77,9 +94,19 @@ export default {
       
       try {
         if (shouldPlay) {
-          audioElement.play().catch(err => console.warn(`${audioName}播放失败:`, err));
+          // 如果音频已经在播放，避免重复调用 play()
+          if (audioElement.paused) {
+            audioElement.play().catch(err => {
+              // 忽略 AbortError，这通常是由于快速切换导致的正常中断
+              if (err.name !== 'AbortError') {
+                console.warn(`${audioName}播放失败:`, err);
+              }
+            });
+          }
         } else {
-          audioElement.pause();
+          if (!audioElement.paused) {
+            audioElement.pause();
+          }
         }
       } catch (error) {
         console.warn(`${audioName}控制失败:`, error);
