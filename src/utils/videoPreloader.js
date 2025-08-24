@@ -114,7 +114,7 @@ class VideoPreloader {
   preloadCriticalVideos(urls) {
     if (!Array.isArray(urls) || urls.length === 0) return
 
-    console.log(`预加载 ${urls.length} 个关键视频...`)
+    // console.log(`预加载 ${urls.length} 个关键视频...`)
     this.preloadVideos(urls, {
       priority: 'high',
       maxConcurrent: 1 // 关键视频限制并发数为1

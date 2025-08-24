@@ -164,7 +164,7 @@ class ImagePreloader {
   preloadCriticalImages(urls) {
     if (!Array.isArray(urls) || urls.length === 0) return
 
-    console.log(`预加载 ${urls.length} 张关键图片...`)
+    // console.log(`预加载 ${urls.length} 张关键图片...`)
     this.preloadImages(urls, {
       priority: 'high',
       maxConcurrent: 2 // 关键图片限制并发数
