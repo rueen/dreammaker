@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-23 20:17:41
+ * @LastEditTime: 2025-08-24 17:49:57
  * @Description: 
 -->
 <template>
@@ -194,6 +194,7 @@ export default {
   width: 100%;
   height: 100vh;
   background-size: cover;
+  background-position: center center;
   display: flex;
   justify-content: center;
   align-items: center;

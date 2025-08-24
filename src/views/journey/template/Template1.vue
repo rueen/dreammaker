@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-22 15:51:41
+ * @LastEditTime: 2025-08-24 18:02:16
  * @Description: 
 -->
 <template>
@@ -10,44 +10,46 @@
   <CustomVideo ref="CustomVideoRef" />
   <Loading text="图片上传中 请耐心等待..." v-if="loading" />
   <div id="template1" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
-    <div class="page-title">{{data.title}}</div>
-    <div class="left">
-      <div class="sexList">
-        <div class="sexItem sexMale" @click="selectSex({
-          gender: 'male',
-          text: data.maleText
-        })" :class="activeSex.gender === 'male' ? 'activeSex' : ''">
-          <div class="sexItemContent">
-            <div class="iconBox">
-              <span class="iconfont icon-male sexIcon"></span>
-              <span class="sexTag">male</span>
+    <div class="content">
+      <div class="page-title">{{data.title}}</div>
+      <div class="left">
+        <div class="sexList">
+          <div class="sexItem sexMale" @click="selectSex({
+            gender: 'male',
+            text: data.maleText
+          })" :class="activeSex.gender === 'male' ? 'activeSex' : ''">
+            <div class="sexItemContent">
+              <div class="iconBox">
+                <span class="iconfont icon-male sexIcon"></span>
+                <span class="sexTag">male</span>
+              </div>
+              <div class="sexText">{{data.maleText}}</div>
             </div>
-            <div class="sexText">{{data.maleText}}</div>
           </div>
-        </div>
-        <div class="sexItem" @click="selectSex({
-          gender: 'female',
-          text: data.femaleText
-        })" :class="activeSex.gender === 'female' ? 'activeSex' : ''">
-          <div class="sexItemContent">
-            <div class="iconBox">
-              <span class="iconfont icon-female sexIcon"></span>
-              <span class="sexTag">female</span>
+          <div class="sexItem" @click="selectSex({
+            gender: 'female',
+            text: data.femaleText
+          })" :class="activeSex.gender === 'female' ? 'activeSex' : ''">
+            <div class="sexItemContent">
+              <div class="iconBox">
+                <span class="iconfont icon-female sexIcon"></span>
+                <span class="sexTag">female</span>
+              </div>
+              <div class="sexText">{{data.femaleText}}</div>
             </div>
-            <div class="sexText">{{data.femaleText}}</div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="right">
-      <FaceTracking ref="refFaceTracking" @getPhoto="getPhoto($event)" />
-      <div class="btnBox-wrap">
-        <div class="btnBox" :style="{'width': `${cameraWidth}px`}" v-if="photo">
-          <CustomButton theme="white" @click="reTrack()" style="width: 10rem;">
-            <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
-            <span>重新拍</span>
-          </CustomButton>
-          <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="data.children && data.children[0]">下一步</CustomButton>
+      <div class="right">
+        <FaceTracking ref="refFaceTracking" @getPhoto="getPhoto($event)" />
+        <div class="btnBox-wrap">
+          <div class="btnBox" :style="{'width': `${cameraWidth}px`}" v-if="photo">
+            <CustomButton theme="white" @click="reTrack()" style="width: 10rem;padding: 0 1rem;">
+              <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
+              <span>重新拍</span>
+            </CustomButton>
+            <CustomButton theme="blue" style="width: 10rem;" @click="nextStep" v-if="data.children && data.children[0]">下一步</CustomButton>
+          </div>
         </div>
       </div>
     </div>
@@ -218,20 +220,31 @@ export default {
   width: 100%;
   height: 100vh;
   background-size: cover;
+  background-position: center center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.content{
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  max-width: 1000px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
 }
 .page-title {
   font-size: 1.5rem;
   color: #fff;
   position: absolute;
   top: 10%;
-  left: 7rem;
+  left: 2rem;
 }
 .left{
-  width: 45%;
-  padding-top: 15rem;
-  padding-left: 7rem;
+  width: 50%;
 }
 .sexList{
   display: flex;
@@ -254,7 +267,7 @@ export default {
   padding-left: 1rem;
 }
 .sexMale{
-  margin-right: 5rem;
+  margin-right: 3rem;
 }
 .sexIcon{
   color: #fff;
@@ -307,8 +320,10 @@ export default {
   z-index: 1;
 }
 .right{
-  width: 55%;
-  padding-top: 10rem;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .btnBox-wrap{
   height: 3rem;
@@ -321,6 +336,8 @@ export default {
 /* 竖屏 */
 .portrait .container{
   height: 100vh;
+}
+.portrait .content{
   flex-direction: column;
   justify-content: center;
 }

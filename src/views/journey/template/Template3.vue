@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-24 16:53:44
+ * @LastEditTime: 2025-08-24 17:41:37
  * @Description: 
 -->
 <template>
@@ -180,6 +180,7 @@ export default {
   width: 100%;
   height: 100vh;
   background-size: cover;
+  background-position: center center;
   position: relative;
 }
 .container::before{

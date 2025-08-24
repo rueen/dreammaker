@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-22 14:50:14
+ * @LastEditTime: 2025-08-24 18:00:04
  * @Description: 人脸捕捉 - 使用face-api.js，兼容现代主流浏览器
 -->
 <template>
@@ -587,8 +587,6 @@ export default {
   font-size: .8rem;
   background: rgba(0,0,0,0.5);
   padding: 0.5rem;
-  border-radius: 0.3rem;
-  margin: 2rem 1rem;
 }
 
 .countdown{
