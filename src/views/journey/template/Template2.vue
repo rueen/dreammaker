@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-24 14:26:56
+ * @LastEditTime: 2025-08-24 17:06:09
  * @Description: 
 -->
 <template>
@@ -66,7 +66,7 @@ export default {
         strings: [
           `${this.data.title}`
         ],
-        typeSpeed: 100 * this.data.rate, // 打印速度
+        typeSpeed: 100 / this.data.rate, // 打印速度
         startDelay: 300, // 开始之前的延迟300毫秒
         loop: false, // 是否循环
         showCursor: false,
@@ -75,7 +75,7 @@ export default {
             strings: [
               `${this.data.content}`
             ],
-            typeSpeed: 100, // 打印速度
+            typeSpeed: 100 / this.data.rate, // 打印速度
             startDelay: 300, // 开始之前的延迟300毫秒
             loop: false, // 是否循环
             showCursor: false,
