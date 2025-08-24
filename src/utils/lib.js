@@ -17,6 +17,14 @@ export const debounce = (func, wait) => {
   };
 }
 
+// 检测是否为微信浏览器
+export const isWechatBrowser = () => {
+  const ua = navigator.userAgent.toLowerCase();
+  // 微信浏览器的UserAgent中包含micromessenger
+  return ua.includes('micromessenger');
+};
+
 export default {
   debounce,
+  isWechatBrowser,
 }
