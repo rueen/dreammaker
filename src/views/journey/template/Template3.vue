@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-23 20:03:13
+ * @LastEditTime: 2025-08-24 16:53:44
  * @Description: 
 -->
 <template>
@@ -21,9 +21,13 @@
           @click="handleSelect(option)">
           <div
             class="imageView"
-            :style="{'background-image': `url(${option.image})`, 'height': `${optionItemWidth*1.1}px`}">
-            <div class="imageView-content" v-if="selectedOption && selectedOption.id === option.id">
+            :style="{'background-image': `url(${option.image})`, 'height': `${optionItemWidth*1.1}px`}"
+            v-if="data.generateRule !== 3"
+          >
+            <div class="imageView-content" v-if="selectedOption && selectedOption.id === option.id && option.dynamicsImage">
+              <!-- 视频格式 -->
               <video
+                v-if="isVideoFormat(option.dynamicsImage)"
                 class="imageView-video"
                 autoplay
                 loop
@@ -34,9 +38,14 @@
                 x5-video-player-fullscreen="true"
                 x5-video-orientation="portrait"
               >
-                <source src="https://unidt365.oss-cn-hangzhou.aliyuncs.com/video/20250821115049.mp4" type="video/mp4">
+                <source :src="option.dynamicsImage" type="video/mp4">
               </video>
-              <!-- <div class="imageView-gif" :style="{'background-image': `url(${option.image})`}"></div> -->
+              <!-- 图片格式 -->
+              <div 
+                v-else
+                class="imageView-gif" 
+                :style="{'background-image': `url(${option.dynamicsImage})`}"
+              ></div>
             </div>
           </div>
           <div class="name">{{ option.name }}</div>
@@ -118,6 +127,14 @@ export default {
     }, 300)
   },
   methods: {
+    // 判断文件是否为视频格式
+    isVideoFormat(url) {
+      if (!url) return false;
+      const videoExtensions = ['.mp4', '.webm', '.ogg', '.avi', '.mov', '.wmv', '.flv', '.mkv'];
+      const urlLower = url.toLowerCase();
+      return videoExtensions.some(ext => urlLower.includes(ext));
+    },
+
     getInteractive(){
       // 通知父组件用户已交互，可以播放音频
       this.$emit('userInteractive', {
