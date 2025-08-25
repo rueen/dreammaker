@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-12-19 16:30:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 19:15:42
+ * @LastEditTime: 2025-08-25 19:31:36
  * @Description: 队列式3D图片轮播组件 - 队列推进效果
 -->
 <template>
@@ -68,7 +68,9 @@ export default {
       loadedImages: 0,
       // 轮播项目数组 - 每个项目都有自己的DOM元素和位置
       carouselItems: [],
-      currentIndex: 0 // 当前第一张图片的索引
+      currentIndex: 0, // 当前第一张图片的索引
+      isFastForwarding: false, // 快速推进状态标识
+      isAnimating: false // 动画执行状态标识
     }
   },
   computed: {
@@ -127,6 +129,8 @@ export default {
       this.loadedImages = 0;
       this.carouselItems = [];
       this.currentIndex = 0;
+      this.isFastForwarding = false;
+      this.isAnimating = false;
     },
     
     // 初始化轮播项目
@@ -267,6 +271,22 @@ export default {
     async pushQueue() {
       if (this.carouselItems.length === 0) return;
       
+      // 如果正在执行动画，等待完成
+      if (this.isAnimating) {
+        await new Promise(resolve => {
+          const checkAnimation = () => {
+            if (!this.isAnimating) {
+              resolve();
+            } else {
+              setTimeout(checkAnimation, 50);
+            }
+          };
+          checkAnimation();
+        });
+      }
+      
+      this.isAnimating = true;
+      
       // 准备新图片数据（在动画开始前就添加）
       const newImageIndex = (this.carouselItems[0]?.originalIndex + this.carouselItems.length) % this.totalImages;
       const newItem = {
@@ -336,6 +356,9 @@ export default {
         // 更新当前索引
         this.currentIndex = this.carouselItems[0]?.originalIndex || 0;
         this.$emit('change', this.currentIndex);
+        
+        // 重置动画状态
+        this.isAnimating = false;
       }, 800);
     },
     
@@ -395,11 +418,29 @@ export default {
       const steps = targetItem.position;
       if (steps === 0) return;
       
-      // 执行多次推进
-      for (let i = 0; i < steps; i++) {
-        await this.pushQueue();
-        // 等待动画完成
-        await new Promise(resolve => setTimeout(resolve, 600));
+      // 防止并发执行
+      if (this.isFastForwarding) return;
+      this.isFastForwarding = true;
+      
+      try {
+        // 执行多次推进
+        for (let i = 0; i < steps; i++) {
+          await this.pushQueue();
+          // 等待动画完成，确保与pushQueue的setTimeout时间一致
+          await new Promise(resolve => setTimeout(resolve, 850)); // 稍微多一点确保动画完成
+          
+          // 等待DOM完全稳定
+          await this.$nextTick();
+        }
+      } finally {
+        this.isFastForwarding = false;
+        
+        // 快速推进完成后，重新计算容器高度
+        if (this.height === 'auto') {
+          this.$nextTick(() => {
+            this.updateAutoHeight();
+          });
+        }
       }
     },
     
