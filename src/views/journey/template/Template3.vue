@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-24 17:41:37
+ * @LastEditTime: 2025-08-25 21:57:02
  * @Description: 
 -->
 <template>
@@ -168,7 +168,8 @@ export default {
         selectedOption: this.selectedOption
       });
       this.$emit('getLastOption', {
-        selectedOption: this.selectedOption
+        selectedOption: this.selectedOption,
+        selectedChildren: nexItem
       });
     }
   }

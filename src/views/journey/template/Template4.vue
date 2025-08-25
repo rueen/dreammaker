@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 21:02:55
+ * @LastEditTime: 2025-08-25 22:23:55
  * @Description: 
 -->
 <template>
@@ -12,7 +12,7 @@
   <div id="template4" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
     <div class="left">
       <ImageCarousel
-        :images="['https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370458233643008.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370536407941120.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370551955365888.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370516518551552.png']"
+        :images="images"
         :auto-play="true"
         :auto-play-interval="4000"
         :visible-count="3"
@@ -27,8 +27,8 @@
         <div class="qrCodeWrap hide" id="qrCodeWrap">
           <div class="qrCode">
             <vue-qrcode
-              v-if="info.image && info.image.trim()"
-              :value="info.image"
+              v-if="images && images.length"
+              :value="images.join('|')"
               type="image/png"
               :color="{ dark: '#000000ff' }"
             />
@@ -62,7 +62,7 @@ import {post} from '@/server/request';
 
 export default {
   name: 'Template4View',
-  props: ['data', 'userInfo', 'selectedOption', 'sceneInfo', 'selectedLastOption', 'isInteractive'],
+  props: ['data', 'userInfo', 'selectedOption', 'sceneInfo', 'isInteractive', 'syntheticImages'],
   emits: ['reStart', 'initAudio', 'userInteractive', 'printPhoto'],
 
   components: {
@@ -84,6 +84,8 @@ export default {
     }
   },
   async mounted() {
+    const _syntheticImages = this.syntheticImages;
+    this.images = _syntheticImages.sort((a, b) => a.sort - b.sort).map(item => item.img);
     await this.synthetize();
     document.getElementById('template4').classList.add('fadeIn');
     setTimeout(() => {
@@ -127,13 +129,8 @@ export default {
       // 确保返回的数据有默认值，避免undefined错误
       this.info = {
         content: '',
-        image: '',
         ...(res.Data || {})
       };
-      if(this.sceneInfo.generateRule === 2 && this.selectedLastOption && this.selectedLastOption.image){
-        this.info.image = this.selectedLastOption.image;
-      }
-      this.images = [this.info.image,this.info.image,this.info.image,this.info.image,this.info.image,this.info.image];
     },
     reStart(){
       this.$emit('reStart');

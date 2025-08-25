@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 21:03:28
+ * @LastEditTime: 2025-08-25 22:16:33
  * @Description: 
 -->
 <template>
@@ -61,7 +61,7 @@
         :data="activeItem"
         :userInfo="userInfo"
         :selectedOption="selectedOption"
-        :selectedLastOption="selectedLastOption"
+        :syntheticImages="syntheticImages"
         @reStart="reStart"
         @initAudio="handleInitAudio"
         @userInteractive="handleUserInteractive"
@@ -78,7 +78,7 @@ import Template2 from './template/Template2.vue';
 import Template3 from './template/Template3.vue';
 import Template4 from './template/Template4.vue';
 import CustomAudio from '@/components/CustomAudio';
-import {get} from '@/server/request';
+import {get, post} from '@/server/request';
 import { preloadCriticalImages } from '@/utils/imagePreloader'
 import { preloadVideo } from '@/utils/videoPreloader'
 
@@ -106,6 +106,7 @@ export default {
       selectedLastOption: {},
       isInteractive: false,
       isShow: true,
+      sort: 0, // 记录合成图片的顺序
       syntheticImages: [], // 最终合成的图片数组
     }
   },
@@ -142,6 +143,8 @@ export default {
       } else {
         updateAudio();
       }
+      // ai 合成图片
+      this.handleAiImage(newValue);
     }
   },
   mounted() {
@@ -294,8 +297,61 @@ export default {
         this.selectedOption = selectedOption;
       }
     },
-    getLastOption({selectedOption}){
+    getLastOption({selectedOption, selectedChildren}){
       this.selectedLastOption = selectedOption;
+      if(this.activeItem.generateRule === 2) {
+        // 选项卡预生成内容
+        this.aiImage({
+          image: selectedOption.image
+        });
+      } else {
+        // 选项卡不是预生成内容
+        this.aiImage({
+          id: selectedChildren.id,
+          episodeId: selectedChildren.episodeId,
+        });
+      }
+    },
+    // AI合成图片
+    handleAiImage(activeItem) {
+      if(!this.userInfo.photoPath){
+        return;
+      }
+      if(activeItem.template === '2') {
+        // 图文视频模板
+        this.aiImage({
+          id: activeItem.id,
+          episodeId: activeItem.episodeId,
+        });
+      }
+    },
+    async aiImage({ id, episodeId, image }){
+      const { photoPath } = this.userInfo;
+      const sort = this.sort;
+      this.sort += 1;
+      if(image) {
+        this.syntheticImages.push({
+          img: image,
+          sort,
+        })
+        return;
+      }
+      const res = await post({
+        url: '/site/api/aiImage',
+        params: {
+          id,
+          episodeId,
+          img: photoPath,
+        }
+      })
+      if(res.Data && res.Data.data && res.Data.data.length) {
+        // 保存已合成的图片
+        this.syntheticImages.push({
+          img: res.Data.data[0],
+          sort,
+        })
+        console.log(this.syntheticImages, '-syntheticImages')
+      }
     },
     // 打印照片
     printPhoto() {
