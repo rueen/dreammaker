@@ -70,7 +70,9 @@ export default {
       carouselItems: [],
       currentIndex: 0, // 当前第一张图片的索引
       isFastForwarding: false, // 快速推进状态标识
-      isAnimating: false // 动画执行状态标识
+      isAnimating: false, // 动画执行状态标识
+      isPaused: false, // 是否被用户暂停
+      pauseTimer: null // 暂停恢复定时器
     }
   },
   computed: {
@@ -139,8 +141,8 @@ export default {
         });
       }
       
-      // 直接开始自动播放
-      this.startAutoPlay();
+      // 检查并开始自动播放
+      this.checkAndStartAutoPlay();
     },
     
     reset() {
@@ -150,6 +152,8 @@ export default {
       this.currentIndex = 0;
       this.isFastForwarding = false;
       this.isAnimating = false;
+      this.isPaused = false;
+      this.clearPauseTimer();
     },
     
     // 初始化轮播项目
@@ -399,13 +403,61 @@ export default {
         clearInterval(this.autoPlayTimer);
         this.autoPlayTimer = null;
       }
+      // 同时清除暂停恢复定时器
+      this.clearPauseTimer();
+    },
+    
+    // 暂停自动播放（用户交互后）
+    pauseAutoPlay() {
+      if (this.autoPlayTimer) {
+        clearInterval(this.autoPlayTimer);
+        this.autoPlayTimer = null;
+        this.isPaused = true;
+        
+        // 设置恢复定时器
+        this.pauseTimer = setTimeout(() => {
+          this.resumeAutoPlay();
+        }, this.autoPlayInterval);
+      }
+    },
+    
+    // 恢复自动播放
+    resumeAutoPlay() {
+      if (this.isPaused && this.canAutoPlay) {
+        this.isPaused = false;
+        this.clearPauseTimer();
+        this.startAutoPlay();
+      }
+    },
+    
+    // 清除暂停恢复定时器
+    clearPauseTimer() {
+      if (this.pauseTimer) {
+        clearTimeout(this.pauseTimer);
+        this.pauseTimer = null;
+      }
+    },
+    
+    // 检查并启动自动播放（如果条件满足）
+    checkAndStartAutoPlay() {
+      if (this.canAutoPlay && !this.isPaused && !this.autoPlayTimer) {
+        this.startAutoPlay();
+      }
+    },
+    
+    // 手动恢复自动播放（供外部调用）
+    resumeAutoPlayManually() {
+      this.isPaused = false;
+      this.clearPauseTimer();
+      this.checkAndStartAutoPlay();
     },
     
     // 下一张
     next() {
       this.pushQueue();
-      if (this.autoPlay) {
-        this.startAutoPlay(); // 重新开始自动播放
+      // 手动操作后，如果之前是暂停状态，则恢复自动播放
+      if (this.isPaused && this.autoPlay) {
+        this.resumeAutoPlay();
       }
     },
     
@@ -427,11 +479,11 @@ export default {
       
       if (item.position === 0) {
         // 点击第一张图片，正常推进
-        this.stopAutoPlay();
+        this.pauseAutoPlay(); // 暂停自动播放
         this.next();
       } else {
         // 点击非第一张图片，快速推进到该图片
-        this.stopAutoPlay();
+        this.pauseAutoPlay(); // 暂停自动播放
         this.fastForwardToItem(item);
       }
     },
@@ -463,6 +515,11 @@ export default {
           this.$nextTick(() => {
             this.updateAutoHeight();
           });
+        }
+        
+        // 快速推进完成后，如果之前是暂停状态，则恢复自动播放
+        if (this.isPaused && this.autoPlay) {
+          this.resumeAutoPlay();
         }
       }
     },
