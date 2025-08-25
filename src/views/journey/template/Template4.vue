@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 22:23:55
+ * @LastEditTime: 2025-08-25 22:35:42
  * @Description: 
 -->
 <template>
@@ -28,7 +28,7 @@
           <div class="qrCode">
             <vue-qrcode
               v-if="images && images.length"
-              :value="images.join('|')"
+              :value="galleryUrl"
               type="image/png"
               :color="{ dark: '#000000ff' }"
             />
@@ -81,6 +81,25 @@ export default {
       },
       images: [],
       imageCarouselHeight: window.innerWidth > window.innerHeight ? 'auto' : window.innerWidth
+    }
+  },
+  computed: {
+    // 生成图片集合页面的URL
+    galleryUrl() {
+      if (!this.images || this.images.length === 0) {
+        return '';
+      }
+      
+      // 获取当前域名和协议
+      const baseUrl = window.location.origin;
+      
+      // 编码图片URL参数
+      const imageParams = this.images
+        .map(imageUrl => encodeURIComponent(imageUrl))
+        .join(',');
+      
+      // 生成完整的图片集合页面URL
+      return `${baseUrl}/#/gallery?images=${imageParams}`;
     }
   },
   async mounted() {

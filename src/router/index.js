@@ -7,12 +7,18 @@
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
 import JourneyView from '@/views/journey/index.vue'
+import GalleryView from '@/views/gallery/index.vue'
 
 const routes = [
   {
     path: '/journey/:id',
     name: 'journey',
     component: JourneyView
+  },
+  {
+    path: '/gallery',
+    name: 'gallery',
+    component: GalleryView
   }
 ]
 
