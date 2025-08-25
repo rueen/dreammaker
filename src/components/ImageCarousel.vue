@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-12-19 16:30:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 19:51:07
+ * @LastEditTime: 2025-08-25 20:24:31
  * @Description: 队列式3D图片轮播组件 - 队列推进效果
 -->
 <template>
@@ -362,16 +362,18 @@ export default {
           }
         });
         
-        // 2. 同时执行：更新数据 + 移除动画类
+        // 2. 先更新数据，让getItemPositionStyle计算出正确的最终位置
         this.carouselItems = newCarouselItems;
         
-        // 3. 在同一个微任务中移除动画类
-        const currentQueueItems = this.$refs.carouselQueue?.querySelectorAll('.queue-item');
-        if (currentQueueItems) {
-          currentQueueItems.forEach(element => {
-            element.classList.remove('accelerate-out', 'move-forward');
-          });
-        }
+        // 3. 等待DOM更新后，在移除动画类之前先应用最终样式
+        this.$nextTick(() => {
+          const currentQueueItems = this.$refs.carouselQueue?.querySelectorAll('.queue-item');
+          if (currentQueueItems) {
+            currentQueueItems.forEach(element => {
+              element.classList.remove('accelerate-out', 'move-forward');
+            });
+          }
+        })
         
         // 更新当前索引
         this.currentIndex = this.carouselItems[0]?.originalIndex || 0;
@@ -536,12 +538,23 @@ export default {
   transition: all 0.6s linear;
   /* 高度自动，由内容撑开 */
   height: auto;
+  /* 移动端优化：启用硬件加速 */
+  transform: translateZ(0);
+  /* 移动端优化：防止闪烁 */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /* 移动端优化：平滑渲染 */
+  -webkit-perspective: 1000;
+  perspective: 1000;
 }
 
 /* 动画期间禁用默认过渡 */
 .queue-item.accelerate-out,
 .queue-item.move-forward {
   transition: none !important;
+  /* 移动端：确保动画期间transform优先级最高 */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 /* 精确的推进动画效果 */
@@ -553,11 +566,13 @@ export default {
 
 @keyframes accelerateOut {
   0% {
+    -webkit-transform: translate(0, 0) scale(1);
     transform: translate(0, 0) scale(1);
     opacity: 1;
   }
   100% {
     /* 加速移出到显示区域外，同时变大 */
+    -webkit-transform: translate(120%, 120%) scale(1.5);
     transform: translate(120%, 120%) scale(1.5);
     opacity: 0.7;
   }
