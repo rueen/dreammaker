@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-26 00:52:47
+ * @LastEditTime: 2025-08-26 00:55:11
  * @Description: 
 -->
 <template>
@@ -256,6 +256,7 @@ export default {
       } else {
         this.onLaunch();
       }
+      this.syntheticImages = [];
     },
     // 处理音频初始化请求（统一处理）
     handleInitAudio({ sceneAudio, plotAudio, audioLevel }) {
