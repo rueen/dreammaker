@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-24 17:49:57
+ * @LastEditTime: 2025-08-25 19:17:42
  * @Description: 
 -->
 <template>
@@ -10,14 +10,24 @@
   <CustomVideo ref="CustomVideoRef" />
   <Loading text="数据加载中 请耐心等待..." v-if="loading" />
   <div id="template4" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
+    <ImageCarousel
+      :images="['https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370458233643008.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370536407941120.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370551955365888.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370516518551552.png']"
+      :auto-play="false"
+      :auto-play-interval="4000"
+      :visible-count="3"
+      :height="'auto'"
+      @change="handleChange"
+      @click="handleClick"
+      class="imageCarousel"
+    />
     <div class="left" :style="{'height': `${leftHeight}px`}">
-      <div
+      <!-- <div
         class="photo hide"
         v-for="(option, index) in images"
         :key="index"
         :style="{'z-index': `${100 - index}`}"
         @click="handleSelect(index)"
-      ><img class="photoImg" :src="option" alt=""></div>
+      ><img class="photoImg" :src="option" alt=""></div> -->
     </div>
     <div class="right">
       <div class="rightContent">
@@ -51,6 +61,7 @@ import Loading from '@/components/loading';
 import VueQrcode from 'vue-qrcode'
 import CustomButton from '@/components/CustomButton.vue'
 import CustomVideo from '@/components/CustomVideo.vue';
+import ImageCarousel from '@/components/ImageCarousel.vue';
 import {post} from '@/server/request';
 
 
@@ -64,7 +75,7 @@ export default {
     CustomButton,
     CustomVideo,
     VueQrcode,
-
+    ImageCarousel
   },
   data(){
     return {
@@ -146,7 +157,7 @@ export default {
       if(this.sceneInfo.generateRule === 2 && this.selectedLastOption && this.selectedLastOption.image){
         this.info.image = this.selectedLastOption.image;
       }
-      this.images = [this.info.image,this.info.image,this.info.image];
+      this.images = [this.info.image,this.info.image,this.info.image,this.info.image,this.info.image,this.info.image];
       // 计算leftHeight
       this.calculateLeftHeight();
     },
@@ -208,6 +219,13 @@ export default {
   justify-content: flex-end;
   padding-right: 8rem;
   position: relative;
+}
+.imageCarousel{
+  width: 40%;
+  position: absolute;
+  left: 10%;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .right{
   width: 50%;
@@ -328,10 +346,10 @@ export default {
 .portrait .container{
   flex-direction: column;
 }
-.portrait .left{
+.portrait .imageCarousel{
   width: 100%;
-  padding: 0;
-  margin-bottom: 2rem;
+  position: static;
+  transform: none;
 }
 .portrait .photo{
   width: 15rem;
