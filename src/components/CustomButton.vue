@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2024-06-18 20:16:28
+ * @LastEditTime: 2025-08-25 21:17:21
  * @Description: 人脸捕捉
 -->
 <template>
@@ -43,6 +43,10 @@ export default {
   cursor: pointer;
 }
 .buttonContainer.blue{
+  background-color: #3972E1;
+  color: #fff;
+}
+.buttonContainer.yellow{
   background-color: #3972E1;
   color: #fff;
 }

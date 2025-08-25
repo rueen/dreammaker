@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-24 16:07:35
+ * @LastEditTime: 2025-08-25 21:03:28
  * @Description: 
 -->
 <template>
@@ -105,7 +105,8 @@ export default {
       selectedOption: {},
       selectedLastOption: {},
       isInteractive: false,
-      isShow: true
+      isShow: true,
+      syntheticImages: [], // 最终合成的图片数组
     }
   },
   watch: {
@@ -295,6 +296,10 @@ export default {
     },
     getLastOption({selectedOption}){
       this.selectedLastOption = selectedOption;
+    },
+    // 打印照片
+    printPhoto() {
+      
     }
   }
 }

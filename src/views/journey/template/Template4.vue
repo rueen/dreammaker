@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 20:25:30
+ * @LastEditTime: 2025-08-25 21:02:55
  * @Description: 
 -->
 <template>
@@ -36,6 +36,10 @@
               <span>暂无二维码</span>
             </div>
           </div>
+          <CustomButton theme="yellow" @click="handlePrint">
+            <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
+            <span>打印照片</span>
+          </CustomButton>
           <CustomButton theme="blue" @click="reStart">
             <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
             <span>重新体验</span>
@@ -59,7 +63,7 @@ import {post} from '@/server/request';
 export default {
   name: 'Template4View',
   props: ['data', 'userInfo', 'selectedOption', 'sceneInfo', 'selectedLastOption', 'isInteractive'],
-  emits: ['reStart', 'initAudio', 'userInteractive'],
+  emits: ['reStart', 'initAudio', 'userInteractive', 'printPhoto'],
 
   components: {
     Loading,
@@ -133,6 +137,9 @@ export default {
     },
     reStart(){
       this.$emit('reStart');
+    },
+    handlePrint(){
+      this.$emit('printPhoto');
     }
   }
 }
