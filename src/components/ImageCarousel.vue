@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-12-19 16:30:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 19:31:36
+ * @LastEditTime: 2025-08-25 19:51:07
  * @Description: 队列式3D图片轮播组件 - 队列推进效果
 -->
 <template>
@@ -76,6 +76,16 @@ export default {
   computed: {
     totalImages() {
       return this.images.length;
+    },
+    
+    // 实际显示的图片数量（考虑visibleCount和images.length的最小值）
+    actualVisibleCount() {
+      return Math.min(this.visibleCount, this.images.length);
+    },
+    
+    // 是否有足够的图片进行轮播
+    canAutoPlay() {
+      return this.autoPlay && this.totalImages > 1 && this.actualVisibleCount > 0;
     }
   },
   mounted() {
@@ -105,7 +115,16 @@ export default {
   },
   methods: {
     init() {
-      if (this.images.length === 0) return;
+      if (this.images.length === 0) {
+        console.warn('ImageCarousel: No images provided');
+        return;
+      }
+      
+      // 检查visibleCount是否合理
+      if (this.visibleCount <= 0) {
+        console.warn('ImageCarousel: visibleCount must be greater than 0');
+        return;
+      }
       
       this.calculateContainerHeight();
       this.initCarouselItems();
@@ -136,9 +155,8 @@ export default {
     // 初始化轮播项目
     initCarouselItems() {
       this.carouselItems = [];
-      const visibleCount = Math.min(this.visibleCount, this.images.length);
       
-      for (let i = 0; i < visibleCount; i++) {
+      for (let i = 0; i < this.actualVisibleCount; i++) {
         this.carouselItems.push({
           id: `item-${Date.now()}-${i}`,
           src: this.images[i % this.totalImages],
@@ -269,7 +287,7 @@ export default {
     
     // 队列推进动画 - 流畅无卡顿的动画效果
     async pushQueue() {
-      if (this.carouselItems.length === 0) return;
+      if (this.carouselItems.length === 0 || this.totalImages === 0) return;
       
       // 如果正在执行动画，等待完成
       if (this.isAnimating) {
@@ -288,7 +306,9 @@ export default {
       this.isAnimating = true;
       
       // 准备新图片数据（在动画开始前就添加）
-      const newImageIndex = (this.carouselItems[0]?.originalIndex + this.carouselItems.length) % this.totalImages;
+      // 确保在visibleCount > images.length的情况下也能正确计算
+      const currentFirstIndex = this.carouselItems[0]?.originalIndex || 0;
+      const newImageIndex = (currentFirstIndex + this.carouselItems.length) % this.totalImages;
       const newItem = {
         id: `item-${Date.now()}-new`,
         src: this.images[newImageIndex],
@@ -363,7 +383,8 @@ export default {
     },
     
     startAutoPlay() {
-      if (!this.autoPlay || this.totalImages <= 1) return;
+      // 使用computed属性判断是否可以自动播放
+      if (!this.canAutoPlay) return;
       
       this.stopAutoPlay();
       this.autoPlayTimer = setInterval(() => {

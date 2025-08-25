@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 19:25:59
+ * @LastEditTime: 2025-08-25 19:49:41
  * @Description: 
 -->
 <template>
@@ -13,10 +13,10 @@
     <div class="left">
       <ImageCarousel
         :images="['https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370458233643008.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370536407941120.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370551955365888.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370516518551552.png']"
-        :auto-play="true"
+        :auto-play="false"
         :auto-play-interval="4000"
         :visible-count="3"
-        :height="'auto'"
+        :height="imageCarouselHeight"
         class="imageCarousel"
       />
     </div>
@@ -75,7 +75,8 @@ export default {
         content: '',
         image: ''
       },
-      images: []
+      images: [],
+      imageCarouselHeight: window.innerWidth > window.innerHeight ? 'auto' : window.innerWidth
     }
   },
   async mounted() {
@@ -264,6 +265,9 @@ export default {
   width: 100%;
   position: static;
   transform: none;
+}
+.portrait .left{
+  width: 100%;
 }
 .portrait .right{
   width: 100%;
