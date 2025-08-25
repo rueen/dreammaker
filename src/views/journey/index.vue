@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 22:56:27
+ * @LastEditTime: 2025-08-26 00:52:47
  * @Description: 
 -->
 <template>
@@ -143,7 +143,7 @@ export default {
         updateAudio();
       }
       // ai 合成图片
-      this.handleAiImage(newValue);
+      this.handleAiImage(newValue, oldValue);
     }
   },
   mounted() {
@@ -296,25 +296,29 @@ export default {
         this.selectedOption = selectedOption;
       }
     },
-    getLastOption({selectedOption, selectedChildren}){
+    getLastOption({selectedOption}){
       this.selectedLastOption = selectedOption;
-      if(this.activeItem.generateRule === 2) {
-        // 选项卡预生成内容
-        this.aiImage({
-          image: selectedOption.image
-        });
-      } else {
-        // 选项卡不是预生成内容
-        this.aiImage({
-          id: selectedChildren.id,
-          episodeId: selectedChildren.episodeId,
-        });
-      }
     },
     // AI合成图片
-    handleAiImage(activeItem) {
+    handleAiImage(activeItem, oldActiveItem) {
       if(!this.userInfo.photoPath){
         return;
+      }
+      if(oldActiveItem.template === '3') {
+        // 选项卡
+        if(oldActiveItem.generateRule === 2) {
+          // 选项卡预生成内容
+          this.aiImage({
+            image: this.selectedLastOption.image
+          });
+        } else {
+          // 选项卡不是预生成内容
+          this.aiImage({
+            id: oldActiveItem.id,
+            episodeId: oldActiveItem.episodeId,
+            optionsId: this.selectedLastOption.id
+          });
+        }
       }
       if(activeItem.template === '2') {
         // 图文视频模板
@@ -327,7 +331,7 @@ export default {
     getSort() {
       return this.syntheticImages.reduce((m, i) => Math.max(m, i.sort), -1) + 1
     },
-    async aiImage({ id, episodeId, image }){
+    async aiImage({ id, episodeId, optionsId, image }){
       const { photoPath } = this.userInfo;
 
       if(image) {
@@ -343,13 +347,17 @@ export default {
         sort,
         loading: true
       })
+      const params = {
+        id,
+        episodeId,
+        img: photoPath,
+      }
+      if(optionsId != null) {
+        params.optionsId = optionsId;
+      }
       const res = await post({
         url: '/site/api/aiImage',
-        params: {
-          id,
-          episodeId,
-          img: photoPath,
-        }
+        params
       })
       if(res.Data && res.Data.data && res.Data.data.length) {
         // 保存已合成的图片
