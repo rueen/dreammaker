@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 22:16:33
+ * @LastEditTime: 2025-08-25 22:56:27
  * @Description: 
 -->
 <template>
@@ -106,7 +106,6 @@ export default {
       selectedLastOption: {},
       isInteractive: false,
       isShow: true,
-      sort: 0, // 记录合成图片的顺序
       syntheticImages: [], // 最终合成的图片数组
     }
   },
@@ -325,17 +324,25 @@ export default {
         });
       }
     },
+    getSort() {
+      return this.syntheticImages.reduce((m, i) => Math.max(m, i.sort), -1) + 1
+    },
     async aiImage({ id, episodeId, image }){
       const { photoPath } = this.userInfo;
-      const sort = this.sort;
-      this.sort += 1;
+
       if(image) {
         this.syntheticImages.push({
           img: image,
-          sort,
+          sort: this.getSort(),
         })
         return;
       }
+      const sort = this.getSort();
+      this.syntheticImages.push({
+        img: '',
+        sort,
+        loading: true
+      })
       const res = await post({
         url: '/site/api/aiImage',
         params: {
@@ -346,12 +353,9 @@ export default {
       })
       if(res.Data && res.Data.data && res.Data.data.length) {
         // 保存已合成的图片
-        this.syntheticImages.push({
-          img: res.Data.data[0],
-          sort,
-        })
-        console.log(this.syntheticImages, '-syntheticImages')
+        this.syntheticImages.find(item => item.sort === sort).img = res.Data.data[0];
       }
+      this.syntheticImages.find(item => item.sort === sort).loading = false;
     },
     // 打印照片
     printPhoto() {

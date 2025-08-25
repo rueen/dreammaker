@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 22:37:13
+ * @LastEditTime: 2025-08-25 23:02:21
  * @Description: 
 -->
 <template>
@@ -11,7 +11,23 @@
   <Loading text="数据加载中 请耐心等待..." v-if="loading" />
   <div id="template4" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
     <div class="left">
+      <!-- 图片加载中状态 -->
+      <div v-if="isCarouselLoading" class="imageCarousel carousel-loading">
+        <div class="loading-content">
+          <div class="loading-spinner"></div>
+          <p class="loading-text">图片生成中...</p>
+          <div class="loading-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" :style="{ width: loadingProgress + '%' }"></div>
+            </div>
+            <span class="progress-text">{{ loadedCount }}/{{ totalCount }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 图片轮播组件 -->
       <ImageCarousel
+        v-else
         :images="images"
         :auto-play="true"
         :auto-play-interval="4000"
@@ -27,13 +43,14 @@
         <div class="qrCodeWrap hide" id="qrCodeWrap">
           <div class="qrCode">
             <vue-qrcode
-              v-if="images && images.length"
+              v-if="images && images.length && !isCarouselLoading"
               :value="galleryUrl"
               type="image/png"
               :color="{ dark: '#000000ff' }"
             />
             <div v-else class="qrCodePlaceholder">
-              <span>暂无二维码</span>
+              <span v-if="isCarouselLoading">图片生成中...</span>
+              <span v-else>暂无二维码</span>
             </div>
           </div>
           <!-- <CustomButton theme="yellow" @click="handlePrint">
@@ -100,11 +117,59 @@ export default {
       
       // 生成完整的图片集合页面URL
       return `${baseUrl}/#/gallery?images=${imageParams}`;
+    },
+    
+    // 判断是否需要显示加载状态
+    isCarouselLoading() {
+      if (!this.syntheticImages || this.syntheticImages.length === 0) {
+        return false;
+      }
+      
+      // 如果有任何项目的loading为true，则显示加载状态
+      return this.syntheticImages.some(item => item.loading === true);
+    },
+    
+    // 计算已加载的图片数量
+    loadedCount() {
+      if (!this.syntheticImages || this.syntheticImages.length === 0) {
+        return 0;
+      }
+      
+      return this.syntheticImages.filter(item => !item.loading && item.img).length;
+    },
+    
+    // 计算总图片数量
+    totalCount() {
+      return this.syntheticImages ? this.syntheticImages.length : 0;
+    },
+    
+    // 计算加载进度百分比
+    loadingProgress() {
+      if (this.totalCount === 0) {
+        return 0;
+      }
+      
+      return Math.round((this.loadedCount / this.totalCount) * 100);
+    }
+  },
+  watch: {
+    // 监听syntheticImages变化，实时更新images数组
+    syntheticImages: {
+      handler(newValue) {
+        if (newValue && newValue.length > 0) {
+          // 只包含已加载完成的图片
+          this.images = newValue
+            .filter(item => !item.loading && item.img)
+            .sort((a, b) => a.sort - b.sort)
+            .map(item => item.img);
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
   async mounted() {
-    const _syntheticImages = this.syntheticImages;
-    this.images = _syntheticImages.sort((a, b) => a.sort - b.sort).map(item => item.img);
+    // images已经在watcher中处理，这里只需要处理其他逻辑
     await this.synthetize();
     document.getElementById('template4').classList.add('fadeIn');
     setTimeout(() => {
@@ -312,5 +377,103 @@ export default {
 .portrait .rightContent .qrCode{
   width: 7rem;
   height: 7rem;
+}
+
+/* ImageCarousel Loading 样式 */
+.carousel-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background: rgba(255, 255, 255, 0.95); */
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  width: 30%;
+}
+
+.loading-content {
+  text-align: center;
+  padding: 40px 30px;
+  max-width: 300px;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2F52C1;
+  border-radius: 50%;
+  animation: carouselSpin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes carouselSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 1.1rem;
+  color: #2F52C1;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+}
+
+.loading-progress {
+  margin-top: 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2F52C1 0%, #4A90E2 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: progressShine 1.5s infinite;
+}
+
+@keyframes progressShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+/* 竖屏模式下的loading样式调整 */
+.portrait .carousel-loading .loading-content {
+  padding: 30px 20px;
+}
+
+.portrait .carousel-loading .loading-spinner {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 15px;
+}
+
+.portrait .carousel-loading .loading-text {
+  font-size: 1rem;
 }
 </style>
