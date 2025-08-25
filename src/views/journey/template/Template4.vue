@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 19:22:58
+ * @LastEditTime: 2025-08-25 19:25:59
  * @Description: 
 -->
 <template>
@@ -17,8 +17,6 @@
         :auto-play-interval="4000"
         :visible-count="3"
         :height="'auto'"
-        @change="handleChange"
-        @click="handleClick"
         class="imageCarousel"
       />
     </div>
@@ -111,7 +109,7 @@ export default {
       const { photoPath, activeGender } = this.userInfo;
       this.loading = true;
       const res = await post({
-        url: '/site/api/synthetize',
+        url: '/site/api/aiContent',
         params: {
           id: this.data.id,
           img: photoPath,
