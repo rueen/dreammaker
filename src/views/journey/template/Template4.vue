@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 19:17:42
+ * @LastEditTime: 2025-08-25 19:22:58
  * @Description: 
 -->
 <template>
@@ -10,24 +10,17 @@
   <CustomVideo ref="CustomVideoRef" />
   <Loading text="数据加载中 请耐心等待..." v-if="loading" />
   <div id="template4" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
-    <ImageCarousel
-      :images="['https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370458233643008.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370536407941120.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370551955365888.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370516518551552.png']"
-      :auto-play="false"
-      :auto-play-interval="4000"
-      :visible-count="3"
-      :height="'auto'"
-      @change="handleChange"
-      @click="handleClick"
-      class="imageCarousel"
-    />
-    <div class="left" :style="{'height': `${leftHeight}px`}">
-      <!-- <div
-        class="photo hide"
-        v-for="(option, index) in images"
-        :key="index"
-        :style="{'z-index': `${100 - index}`}"
-        @click="handleSelect(index)"
-      ><img class="photoImg" :src="option" alt=""></div> -->
+    <div class="left">
+      <ImageCarousel
+        :images="['https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370458233643008.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370536407941120.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370551955365888.png','https://unidt365.oss-cn-hangzhou.aliyuncs.com/2025/08/19/mt_1957370516518551552.png']"
+        :auto-play="true"
+        :auto-play-interval="4000"
+        :visible-count="3"
+        :height="'auto'"
+        @change="handleChange"
+        @click="handleClick"
+        class="imageCarousel"
+      />
     </div>
     <div class="right">
       <div class="rightContent">
@@ -84,20 +77,12 @@ export default {
         content: '',
         image: ''
       },
-      images: [],
-      leftHeight: 0
+      images: []
     }
   },
   async mounted() {
     await this.synthetize();
     document.getElementById('template4').classList.add('fadeIn');
-    setTimeout(() => {
-      document.querySelectorAll('.photo').forEach((el, index) => {
-        // 为每个元素设置不同的旋转角度
-        el.style.setProperty('--final-rotate', `${(index + 1) * 10}deg`);
-        el.classList.add('fadeInLeft');
-      });
-    })
     setTimeout(() => {
       document.getElementById('title').classList.add('fadeInDown');
       document.getElementById('content').classList.add('fadeIn');
@@ -114,18 +99,6 @@ export default {
     }
   },
   methods: {
-    handleSelect(index){
-      // 移除所有元素的 scaleUp 类名
-      document.querySelectorAll('.photo').forEach(el => {
-        el.classList.remove('active');
-      });
-      
-      // 为选中的元素添加 scaleUp 类名
-      const selectedElement = document.querySelectorAll('.photo')[index];
-      if (selectedElement) {
-        selectedElement.classList.add('active');
-      }
-    },
     getInteractive(){
       // 通知父组件用户已交互，可以播放音频
       this.$emit('userInteractive', {
@@ -158,40 +131,6 @@ export default {
         this.info.image = this.selectedLastOption.image;
       }
       this.images = [this.info.image,this.info.image,this.info.image,this.info.image,this.info.image,this.info.image];
-      // 计算leftHeight
-      this.calculateLeftHeight();
-    },
-    /**
-     * 计算left区域高度 - 基于图片等比例缩放后的最大高度
-     */
-    calculateLeftHeight() {
-      // 等待DOM更新完成
-      this.$nextTick(() => {
-        const photoElements = document.querySelectorAll('.photo');
-        if (photoElements.length === 0) return;
-        
-        // 获取第一个photo元素的宽度作为基准
-        const photoWidth = photoElements[0].offsetWidth;
-        let maxHeight = 0;
-        
-        // 遍历所有图片，计算等比例缩放后的高度
-        this.images.forEach((imageSrc, index) => {
-          if (imageSrc) {
-            const img = new Image();
-            img.onload = () => {
-              const aspectRatio = img.height / img.width;
-              const scaledHeight = photoWidth * aspectRatio;
-              maxHeight = Math.max(maxHeight, scaledHeight);
-              
-              // 当所有图片都加载完成后，更新leftHeight
-              if (index === this.images.length - 1) {
-                this.leftHeight = maxHeight;
-              }
-            };
-            img.src = imageSrc;
-          }
-        });
-      });
     },
     reStart(){
       this.$emit('reStart');
@@ -215,10 +154,6 @@ export default {
 }
 .left{
   width: 50%;
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 8rem;
-  position: relative;
 }
 .imageCarousel{
   width: 40%;
@@ -237,25 +172,6 @@ export default {
   box-sizing: border-box;
   border-radius: 0.6rem;
   box-shadow: .3rem .1rem .8rem 0 rgba(0, 0, 0, .25);
-}
-.photo{
-  width: 20rem;
-  box-shadow: .3rem .1rem .8rem 0 rgba(0, 0, 0, .25);
-  transform-origin: 80% 80%;
-  cursor: pointer;
-  position: absolute;
-  right: 30%;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: .5rem;
-  background-color: #E6E6E6;
-}
-.photo.active{
-  z-index: 101!important;
-}
-.photoImg{
-  width: 100%;
-  vertical-align: middle;
 }
 .title{
   color: #2F52C1;
@@ -350,9 +266,6 @@ export default {
   width: 100%;
   position: static;
   transform: none;
-}
-.portrait .photo{
-  width: 15rem;
 }
 .portrait .right{
   width: 100%;
