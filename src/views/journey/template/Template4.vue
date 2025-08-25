@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 23:02:21
+ * @LastEditTime: 2025-08-26 00:30:42
  * @Description: 
 -->
 <template>
@@ -110,11 +110,15 @@ export default {
       // 获取当前域名和协议
       const baseUrl = window.location.origin;
       
+      // 限制图片数量，最多10张，避免URL过长
+      const maxImagesForGallery = 10;
+      const limitedImages = this.images.slice(0, maxImagesForGallery);
+      
       // 编码图片URL参数
-      const imageParams = this.images
+      const imageParams = limitedImages
         .map(imageUrl => encodeURIComponent(imageUrl))
         .join(',');
-      
+        
       // 生成完整的图片集合页面URL
       return `${baseUrl}/#/gallery?images=${imageParams}`;
     },
