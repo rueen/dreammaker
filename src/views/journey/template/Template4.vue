@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 22:35:42
+ * @LastEditTime: 2025-08-25 22:37:13
  * @Description: 
 -->
 <template>
@@ -36,10 +36,10 @@
               <span>暂无二维码</span>
             </div>
           </div>
-          <CustomButton theme="yellow" @click="handlePrint">
+          <!-- <CustomButton theme="yellow" @click="handlePrint">
             <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
             <span>打印照片</span>
-          </CustomButton>
+          </CustomButton> -->
           <CustomButton theme="blue" @click="reStart">
             <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
             <span>重新体验</span>
