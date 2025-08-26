@@ -436,11 +436,9 @@ export default {
                   }
                   
                   img { 
-                    max-width: 100%;
-                    max-height: 100%;
-                    width: auto;
-                    height: auto;
-                    object-fit: contain;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
                     display: block;
                   }
                 }
@@ -483,11 +481,9 @@ export default {
                   }
                   
                   img { 
-                    max-width: 95%;
-                    max-height: 95%;
-                    width: auto;
-                    height: auto;
-                    object-fit: contain;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
                     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                   }
                   
