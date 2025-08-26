@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-26 17:08:28
+ * @LastEditTime: 2025-08-26 17:13:25
  * @Description: 
 -->
 <template>
@@ -412,6 +412,12 @@ export default {
                     width: ${pageWidth};
                     height: ${pageHeight};
                     font-family: Arial, sans-serif;
+                  }
+                  
+                  /* 打印时隐藏预览标题和说明 */
+                  .preview-title,
+                  .print-instructions {
+                    display: none !important;
                   }
                   
                   .photo-container { 
