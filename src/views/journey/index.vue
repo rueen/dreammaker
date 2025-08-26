@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-26 15:04:01
+ * @LastEditTime: 2025-08-26 17:08:28
  * @Description: 
 -->
 <template>
@@ -82,6 +82,7 @@ import CustomAudio from '@/components/CustomAudio';
 import {get, post} from '@/server/request';
 import { preloadCriticalImages } from '@/utils/imagePreloader'
 import { preloadVideo } from '@/utils/videoPreloader'
+import { toast } from 'vue3-toastify'
 
 export default {
   name: 'JourneyView',
@@ -175,6 +176,7 @@ export default {
     if (this.handleKeydown) {
       document.removeEventListener('keydown', this.handleKeydown);
     }
+    // 无需特殊清理
   },
   methods: {
     async getData() {
@@ -369,8 +371,205 @@ export default {
     },
     // 打印照片
     printPhoto() {
-      const images = this.syntheticImages.map(item => item.img);
-      console.log(images)
+      const images = this.syntheticImages.map(item => item.img).filter(img => img);
+      
+      if (images.length === 0) {
+        toast.error('没有可打印的图片');
+        return;
+      }
+
+      try {
+        // 创建打印窗口
+        const printWindow = window.open('', '_blank');
+        
+        // 6寸照相纸尺寸设置 (4x6英寸 = 101.6x152.4毫米)
+        const pageWidth = '101.6mm';
+        const pageHeight = '152.4mm';
+        
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>6寸照片打印</title>
+              <meta charset="UTF-8">
+              <style>
+                /* 设置页面尺寸为6寸照相纸 */
+                @page {
+                  size: ${pageWidth} ${pageHeight};
+                  margin: 0;
+                  padding: 0;
+                }
+                
+                /* 打印样式 */
+                @media print {
+                  * {
+                    box-sizing: border-box;
+                  }
+                  
+                  body { 
+                    margin: 0; 
+                    padding: 0; 
+                    width: ${pageWidth};
+                    height: ${pageHeight};
+                    font-family: Arial, sans-serif;
+                  }
+                  
+                  .photo-container { 
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    page-break-after: always;
+                    page-break-inside: avoid;
+                    background: white;
+                  }
+                  
+                  .photo-container:last-child { 
+                    page-break-after: avoid; 
+                  }
+                  
+                  img { 
+                    max-width: 100%;
+                    max-height: 100%;
+                    width: auto;
+                    height: auto;
+                    object-fit: contain;
+                    display: block;
+                  }
+                }
+                
+                /* 屏幕预览样式 */
+                @media screen {
+                  body { 
+                    padding: 20px; 
+                    background: #f5f5f5;
+                    font-family: Arial, sans-serif;
+                  }
+                  
+                  .preview-title {
+                    text-align: center;
+                    margin-bottom: 20px;
+                    color: #333;
+                    font-size: 18px;
+                  }
+                  
+                  .photo-container { 
+                    width: ${pageWidth};
+                    height: ${pageHeight};
+                    margin: 0 auto 20px auto;
+                    background: white;
+                    border: 1px solid #ddd;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    position: relative;
+                  }
+                  
+                  .photo-container::before {
+                    content: '6寸照片 (4x6英寸)';
+                    position: absolute;
+                    top: -25px;
+                    left: 0;
+                    font-size: 12px;
+                    color: #666;
+                  }
+                  
+                  img { 
+                    max-width: 95%;
+                    max-height: 95%;
+                    width: auto;
+                    height: auto;
+                    object-fit: contain;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                  }
+                  
+                  .print-instructions {
+                    text-align: center;
+                    margin-top: 20px;
+                    padding: 15px;
+                    background: #e3f2fd;
+                    border-radius: 5px;
+                    color: #1976d2;
+                    font-size: 14px;
+                    max-width: 400px;
+                    margin-left: auto;
+                    margin-right: auto;
+                  }
+                }
+              </style>
+            </head>
+            <body>
+              <div class="preview-title">照片打印预览 (${images.length}张)</div>
+              ${images.map((img, index) => `
+                <div class="photo-container">
+                  <img src="${img}" alt="照片${index + 1}" onload="this.style.opacity='1'" style="opacity:0;transition:opacity 0.3s" />
+                </div>
+              `).join('')}
+              <div class="print-instructions">
+                <strong>打印说明：</strong><br>
+                • 请选择6寸照相纸 (4x6英寸)<br>
+                • 设置为无边距打印<br>
+                • 选择高质量打印模式<br>
+                • 使用相纸类型设置
+              </div>
+            </body>
+          </html>
+        `);
+        
+        printWindow.document.close();
+        
+        // 等待图片加载完成后自动打印
+        setTimeout(() => {
+          try {
+            // 检查窗口是否还存在且未关闭
+            if (!printWindow || printWindow.closed) {
+              return;
+            }
+            
+            // 检查图片是否加载完成
+            const imgs = printWindow.document.querySelectorAll('img');
+            let loadedCount = 0;
+            
+            const checkAllLoaded = () => {
+              if (loadedCount === imgs.length) {
+                printWindow.print();
+                // 打印完成后延迟关闭窗口，让用户有时间查看
+                setTimeout(() => {
+                  if (printWindow && !printWindow.closed) {
+                    printWindow.close();
+                  }
+                }, 3000);
+              }
+            };
+            
+            imgs.forEach(img => {
+              if (img.complete) {
+                loadedCount++;
+              } else {
+                img.onload = () => {
+                  loadedCount++;
+                  checkAllLoaded();
+                };
+                img.onerror = () => {
+                  loadedCount++;
+                  checkAllLoaded();
+                };
+              }
+            });
+            
+            checkAllLoaded();
+          } catch (error) {
+            console.warn('打印操作被取消或窗口已关闭');
+          }
+        }, 1000);
+        
+        // toast.success(`6寸照片打印预览已打开 (${images.length}张)`);
+      } catch (error) {
+        console.error('打印失败:', error);
+        // toast.error('打印失败，请检查浏览器设置');
+      }
     }
   }
 }
