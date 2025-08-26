@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-26 15:19:09
+ * @LastEditTime: 2025-08-26 18:46:23
  * @Description: 
 -->
 <template>
@@ -111,6 +111,7 @@ export default {
       
       // 获取当前域名和协议
       const baseUrl = window.location.origin;
+      const pathname = window.location.pathname;
       
       // 限制图片数量，最多10张，避免URL过长
       const maxImagesForGallery = 10;
@@ -121,9 +122,9 @@ export default {
         .map(imageUrl => encodeURIComponent(imageUrl))
         .join(',');
         
-        // console.log(`${baseUrl}/#/gallery?images=${imageParams}`)
+        // console.log(`${baseUrl}${pathname}#/gallery?images=${imageParams}`)
       // 生成完整的图片集合页面URL
-      return `${baseUrl}/#/gallery?images=${imageParams}`;
+      return `${baseUrl}${pathname}#/gallery?images=${imageParams}`;
     },
     
     // 判断是否需要显示加载状态
