@@ -215,7 +215,6 @@ class FaceApiLoader {
         inputSize: 224,
         scoreThreshold: 0.3
       }))
-      console.log('模型预热完成')
     } catch (error) {
       console.warn('模型预热失败:', error)
     }

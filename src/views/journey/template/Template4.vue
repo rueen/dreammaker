@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-26 00:30:42
+ * @LastEditTime: 2025-08-26 15:19:09
  * @Description: 
 -->
 <template>
@@ -53,14 +53,16 @@
               <span v-else>暂无二维码</span>
             </div>
           </div>
-          <!-- <CustomButton theme="yellow" @click="handlePrint">
-            <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
-            <span>打印照片</span>
-          </CustomButton> -->
-          <CustomButton theme="blue" @click="reStart">
-            <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
-            <span>重新体验</span>
-          </CustomButton>
+          <div class="btnbox">
+            <CustomButton theme="yellow" @click="handlePrint">
+              <span class="iconfont icon-printer" style="font-size: 1.5rem;margin-right: 10px;"></span>
+              <span>打印照片</span>
+            </CustomButton>
+            <CustomButton theme="blue" @click="reStart">
+              <span class="iconfont icon-refresh" style="font-size: 1.2rem;margin-right: 10px;"></span>
+              <span>重新体验</span>
+            </CustomButton>
+          </div>
         </div>
       </div>
     </div>
@@ -119,6 +121,7 @@ export default {
         .map(imageUrl => encodeURIComponent(imageUrl))
         .join(',');
         
+        // console.log(`${baseUrl}/#/gallery?images=${imageParams}`)
       // 生成完整的图片集合页面URL
       return `${baseUrl}/#/gallery?images=${imageParams}`;
     },
@@ -299,6 +302,12 @@ export default {
   color: #999;
   font-size: 0.9rem;
 }
+.btnbox{
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -381,6 +390,11 @@ export default {
 .portrait .rightContent .qrCode{
   width: 7rem;
   height: 7rem;
+}
+.portrait .btnbox{
+  height: 7rem;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* ImageCarousel Loading 样式 */

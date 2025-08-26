@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-26 00:55:11
+ * @LastEditTime: 2025-08-26 15:04:01
  * @Description: 
 -->
 <template>
@@ -65,6 +65,7 @@
         @reStart="reStart"
         @initAudio="handleInitAudio"
         @userInteractive="handleUserInteractive"
+        @printPhoto="printPhoto"
       />
     </div>
   </div>
@@ -368,7 +369,8 @@ export default {
     },
     // 打印照片
     printPhoto() {
-      
+      const images = this.syntheticImages.map(item => item.img);
+      console.log(images)
     }
   }
 }
