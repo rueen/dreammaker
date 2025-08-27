@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-25 21:57:02
+ * @LastEditTime: 2025-08-27 22:12:19
  * @Description: 
 -->
 <template>
@@ -11,6 +11,7 @@
   <div id="template3" class="container" :style="{'background-image': `url(${data.bgUrl})`}">
     <div class="content">
       <div class="page-title">{{ data.title }}</div>
+      <div class="page-describe" v-if="data.generateRule === 3">{{ data.describe }}</div>
       <div class="options">
         <div
           class="optionItem hide"
@@ -194,6 +195,11 @@ export default {
   background-color: rgba(0,0,0,.5);
   z-index: 1;
 }
+.page-describe{
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 5rem;
+}
 .content{
   position: absolute;
   left: 0;
@@ -248,11 +254,11 @@ export default {
 .optionItem .imageView{
   width: 100%;
   background-size: cover;
+  margin-bottom: .5rem;
 }
 .optionItem .name{
   color: #535F6E;
   font-size: 1rem;
-  margin-top: .5rem;
   text-align: center;
 }
 .bottom-box{
