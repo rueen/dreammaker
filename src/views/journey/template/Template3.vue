@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-27 22:12:19
+ * @LastEditTime: 2025-08-27 22:46:08
  * @Description: 
 -->
 <template>
@@ -197,8 +197,14 @@ export default {
 }
 .page-describe{
   color: #fff;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  line-height: 1.8rem;
   margin-bottom: 5rem;
+  width: 65%;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 2rem;
+  border-radius: .8rem;
+  box-sizing: border-box;
 }
 .content{
   position: absolute;
