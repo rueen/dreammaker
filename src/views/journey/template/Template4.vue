@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:02:00
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-26 18:46:23
+ * @LastEditTime: 2025-08-29 17:13:57
  * @Description: 
 -->
 <template>
@@ -304,10 +304,10 @@ export default {
   font-size: 0.9rem;
 }
 .btnbox{
-  flex: 1;
+  height: 7rem;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
 }
 @keyframes fadeIn {
   0% {
@@ -394,8 +394,6 @@ export default {
 }
 .portrait .btnbox{
   height: 7rem;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
 /* ImageCarousel Loading 样式 */
