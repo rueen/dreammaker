@@ -2,7 +2,7 @@
  * @Author: diaochan
  * @Date: 2024-06-15 15:37:06
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-26 17:13:25
+ * @LastEditTime: 2025-08-31 07:49:49
  * @Description: 
 -->
 <template>
@@ -247,6 +247,14 @@ export default {
       this.activeItem = nexItem;
     },
     reStart(){
+      this.activeItem = {};
+      this.userInfo = {
+        photoPath: '',
+        activeGender: {}
+      };
+      this.selectedOption = {};
+      this.selectedLastOption = {};
+      this.syntheticImages = [];
       if(this.info.launchVideo || this.info.launchPhoto){
         this.setp = 2;
         setTimeout(() => {
@@ -259,7 +267,6 @@ export default {
       } else {
         this.onLaunch();
       }
-      this.syntheticImages = [];
     },
     // 处理音频初始化请求（统一处理）
     handleInitAudio({ sceneAudio, plotAudio, audioLevel }) {
