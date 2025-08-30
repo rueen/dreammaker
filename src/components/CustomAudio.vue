@@ -2,15 +2,15 @@
  * @Author: diaochan
  * @Date: 2024-06-15 18:02:21
  * @LastEditors: diaochan
- * @LastEditTime: 2025-08-24 15:53:24
+ * @LastEditTime: 2025-08-30 16:56:38
  * @Description: 音频
 -->
 <template>
   <!-- 场景音频元素 -->
-  <audio ref="sceneAudioElement" loop v-if="sceneAudioSrc" :src="sceneAudioSrc">
+  <audio ref="sceneAudioElement" v-if="sceneAudioSrc" :src="sceneAudioSrc">
   </audio>
   <!-- 剧情音频元素 -->
-  <audio ref="plotAudioElement" loop v-if="plotAudioSrc" :src="plotAudioSrc">
+  <audio ref="plotAudioElement" v-if="plotAudioSrc" :src="plotAudioSrc">
   </audio>
   <div class="controls" v-if="isShowControls">
     <div class="bar-container" @click="handlePause" v-if="isPlay">
